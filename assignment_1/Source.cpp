@@ -1,6 +1,8 @@
 #include <iostream>
 #include <regex>
 #include <string.h>
+#include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -34,10 +36,5 @@ int main() {
 		}
 		cout << endl;
 	}
-
-
-
-
-	system("pause");
 	return 0;
 }
