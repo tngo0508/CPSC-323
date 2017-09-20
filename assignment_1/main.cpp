@@ -29,6 +29,29 @@ int int_DFSM(string arg)
         return 0; //rejected
 }
 
+//Finite State Machine for real
+int real_DFSM(string arg)
+{
+    //create table N for the transitions
+    int a[5][3] = {0, 'd', '.', 1, 12, 3, 34};
+
+    //accepting states
+    int f[0] = {34};
+
+    int col = 1;
+    int state = 1; //starting state
+    
+    int size = arg.size();
+    for (int i = 0; i < size; i++ )
+    {
+        state = a[state,col];
+    }
+    if (state == f[0])
+        return 1; //accepted
+    else 
+        return 0; //rejected
+}
+
 int main() {
     ofstream file;
     file.open("test_case.txt");
