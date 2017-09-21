@@ -8,6 +8,7 @@
 using namespace std;
 
 int main() {
+    string statement;
     ofstream file;
     file.open("test_case.txt");
     
@@ -20,8 +21,7 @@ int main() {
     
     while (!file.eof())
     {
-        //call function lexer
-        //print(token, lexeme)
+        cout << lexer(file);
     }
 
     file.close();
