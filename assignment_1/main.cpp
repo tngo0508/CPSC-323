@@ -23,8 +23,8 @@ int main() {
     string token;
     while (!file.eof())
     {
-        file >> statement;
-        cout << check.lexer(statement) << endl;
+        //file >> statement;
+        cout << check.lexer(file) << endl;
     }
 
     file.close();

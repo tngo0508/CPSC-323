@@ -23,7 +23,8 @@ int Lex::int_DFSM(int& currentState, char input)
         return 0;
 }
 
-string Lex::lexer(string str)
+//string Lex::lexer(string str)
+string Lex::lexer(ifstream& file)
 {
     string token;
     int currentState = 1; //starting state
@@ -33,13 +34,12 @@ string Lex::lexer(string str)
     int i = 0;
     while(!found)
     {
-        ch = str.at(i);
+        file.get(ch);
         if (found == true)
         {
             //isolate the token/lexeme
             //decrement the CP if necessary
-            i--;
-            return token;
+            file.unget();
         }
         else
         {
@@ -51,10 +51,9 @@ string Lex::lexer(string str)
                 else
                     found = true;
             }
-            else
+            else //FSM-identifier and FSM-real need to be added here
                 found = true;
         }
-        i++;
     }
 
     if (found)

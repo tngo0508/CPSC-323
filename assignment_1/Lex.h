@@ -14,7 +14,8 @@ class Lex
     public:
         Lex();
         int int_DFSM(int& currentState, char input);
-        string lexer(string str);
+        string lexer(ifstream& file);
+        //string lexer(string str);
         ~Lex();
     private:
         int currentState;
