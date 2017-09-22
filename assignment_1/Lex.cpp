@@ -1,16 +1,13 @@
-#ifndef LEXER_H
-#define LEXER_H
+#include "Lex.h"
 
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <ctype.h>
-
-using namespace std;
+Lex::Lex()
+{
+    currentState = 0;
+    input = 'c';
+}
 
 //Finite State Machine for integer
-int int_DFSM(int& currentState, char input)
+int Lex::int_DFSM(int& currentState, char input)
 {
     //create table N for the transitions
     int a[3][2] = {0, 'd', 1, 2, 2, 2};
@@ -26,22 +23,24 @@ int int_DFSM(int& currentState, char input)
         return 0;
 }
 
-string lexer(string str)
+string Lex::lexer(string str)
 {
-    cout << "break";
     string token;
-    ifstream is;
     int currentState = 1; //starting state
     int state_status = 0; 
     bool found = false;
     char ch;
+    int i = 0;
     while(!found)
     {
-        is.get(ch);
+        ch = str.at(i);
         if (found == true)
+        {
             //isolate the token/lexeme
             //decrement the CP if necessary
+            i--;
             return token;
+        }
         else
         {
             token += ch;
@@ -52,10 +51,11 @@ string lexer(string str)
                     found = true;
             }
         }
+        i++;
     }
 
     if (found)
         return token;
 }
 
-#endif
+Lex::~Lex(){}

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <ctype.h>
-#include "lexer.h"
+#include "Lex.h"
 
 using namespace std;
 
@@ -19,13 +19,15 @@ int main() {
         exit(1);
     }
     
+    Lex check;
     while (!file.eof())
     {
         file >> statement;
         cout << statement;
-        cout << lexer(statement);
+        cout << check.lexer(statement);
     }
 
     file.close();
 	return 0;
 }
+
