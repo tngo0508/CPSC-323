@@ -20,11 +20,11 @@ int main() {
     }
     
     Lex check;
+    string token;
     while (!file.eof())
     {
         file >> statement;
-        cout << statement;
-        cout << check.lexer(statement);
+        cout << check.lexer(statement) << endl;
     }
 
     file.close();

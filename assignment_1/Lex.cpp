@@ -43,13 +43,16 @@ string Lex::lexer(string str)
         }
         else
         {
-            token += ch;
             if (isdigit(ch))
             {
                 state_status = int_DFSM(currentState, ch);
-                if (state_status == 0)
+                if (state_status == 1)
+                    token += ch;
+                else
                     found = true;
             }
+            else
+                found = true;
         }
         i++;
     }
