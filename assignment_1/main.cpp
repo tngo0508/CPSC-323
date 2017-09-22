@@ -9,7 +9,7 @@ using namespace std;
 
 int main() {
     string statement;
-    ofstream file;
+    ifstream file;
     file.open("test_case.txt");
     
     //Make sure file is opened
@@ -21,7 +21,9 @@ int main() {
     
     while (!file.eof())
     {
-        cout << lexer(file);
+        file >> statement;
+        cout << statement;
+        cout << lexer(statement);
     }
 
     file.close();

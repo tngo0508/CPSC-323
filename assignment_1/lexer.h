@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <ctype.h>
 
@@ -25,25 +26,28 @@ int int_DFSM(int& currentState, char input)
         return 0;
 }
 
-string lexer(ofstream file)
+string lexer(string str)
 {
+    cout << "break";
     string token;
+    ifstream is;
     int currentState = 1; //starting state
     int state_status = 0; 
     bool found = false;
     char ch;
     while(!found)
     {
-        file.get(ch);
+        is.get(ch);
         if (found == true)
             //isolate the token/lexeme
             //decrement the CP if necessary
+            return token;
         else
         {
             token += ch;
             if (isdigit(ch))
             {
-                state_status = int_DFSM(currentState, input)
+                state_status = int_DFSM(currentState, ch);
                 if (state_status == 0)
                     found = true;
             }
