@@ -13,6 +13,10 @@ int Lex::char_to_col(const char input) const
         return 1;
     else if (input == '.')
         return 2;
+    else if (isalpha(input))
+        return 3;
+    else
+        return 4;
 }
 
 //Finite State Machine for integer
@@ -23,10 +27,10 @@ int Lex::int_DFSM(int& currentState, const char input)
 
     //accepting states
     int f[1] = {2};
-    
+
     //update the currentState to new transition
     currentState = a[currentState][1];
-    
+
     if (currentState == f[0])
         return 1; //accepted
     else
@@ -43,7 +47,7 @@ int Lex::real_DFSM(int& currentState, const char input)
     //convert character to its column number in the table
     int col = char_to_col(input);
     currentState = a[currentState][col];
-    
+
     if (currentState == f[0])
         return 1;
     else
@@ -67,18 +71,20 @@ string Lex::lexer(ifstream& file)
         if (!isdigit(ch) && state_status == 1)
         {
             file.unget();
+            found = true;
         }
         else
         {
-            if (isdigit(ch))
+            if (isdigit(ch) || ch == '.')
+            {
+                state_status = real_DFSM(currentState, ch);
+                token += ch;
+            }
+            else if (isdigit(ch))
             {
                 state_status = int_DFSM(currentState, ch);
-                if (state_status == 1)
-                    token += ch;
-                else
-                    found = true;
             }
-            else //FSM-identifier and FSM-real need to be added here
+            else
                 found = true;
         }
     }
