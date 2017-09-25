@@ -84,7 +84,7 @@ string Lex::lexer(ifstream& file)
             {
                 state_status = int_DFSM(currentState, ch);
             }
-            else
+            else //need to implementation for
                 found = true;
         }
     }

@@ -24,7 +24,7 @@ int main() {
     while (!file.eof())
     {
         //file >> statement;
-        cout << check.lexer(file) << endl;
+        cout << check.lexer(file) << " ";
     }
 
     file.close();
