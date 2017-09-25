@@ -8,7 +8,6 @@
 using namespace std;
 
 int main() {
-    string statement;
     ifstream file;
     file.open("test_case.txt");
     
@@ -23,7 +22,7 @@ int main() {
     string token;
     while (!file.eof())
     {
-        //file >> statement;
+        // check.lexer(file);
         cout << check.lexer(file) << " ";
     }
 

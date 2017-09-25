@@ -54,6 +54,26 @@ int Lex::real_DFSM(int& currentState, const char input)
         return 0;
 }
 
+//Finite State Machine for identifier
+int Lex::id_DFSM(int& currentState, const char ipnut)
+{
+    int a[6][5] = {0, 'd', '.', 'l', '#', 1, 0, 0, 2, 0, 2, 0, 0, 3, 4, 3, 0, 0,
+        3, 4, 4, 0, 0, 5, 0, 5, 0, 0, 3, 4};
+
+    int f[4] = {2, 3, 4, 5};
+
+    //convert character to its column number in the table
+    int col = char_to_col(input);
+    currentState = a[currentState][col];
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (currentState == f[i])
+            return 1;
+    }
+    return 0;
+}
+
 string Lex::lexer(ifstream& file)
 {
     string token;
@@ -61,36 +81,29 @@ string Lex::lexer(ifstream& file)
     int state_status = 0; 
     bool found = false;
     char ch;
-    int i = 0;
-    while(!found)
-    {
-        ch = file.get();
-        /* if input char terminates a token AND it is an accepting state then 
-         * isolate the token/lexeme
-         * decrement the CP if necessary*/ 
-        if (!isdigit(ch) && state_status == 1)
-        {
-            file.unget();
-            found = true;
-        }
-        else
-        {
-            if (isdigit(ch) || ch == '.')
-            {
-                state_status = real_DFSM(currentState, ch);
-                token += ch;
-            }
-            else if (isdigit(ch))
-            {
-                state_status = int_DFSM(currentState, ch);
-            }
-            else //need to implementation for
-                found = true;
-        }
-    }
+    
+    ch = file.get();
 
-    if (found)
-        return token;
+    if (isalpha(ch) || ch == '#')
+    {
+        while (!found)
+        {
+            if (!(isalpha(ch) || ch == '#') && state_status == 1)
+            {
+                found = true;
+                file.unget();
+            }
+            else
+            {
+                state_status = id_DFSM(currentState, ch);
+                token += ch;
+                ch = file.get();
+            }
+        }
+
+        if (found)
+            return token;
+    }
 }
 
 Lex::~Lex(){}
