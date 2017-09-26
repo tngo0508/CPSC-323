@@ -3,8 +3,6 @@
 Lex::Lex()
 {
     input = 'c';
-    // token = new string[6] {identifier, real, integer, keyword, separator, operator};
-    // lexeme = new string[];
 }
 
 //Function check separator
@@ -146,51 +144,47 @@ void Lex::lexer(ifstream& file)
             found = true;
             file.unget();
         }
-        else
             str += ch;
     }
-    if (isalpha(str[0]) )
-    {
-        state_status = identifier_DFSM(str);
-        if (state_status == 1)
-        {
-            this->setLexeme(str);
-            if (this->checkKeyword(str) == true)
-                this->setToken("keyword");
-            else
-                this->setToken("identifier");
-        }
-        else
-            cerr << "invalid identifier";
-    }
-    // else if (isdigit(str[0]) || str[0] == 0)
-    // {
-    //     state_status = real_DFSM(str);
-    //     if (state_status == 1)
-    //     {
-    //         this->setLexeme(str);
-    //         this->setToken("real");
-    //     }
-    //     else
-    //         cerr << "invalid real";
-    // }
-    // else
-    // {
-    //     state_status = int_DFSM(str);
-    //     if (state_status == 1)
-    //     {
-    //         this->setLexeme(str);
-    //         this->setToken("integer");
-    //     }
-    //     else
-    //         cerr << "invalid real";
-    // }
+
+	if (str[0] == ' ')
+		ch = file.get();
+	else if (this->isOperator(ch))
+	{
+		this->setToken("operator");
+		this->setLexeme(str);
+		ch = file.get();
+	}
+	else if (this->isSeparator(ch))
+	{
+		this->setToken("separator");
+		this->setLexeme(str);
+		ch = file.get();
+	}
+	else
+	{
+		if (isalpha(str[0]))
+		{
+			state_status = identifier_DFSM(str);
+			if (state_status == 1)
+			{
+				this->setLexeme(str);
+				if (this->checkKeyword(str) == true)
+					this->setToken("keyword");
+				else
+					this->setToken("identifier");
+			}
+			else
+				cerr << "invalid identifier";
+		}
+
+	}
 }
 
 void Lex::print() const
 {
     // cout << "token" << "        " << "lexeme";
-    cout << this->token << " "<< this->lexeme;
+    cout << this->token << " "<< this->lexeme << endl;
 }
 
 void Lex::setToken(const string newToken)
@@ -203,10 +197,14 @@ void Lex::setLexeme(const string newLexeme)
     lexeme = newLexeme;
 }
 
-Lex::~Lex()
+string Lex::getToken() const
 {
-    // delete [] lexeme;
-    // lexeme = NULL;
-    // delete [] token;
-    // token = NULL;
+	return token;
 }
+
+string Lex::getLexeme() const
+{
+	return lexeme;
+}
+
+Lex::~Lex(){}
