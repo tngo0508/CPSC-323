@@ -172,9 +172,16 @@ void Lex::lexer(ifstream& file)
 		this->setToken("separator");
 		this->setLexeme(str);
 	}
-	else
+	else //look for appropriate FSM to check lexeme
 	{
-		if (isalpha(str[0]))
+		int size = str.size();
+		bool checking = false;
+		for (int i = 0; i < size; i++)
+		{
+			if (!(str[i] == '#' || isalpha(str[i])))
+				checking = true;
+		}
+		if (!checking)
 		{
 			state_status = identifier_DFSM(str);
 			this->setLexeme(str);
@@ -192,7 +199,15 @@ void Lex::lexer(ifstream& file)
 				//cerr << "invalid identifier\n";
 			}
 		}
-		/*else if (isdigit(str[0]) || str[0] == 0)
+		else
+		{
+			if (checking)
+			{
+				this->setLexeme(str);
+				this->setToken("invalid identifier");
+			}
+		}
+		/*else if (isdigit(str[0]) || str[0])
 		{
 			state_status = real_DFSM(str);
 			if (state_status == 1)
