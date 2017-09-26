@@ -17,7 +17,7 @@ int main() {
         cerr << "Failed to open the file";
         exit(1);
     }
-    
+	
     Lex check;
     while (!file.eof())
     {
