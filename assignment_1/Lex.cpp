@@ -177,16 +177,20 @@ void Lex::lexer(ifstream& file)
 		if (isalpha(str[0]))
 		{
 			state_status = identifier_DFSM(str);
+			this->setLexeme(str);
 			if (state_status == 1)
 			{
-				this->setLexeme(str);
+				//this->setLexeme(str);
 				if (this->checkKeyword(str) == true)
 					this->setToken("keyword");
 				else
 					this->setToken("identifier");
 			}
 			else
-				cerr << "invalid identifier";
+			{
+				this->setToken("invalid identifier");
+				//cerr << "invalid identifier\n";
+			}
 		}
 		/*else if (isdigit(str[0]) || str[0] == 0)
 		{
