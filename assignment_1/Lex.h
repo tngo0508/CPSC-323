@@ -24,8 +24,8 @@ class Lex
         void print() const;
         void setToken(const string newToken);
         void setLexeme(const string newLexeme);
-        void getToken() const;
-        void getLexeme() const;
+        string getToken() const;
+        string getLexeme() const;
         ~Lex();
     private:
         char input;
