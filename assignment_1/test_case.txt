@@ -1,7 +1,1 @@
-abc5501
-a9b9c9
-201abcd
-abc 20 1000 < xyz
-123*4.56 
 while (fahr#x  < upper)   a := 23.00
-abc####

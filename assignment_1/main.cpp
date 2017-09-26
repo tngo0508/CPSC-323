@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <ctype.h>
-#include "Lex.hpp"
+#include "Lex.h"
 
 using namespace std;
 
@@ -19,11 +19,10 @@ int main() {
     }
     
     Lex check;
-    string token;
     while (!file.eof())
     {
-        // check.lexer(file);
-        cout << check.lexer(file) << " ";
+        check.lexer(file);
+        check.print();
     }
 
     file.close();

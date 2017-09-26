@@ -1,9 +1,46 @@
-#include "Lex.hpp"
+#include "Lex.h"
 
 Lex::Lex()
 {
-    currentState = 0;
     input = 'c';
+    // token = new string[6] {identifier, real, integer, keyword, separator, operator};
+    // lexeme = new string[];
+}
+
+//Function check separator
+bool Lex::isSeparator(const char input) const
+{
+	int separator[6] = { '(',')', '{', '}', '%', '@' };
+	for (int i = 0; i < 6; i++ ) {
+		if (separator[i] == input) {
+			return 1;
+		}
+	}
+	return 0;
+}
+//Function check Operator
+bool Lex::isOperator(const char input) const
+{
+    int operators[10] = { '+', '-', '/', '*', '<','>','=',':','!', '=' };
+    for (int i = 0; i < 10; i++) {
+        if (operators[i] == input) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+//Function check keyword
+bool Lex::checkKeyword(string identifier) const
+{
+    string keywords[12] = { "while", "if", "int", "fi", "else", "return",
+        "read", "write", "integer", "for", "string", "boolean" };
+    for (int i = 0; i < 12; i++) {
+        if (keywords[i] == identifier) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 //Function returns the column number of the character in the table
@@ -20,8 +57,11 @@ int Lex::char_to_col(const char input) const
 }
 
 //Finite State Machine for integer
-int Lex::int_DFSM(int& currentState, const char input)
+int Lex::int_DFSM(const string str)
 {
+    //starting state
+    int state = 1;
+
     //create table N for the transitions
     int a[3][2] = {0, 'd', 1, 2, 2, 2};
 
@@ -29,81 +69,144 @@ int Lex::int_DFSM(int& currentState, const char input)
     int f[1] = {2};
 
     //update the currentState to new transition
-    currentState = a[currentState][1];
-
-    if (currentState == f[0])
-        return 1; //accepted
+    int size = str.size(); 
+    for (int i = 0; i < size; i++)
+    {
+        int col = char_to_col(str[i]);
+        if (col > 1)
+            return 0;
+        state = a[state][col];
+    }
+    if (state == f[0])
+        return 1;
     else
-        return 0; //rejected
+        return 0;
 }
 
 //Finite State Machine for real
-int Lex::real_DFSM(int& currentState, const char input)
+int Lex::real_DFSM(string str)
 {
+    int state = 1;
     int a[5][3] = {0, 'd', '.', 1, 2, 0, 2, 2, 3, 3, 4, 0, 4, 4, 0};
 
     int f[1] = {4};
 
     //convert character to its column number in the table
-    int col = char_to_col(input);
-    currentState = a[currentState][col];
-
-    if (currentState == f[0])
+    int size = str.size();
+    for (int i = 0; i < size; i++)
+    {
+        int col = char_to_col(str[i]);
+        if (col > 2)
+            return 0;
+        state = a[state][col];
+    }
+    if (state == f[0])
         return 1;
     else
         return 0;
 }
 
 //Finite State Machine for identifier
-int Lex::id_DFSM(int& currentState, const char ipnut)
+int Lex::identifier_DFSM(string str)
 {
+    int state = 1;
     int a[6][5] = {0, 'd', '.', 'l', '#', 1, 0, 0, 2, 0, 2, 0, 0, 3, 4, 3, 0, 0,
         3, 4, 4, 0, 0, 5, 0, 5, 0, 0, 3, 4};
 
     int f[4] = {2, 3, 4, 5};
 
     //convert character to its column number in the table
-    int col = char_to_col(input);
-    currentState = a[currentState][col];
+    int size = str.size();
+    for (int i = 0; i < size; i++)
+    {
+        int col = char_to_col(str[i]);
+        state = a[state][col];
+    }
 
     for (int i = 0; i < 4; i++)
     {
-        if (currentState == f[i])
+        if (state == f[i])
             return 1;
     }
     return 0;
 }
 
-string Lex::lexer(ifstream& file)
+void Lex::lexer(ifstream& file)
 {
-    string token;
-    int currentState = 1; //starting state
+    string str;
     int state_status = 0; 
     bool found = false;
-    char ch;
+    char ch = 'c';
     
-    ch = file.get();
-
-    if (isalpha(ch) || ch == '#')
+    while (!found)
     {
-        while (!found)
+        ch = file.get();
+        if (this->isSeparator(ch) || this->isOperator(ch)  || ch == 32)
         {
-            if (!(isalpha(ch) || ch == '#') && state_status == 1)
-            {
-                found = true;
-                file.unget();
-            }
-            else
-            {
-                state_status = id_DFSM(currentState, ch);
-                token += ch;
-                ch = file.get();
-            }
+            found = true;
+            file.unget();
         }
-
-        if (found)
-            return token;
+        else
+            str += ch;
     }
+    if (isalpha(str[0]) )
+    {
+        state_status = identifier_DFSM(str);
+        if (state_status == 1)
+        {
+            this->setLexeme(str);
+            if (this->checkKeyword(str) == true)
+                this->setToken("keyword");
+            else
+                this->setToken("identifier");
+        }
+        else
+            cerr << "invalid identifier";
+    }
+    // else if (isdigit(str[0]) || str[0] == 0)
+    // {
+    //     state_status = real_DFSM(str);
+    //     if (state_status == 1)
+    //     {
+    //         this->setLexeme(str);
+    //         this->setToken("real");
+    //     }
+    //     else
+    //         cerr << "invalid real";
+    // }
+    // else
+    // {
+    //     state_status = int_DFSM(str);
+    //     if (state_status == 1)
+    //     {
+    //         this->setLexeme(str);
+    //         this->setToken("integer");
+    //     }
+    //     else
+    //         cerr << "invalid real";
+    // }
 }
 
-Lex::~Lex(){}
+void Lex::print() const
+{
+    // cout << "token" << "        " << "lexeme";
+    cout << this->token << " "<< this->lexeme;
+}
+
+void Lex::setToken(const string newToken)
+{
+    token = newToken;
+}
+
+void Lex::setLexeme(const string newLexeme)
+{
+    lexeme = newLexeme;
+}
+
+Lex::~Lex()
+{
+    // delete [] lexeme;
+    // lexeme = NULL;
+    // delete [] token;
+    // token = NULL;
+}
