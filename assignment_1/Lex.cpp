@@ -8,8 +8,8 @@ Lex::Lex()
 //Function check separator
 bool Lex::isSeparator(const char input) const
 {
-	int separator[6] = { '(',')', '{', '}', '%', '@' };
-	for (int i = 0; i < 6; i++) {
+	int separator[10] = { '(',')', '{', '}', '%', '@', ',', '[', ']', ';'};
+	for (int i = 0; i < 10; i++) {
 		if (separator[i] == input) {
 			return 1;
 		}
@@ -19,8 +19,8 @@ bool Lex::isSeparator(const char input) const
 //Function check Operator
 bool Lex::isOperator(const char input) const
 {
-	int operators[12] = { '(', ')', '+', '-', '/', '*', '<','>','=',':','!', '=' };
-	for (int i = 0; i < 12; i++) {
+	int operators[8] = { '+', '-', '/', '*', '<','>',':', '=' };
+	for (int i = 0; i < 8; i++) {
 		if (operators[i] == input) {
 			return 1;
 		}
@@ -140,12 +140,16 @@ void Lex::lexer(ifstream& file)
 	while (!found)
 	{
 		ch = file.get();
-		
+
 		if (this->isSeparator(ch) || this->isOperator(ch) || ch == 32 || ch == '\n' || ch == -1)
 		{
 			found = true;
 		}
-		if (!(ch == 32) && this->isSeparator(ch) == false && this->isOperator(ch) == false)
+		if (!str.empty() && (this->isOperator(ch) || this->isSeparator(ch)))
+		{
+			file.unget();
+		}
+		else if (!(ch == 32))
 			str += ch;
 		if (str.empty())
 			found = false;
@@ -153,8 +157,14 @@ void Lex::lexer(ifstream& file)
 
 	if (this->isOperator(str[0]))
 	{
-		this->setToken("operator");
 		str = ch;
+		//check if the next character is another operator or not
+		ch = file.get();
+		if (this->isOperator(ch))
+			str += ch;
+		else
+			file.unget();
+		this->setToken("operator");
 		this->setLexeme(str);
 	}
 	else if (this->isSeparator(str[0]))
@@ -178,28 +188,28 @@ void Lex::lexer(ifstream& file)
 			else
 				cerr << "invalid identifier";
 		}
-		 /*else if (isdigit(str[0]) || str[0] == 0)
-		 {
-		     state_status = real_DFSM(str);
-		     if (state_status == 1)
-		     {
-		         this->setLexeme(str);
-		         this->setToken("real");
-		     }
-		     else
-		         cerr << "invalid real";
-		 }
-		 else
-		 {
-		     state_status = int_DFSM(str);
-		     if (state_status == 1)
-		     {
-		         this->setLexeme(str);
-		         this->setToken("integer");
-		     }
-		     else
-		         cerr << "invalid real";
-		 }*/
+		/*else if (isdigit(str[0]) || str[0] == 0)
+		{
+			state_status = real_DFSM(str);
+			if (state_status == 1)
+			{
+				this->setLexeme(str);
+				this->setToken("real");
+			}
+			else
+				cerr << "invalid real";
+		}
+		else
+		{
+			state_status = int_DFSM(str);
+			if (state_status == 1)
+			{
+				this->setLexeme(str);
+				this->setToken("integer");
+			}
+			else
+				cerr << "invalid real";
+		}*/
 	}
 }
 

@@ -24,6 +24,8 @@ int main() {
 		check.lexer(file);
 		check.print();
 	}
+
+	cout << endl;
 	system("Pause");
 	return 0;
 }
