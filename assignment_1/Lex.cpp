@@ -136,30 +136,31 @@ void Lex::lexer(ifstream& file)
 	bool found = false;
 	char ch = 'c';
 
+	//get the character and add it into a string until see space, separator, or operator
 	while (!found)
 	{
 		ch = file.get();
-		if (this->isSeparator(ch) || this->isOperator(ch) || ch == 32)
+		
+		if (this->isSeparator(ch) || this->isOperator(ch) || ch == 32 || ch == '\n' || ch == -1)
 		{
 			found = true;
 		}
-		else
+		if (!(ch == 32) && this->isSeparator(ch) == false && this->isOperator(ch) == false)
 			str += ch;
+		if (str.empty())
+			found = false;
 	}
 
-	if (str[0] == ' ')
-		ch = file.get();
-	else if (this->isOperator(ch))
+	if (this->isOperator(str[0]))
 	{
 		this->setToken("operator");
 		str = ch;
 		this->setLexeme(str);
 	}
-	else if (this->isSeparator(ch))
+	else if (this->isSeparator(str[0]))
 	{
 		this->setToken("separator");
 		this->setLexeme(str);
-		ch = file.get();
 	}
 	else
 	{
@@ -177,7 +178,28 @@ void Lex::lexer(ifstream& file)
 			else
 				cerr << "invalid identifier";
 		}
-
+		 /*else if (isdigit(str[0]) || str[0] == 0)
+		 {
+		     state_status = real_DFSM(str);
+		     if (state_status == 1)
+		     {
+		         this->setLexeme(str);
+		         this->setToken("real");
+		     }
+		     else
+		         cerr << "invalid real";
+		 }
+		 else
+		 {
+		     state_status = int_DFSM(str);
+		     if (state_status == 1)
+		     {
+		         this->setLexeme(str);
+		         this->setToken("integer");
+		     }
+		     else
+		         cerr << "invalid real";
+		 }*/
 	}
 }
 

@@ -8,24 +8,23 @@
 using namespace std;
 
 int main() {
-    ifstream file;
-    file.open("test_case.txt");
-    
-    //Make sure file is opened
-    if (!file.is_open())
-    {
-        cerr << "Failed to open the file";
-        exit(1);
-    }
-	
-    Lex check;
-    while (!file.eof())
-    {
-        check.lexer(file);
-        check.print();
-    }
+	ifstream file;
+	file.open("test_case.txt");
 
-    file.close();
+	//Make sure file is opened
+	if (!file.is_open())
+	{
+		cerr << "Failed to open the file";
+		exit(1);
+	}
+
+	Lex check;
+	while (!file.eof())
+	{
+		check.lexer(file);
+		check.print();
+	}
+	system("Pause");
 	return 0;
 }
 
