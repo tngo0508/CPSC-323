@@ -222,37 +222,41 @@ void Lex::lexer(ifstream& file)
 	}
 	else if (classify == 4) {
 		state_status = real_DFSM(str);
+		this->setLexeme(str);
 		if (state_status == 1)
 		{
-			this->setLexeme(str);
 			this->setToken("real");
 		}
-		else
-			cerr << "invalid real";
+		else {
+			this->setToken("invalid real");
+		}
 	}
 	else if (classify == 5)
 	{
 		state_status = int_DFSM(str);
+		this->setLexeme(str);
+
 		if (state_status == 1)
 		{
-			this->setLexeme(str);
 			this->setToken("integer");
 		}
 		else
-			cerr << "invalid integer";
+			this->setToken("invalid integer");
 	}
 	else {
 		state_status = identifier_DFSM(str);
+		this->setLexeme(str);
 		if (state_status == 1)
 		{
-			this->setLexeme(str);
 			if (classify == 0)
 				this->setToken("keyword");
 			else
 				this->setToken("identifier");
 		}
 		else
-			cerr << "invalid identifier";
+		{
+			this->setToken("invalid identifier");
+		}
 	}
 	
 
