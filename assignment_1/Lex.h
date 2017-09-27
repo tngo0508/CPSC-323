@@ -23,13 +23,14 @@ public:
 	int real_DFSM(string str);
 	int identifier_DFSM(string str);
 	int char_to_col(const char input) const;
-	bool isSeparator(const char input) const;
-	bool isOperator(const char input) const;
-	bool checkKeyword(string identifier) const;
-	LexToken lexer(ifstream& file, char c);
+	bool isSeparator( char input) ;
+	bool isOperator( char input) ;
+	bool checkKeyword(string identifier) ;
+	LexToken lexer(ifstream& file);
 	void print() const;
 	void setToken(const string);
 	void setLexeme(const string);
+	int Classify(string s);
 	~Lex();
 private:
 	int currentState;

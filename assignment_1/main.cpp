@@ -22,10 +22,12 @@ int main() {
 	LexToken a;
 	Lex check;
 	char c;
-	while (file.get(c))
+	while (!file.eof())
 	{
-		a = check.lexer(file, c);
+		a = check.lexer(file);
+		//if (a.token != "empty string")
 		cout << "Token " << a.token << " " << a.lexeme << endl;
+		
 	}
 
 	file.close();
