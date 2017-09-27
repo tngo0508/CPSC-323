@@ -216,7 +216,8 @@ void Lex::lexer(ifstream& file)
 		str = ch;
 		//check if the next character is another operator or not
 		ch = file.get();
-		if (str[0] == ':' && ch == '=')
+		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=' 
+			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '=')))
 			str += ch;
 		else
 			file.unget();
@@ -231,7 +232,10 @@ void Lex::lexer(ifstream& file)
 		else
 			file.unget();
 		this->setLexeme(str);
-		this->setToken("Separator");
+		if (ch == '%')
+			this->setToken("Separator");
+		else
+			this->setToken("invalid separator");
 	}
 	else if (classify == 4) {
 		state_status = real_DFSM(str);

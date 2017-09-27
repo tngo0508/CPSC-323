@@ -37,6 +37,6 @@ int main() {
 	file.close();
     
 	cout << endl;
-	//system("Pause");
+	system("Pause");
 	return 0;
 }
