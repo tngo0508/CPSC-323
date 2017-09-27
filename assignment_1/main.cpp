@@ -18,15 +18,20 @@ int main() {
 		exit(1);
 	}
 
+	cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
+	cout << endl;
 	Lex check;
+
 	while (!file.eof())
 	{
 		check.lexer(file);
-		check.print();
+		//if (!file.peek() == file.eof())
+			check.print();
 	}
+
+	file.close();
 
 	cout << endl;
 	system("Pause");
 	return 0;
 }
-

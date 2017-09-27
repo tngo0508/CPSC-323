@@ -8,7 +8,7 @@ Lex::Lex()
 //Function check separator
 bool Lex::isSeparator(const char input) const
 {
-	int separator[10] = { '(',')', '{', '}', '%', '@', ',', '[', ']', ';'};
+	int separator[10] = { '(',')', '{', '}', '%', '@', ',', '[', ']', ';' };
 	for (int i = 0; i < 10; i++) {
 		if (separator[i] == input) {
 			return 1;
@@ -41,6 +41,53 @@ bool Lex::checkKeyword(string identifier) const
 	return 0;
 }
 
+int Lex::Classify(string s) {
+	int len = s.length();
+	//regex identifer("[[:alpha:]]([[:alpha:]] | #[[:alpha:]]");
+	//detect is keyword or not
+	if (checkKeyword(s))
+		return 0;
+
+	//detect is operator or not
+	for (int i = 0; i < len; i++)
+	{
+		if (isOperator(s[i]))
+			return 1;
+	}
+
+
+	//detect is seperator or not
+	for (int i = 0; i < len; i++)
+	{
+		if (isSeparator(s[i]))
+			return 2;
+	}
+
+	//detect is identifier or not
+	char classify_ch = s[0];
+	if (isalpha(classify_ch))
+	{
+		for (int i = 0; i < len; i++)
+		{
+			if (s[i] == '#' || isalpha(s[i]))
+				return 3;
+		}
+	}
+	else if (isdigit(classify_ch))
+	{
+		for (int i = 0; i < len; i++)
+		{
+			if (s[i] == '.')
+				return 4;
+		}
+
+		//detect is integer
+		return 5;
+	}
+	else
+		return 6;
+}
+
 //Function returns the column number of the character in the table
 int Lex::char_to_col(const char input) const
 {
@@ -50,8 +97,10 @@ int Lex::char_to_col(const char input) const
 		return 2;
 	else if (isalpha(input))
 		return 3;
-	else
+	else if (input == '#')
 		return 4;
+	else
+		return 5;
 }
 
 //Finite State Machine for integer
@@ -151,13 +200,15 @@ void Lex::lexer(ifstream& file)
 			file.unget();
 		}
 		//else if (!(ch == 32))
-		else if (!isspace(ch))
+		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
 		if (str.empty())
 			found = false;
 	}
 
-	if (this->isOperator(str[0]))
+	int classify = Classify(str);
+
+	if (classify == 1)
 	{
 		str = ch;
 		//check if the next character is another operator or not
@@ -169,84 +220,59 @@ void Lex::lexer(ifstream& file)
 		this->setToken("operator");
 		this->setLexeme(str);
 	}
-	else if (this->isSeparator(str[0]))
-	{
-		this->setToken("separator");
+	else if (classify == 2) {
 		this->setLexeme(str);
+		this->setToken("Separator");
 	}
-	else //look for appropriate FSM to check lexeme
+	else if (classify == 4) {
+		state_status = real_DFSM(str);
+		this->setLexeme(str);
+		if (state_status == 1)
+		{
+			this->setToken("real");
+		}
+		else {
+			this->setToken("invalid real");
+		}
+	}
+	else if (classify == 5)
 	{
-		int size = str.size();
-		bool identifier_checking = false;
-		for (int i = 0; i < size; i++)
+		state_status = int_DFSM(str);
+		this->setLexeme(str);
+
+		if (state_status == 1)
 		{
-			if (!(str[i] == '#' || isalpha(str[i])))
-				identifier_checking = true;
-		}
-		if (!identifier_checking)
-		{
-			state_status = identifier_DFSM(str);
-			this->setLexeme(str);
-			if (state_status == 1)
-			{
-				//this->setLexeme(str);
-				if (this->checkKeyword(str) == true)
-					this->setToken("keyword");
-				else
-					this->setToken("identifier");
-			}
-			else
-			{
-				this->setToken("invalid identifier");
-				//cerr << "invalid identifier\n";
-			}
+			this->setToken("integer");
 		}
 		else
+			this->setToken("invalid integer");
+	}
+	else if (classify == 3){
+		state_status = identifier_DFSM(str);
+		this->setLexeme(str);
+		if (state_status == 1)
 		{
-			if (identifier_checking)
-			{
-				this->setLexeme(str);
-				this->setToken("invalid identifier");
-			}
+			if (classify == 0)
+				this->setToken("keyword");
 			else
-			{
-				bool real_checking = false;
-				for (int i = 0; i < size; i++)
-				{
-					if (!(str[i] == '.' || isdigit(str[i])))
-						real_checking = true;
-				}
-			}
+				this->setToken("identifier");
 		}
-		/*else if (isdigit(str[0]) || str[0])
+		else 
 		{
-			state_status = real_DFSM(str);
-			if (state_status == 1)
-			{
-				this->setLexeme(str);
-				this->setToken("real");
-			}
-			else
-				cerr << "invalid real";
+			this->setToken("invalid identifier");
 		}
-		else
-		{
-			state_status = int_DFSM(str);
-			if (state_status == 1)
-			{
-				this->setLexeme(str);
-				this->setToken("integer");
-			}
-			else
-				cerr << "invalid real";
-		}*/
+	}
+	else
+	{
+		this->setLexeme(str);
+		this->setToken("invalid input");
 	}
 }
 
 void Lex::print() const
 {
 	// cout << "token" << "        " << "lexeme";
-	cout << this->token << " " << this->lexeme << endl;
+	cout << left << setw(20) << this->token << setw(20) << this->lexeme << endl;
 }
 
 void Lex::setToken(const string newToken)
