@@ -25,8 +25,7 @@ int main() {
 	while (!file.eof())
 	{
 		check.lexer(file);
-		//if (!file.peek() == file.eof())
-			check.print();
+		check.print();
 	}
 
 	file.close();
