@@ -9,7 +9,12 @@ using namespace std;
 
 int main() {
 	ifstream file;
-	file.open("test_case.txt");
+    string filename;
+
+    cout << "enter file name\n";
+    cin >> filename;
+    
+	file.open(filename.c_str());
 
 	//Make sure file is opened
 	if (!file.is_open())
@@ -26,11 +31,12 @@ int main() {
 	{
 		check.lexer(file);
 		check.print();
+        cout << "break";
 	}
 
 	file.close();
-
+    
 	cout << endl;
-	system("Pause");
+	//system("Pause");
 	return 0;
 }
