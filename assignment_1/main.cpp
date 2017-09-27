@@ -31,7 +31,6 @@ int main() {
 	{
 		check.lexer(file);
 		check.print();
-        cout << "break";
 	}
 
 	file.close();
