@@ -9,6 +9,6 @@ echo script file for Project3 begin
 rm *.o
 rm *.out
 
-g++ -c -std=c++11 main.cpp Lex.h Lex.cpp
+g++ -g -c -std=c++11 main.cpp Lex.h Lex.cpp
 g++ *.o -o a.out
 echo finished.

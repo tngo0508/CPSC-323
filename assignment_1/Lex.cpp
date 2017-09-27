@@ -68,9 +68,11 @@ int Lex::Classify(string s) {
 	{
 		for (int i = 0; i < len; i++)
 		{
-			if (s[i] == '#' || isalpha(s[i]))
-				return 3;
+            if (s[i] == '#' || isalpha(s[i]));
+            else
+                return 6;
 		}
+        return 3;
 	}
 	else if (isdigit(classify_ch))
 	{
