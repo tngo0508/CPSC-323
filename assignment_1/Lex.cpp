@@ -43,7 +43,6 @@ bool Lex::checkKeyword(string identifier) const
 
 int Lex::Classify(string s) {
 	int len = s.length();
-	//regex identifer("[[:alpha:]]([[:alpha:]] | #[[:alpha:]]");
 	//detect is keyword or not
 	if (checkKeyword(s))
 		return 0;
@@ -86,6 +85,9 @@ int Lex::Classify(string s) {
 	}
 	else
 		return 6;
+	
+	//not all path control above return a value. That's why we need return random number here
+	return 7; 
 }
 
 //Function returns the column number of the character in the table
@@ -190,7 +192,6 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
-		//if (this->isSeparator(ch) || this->isOperator(ch) || ch == 32 || ch == '\n' || ch == -1)
 		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
@@ -199,7 +200,6 @@ void Lex::lexer(ifstream& file)
 		{
 			file.unget();
 		}
-		//else if (!(ch == 32))
 		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
 		if (str.empty())
@@ -271,7 +271,6 @@ void Lex::lexer(ifstream& file)
 
 void Lex::print() const
 {
-	// cout << "token" << "        " << "lexeme";
 	cout << left << setw(20) << this->token << setw(20) << this->lexeme << endl;
 }
 
