@@ -31,8 +31,8 @@ bool Lex::isOperator(const char input) const
 //Function check keyword
 bool Lex::checkKeyword(string identifier) const
 {
-	string keywords[12] = { "while", "if", "int", "fi", "else", "return",
-		"read", "write", "integer", "for", "string", "boolean" };
+	string keywords[12] = { "while", "if", "fi", "else", "return",
+		"read", "write", "integer", "true", "false", "boolean", "floating" };
 	for (int i = 0; i < 12; i++) {
 		if (keywords[i] == identifier) {
 			return 1;
@@ -216,7 +216,7 @@ void Lex::lexer(ifstream& file)
 		str = ch;
 		//check if the next character is another operator or not
 		ch = file.get();
-		if (this->isOperator(ch))
+		if (str[0] == ':' && ch == '=')
 			str += ch;
 		else
 			file.unget();
@@ -224,6 +224,12 @@ void Lex::lexer(ifstream& file)
 		this->setLexeme(str);
 	}
 	else if (classify == 2) {
+		str = ch;
+		ch = file.get();
+		if (str[0] == '%' && ch == '%')
+			str += ch;
+		else
+			file.unget();
 		this->setLexeme(str);
 		this->setToken("Separator");
 	}
