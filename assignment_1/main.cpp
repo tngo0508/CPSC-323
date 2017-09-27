@@ -19,7 +19,7 @@ int main() {
 	//Make sure file is opened
 	if (!file.is_open())
 	{
-		cerr << "Failed to open the file";
+		cerr << "Failed to open the file\n";
 		exit(1);
 	}
 
@@ -30,7 +30,8 @@ int main() {
 	while (!file.eof())
 	{
 		check.lexer(file);
-		check.print();
+        if (!file.eof())
+		    check.print();
 	}
 
 	file.close();

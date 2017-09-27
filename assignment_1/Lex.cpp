@@ -192,7 +192,8 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
-		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
+        if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch
+                == -1 )
 		{
 			found = true;
 		}
@@ -200,7 +201,7 @@ void Lex::lexer(ifstream& file)
 		{
 			file.unget();
 		}
-		else if (!isspace(ch) && !(ch == -1))
+		else if (!isspace(ch))
 			str += ch;
 		if (str.empty())
 			found = false;

@@ -9,9 +9,11 @@ while (f#x <  lower) a := 23.00 adf
 a# ab abc a#abc abcd# abc#x#y abc#xyz#def ab## a#a#
 #abc ab##c
 
+abcd
+
 123#
 ???$%^^
 #123
 !!123
 
-123abc
+123a
