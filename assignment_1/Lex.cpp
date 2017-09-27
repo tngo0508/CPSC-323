@@ -43,9 +43,6 @@ bool Lex::checkKeyword(string identifier) const
 
 int Lex::Classify(string s) {
 	int len = s.length();
-	//detect is keyword or not
-	if (checkKeyword(s))
-		return 0;
 
 	//detect is operator or not
 	for (int i = 0; i < len; i++)
@@ -68,11 +65,11 @@ int Lex::Classify(string s) {
 	{
 		for (int i = 0; i < len; i++)
 		{
-            if (s[i] == '#' || isalpha(s[i]));
-            else
-                return 6;
+			if (s[i] == '#' || isalpha(s[i]));
+			else
+				return 6;
 		}
-        return 3;
+		return 3;
 	}
 	else if (isdigit(classify_ch))
 	{
@@ -87,9 +84,9 @@ int Lex::Classify(string s) {
 	}
 	else
 		return 6;
-	
+
 	//not all path control above return a value. That's why we need return random number here
-	return 7; 
+	return 7;
 }
 
 //Function returns the column number of the character in the table
@@ -194,8 +191,8 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
-        if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch
-                == -1 )
+		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch
+			== -1)
 		{
 			found = true;
 		}
@@ -211,12 +208,27 @@ void Lex::lexer(ifstream& file)
 
 	int classify = Classify(str);
 
-	if (classify == 1)
+	if (classify == 3) {
+		state_status = identifier_DFSM(str);
+		this->setLexeme(str);
+		if (state_status == 1)
+		{
+			if (checkKeyword(str))
+				this->setToken("keyword");
+			else
+				this->setToken("identifier");
+		}
+		else
+		{
+			this->setToken("invalid identifier");
+		}
+	}
+	else if (classify == 1)
 	{
 		str = ch;
 		//check if the next character is another operator or not
 		ch = file.get();
-		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=' 
+		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '='
 			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '=')))
 			str += ch;
 		else
@@ -231,11 +243,16 @@ void Lex::lexer(ifstream& file)
 			str += ch;
 		else
 			file.unget();
-		this->setLexeme(str);
-		if (ch == '%')
+		if (!(str[0] == '%'))
+		{
+			this->setLexeme(str);
 			this->setToken("Separator");
+		}
 		else
+		{
+			this->setLexeme(str);
 			this->setToken("invalid separator");
+		}
 	}
 	else if (classify == 4) {
 		state_status = real_DFSM(str);
@@ -259,21 +276,6 @@ void Lex::lexer(ifstream& file)
 		}
 		else
 			this->setToken("invalid integer");
-	}
-	else if (classify == 3){
-		state_status = identifier_DFSM(str);
-		this->setLexeme(str);
-		if (state_status == 1)
-		{
-			if (classify == 0)
-				this->setToken("keyword");
-			else
-				this->setToken("identifier");
-		}
-		else 
-		{
-			this->setToken("invalid identifier");
-		}
 	}
 	else
 	{
