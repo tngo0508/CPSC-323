@@ -1,4 +1,4 @@
-#include "Lex1.h"
+#include "Lex.h"
 
 Lex::Lex()
 {
