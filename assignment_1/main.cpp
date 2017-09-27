@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <ctype.h>
-#include "Lex1.h"
+#include "Lex.h"
 
 using namespace std;
 
