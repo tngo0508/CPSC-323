@@ -61,7 +61,7 @@ int Lex::Classify(string s) {
 
 	//detect is identifier or not
 	char classify_ch = s[0];
-	if (isalpha(classify_ch))
+	if (isalpha(classify_ch) || classify_ch == '#')
 	{
 		for (int i = 0; i < len; i++)
 		{
