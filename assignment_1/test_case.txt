@@ -1,4 +1,5 @@
-while (f#x <  lower) a := 23
-if(I > you ) you so dep trai
-If(Anh<Em)EmLaChiCuaAnh 23.32
-dash?&$ ds
+while (f#x <  lower) a := 23.00 adf
+{  write  (low);
+             write (convert [low]);
+             low := low + step#xy;
+}

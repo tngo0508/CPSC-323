@@ -11,8 +11,8 @@ Lex::Lex()
 //Function check separator
 bool Lex::isSeparator(char input)
 {
-	int separator[6] = { '(',')', '{', '}', '%', '@' };
-	for (int i = 0; i < 6; i++) {
+	int separator[10] = { '(',')', '{', '}', '%', '@', ',', '[', ']', ';' };
+	for (int i = 0; i < 10; i++) {
 		if (separator[i] == input) {
 			return 1;
 		}
@@ -22,8 +22,8 @@ bool Lex::isSeparator(char input)
 //Function check Operator
 bool Lex::isOperator(char input)
 {
-	int operators[10] = { '+', '-', '/', '*', '<','>','=',':','!', '=' };
-	for (int i = 0; i < 10; i++) {
+	int operators[8] = { '+', '-', '/', '*', '<','>',':', '=' };
+	for (int i = 0; i < 8; i++) {
 		if (operators[i] == input) {
 			return 1;
 		}
@@ -55,8 +55,6 @@ int Lex::char_to_col(const char input) const
 		return 3;			//ID_STATE
 	else if (input == '#')
 		return 4;			//POWER_STATE
-	else
-		return -1;			//FAIL_STATE
 }
 
 //Finite State Machine for integer
@@ -156,7 +154,7 @@ int Lex::identifier_DFSM(string str)
 int Lex::Classify(string s)
 {
 	int len = s.length();
-	/*regex identifer("[[:alpha:]]([[:alpha:]] | #[[:alpha:]]");*/
+	//regex identifer("[[:alpha:]]([[:alpha:]] | #[[:alpha:]]");
 	//detect is keyword or not
 	if (checkKeyword(s))
 		return 0;
@@ -182,7 +180,7 @@ int Lex::Classify(string s)
 		if (s[i] == '#' || isalpha(s[i]))
 			return 3;
 	}
-
+	
 	//detect is real or not
 	for (int i = 0; i < len; i++)
 	{
@@ -207,26 +205,9 @@ LexToken Lex::lexer(ifstream& file)
 	
 	{
 		c = file.get();
-		/*if (isOperator(c))
-		{
-
-			str += c;
-			found = true;
-		}
-		else if (isSeparator(c))
-		{
-
-			str += c;
-			found = true;
-		}
-		else if (c == 32 || c == '\0')
-		{
-			found = true;
-			file.unget();
-		}
-		else
-			str += c;*/
-		if (isSeparator(c) || isOperator(c) || c == 32 || c == '\n' || c == -1)
+		cout << c;
+	
+		if (isSeparator(c) || isOperator(c) || isspace(c) || c == '\n' || c == -1)
 		{
 			found = true;
 		}
@@ -234,25 +215,22 @@ LexToken Lex::lexer(ifstream& file)
 		{
 			file.unget();
 		}
-		else if (!(c == 32)) {
-			str += c;
+		else if (!(isspace(c))) {
+			if (c == -1)
+				found = true;
+			else
+				str += c;
 		}
 		if (str.empty())
 			found = false;
 		
 	}
 
-	/*if (str == "")
-	{
-		a.token = "empty string";
-		return a;
-	
-	}*/
-
 	int classify = Classify(str);
 	
 	if (classify == 1)
 	{
+
 		a.lexeme = c;
 		a.token = "operator";
 	}
@@ -295,49 +273,6 @@ LexToken Lex::lexer(ifstream& file)
 			cerr << "invalid identifier";
 	}
 
-	/*if (isalpha(str[0]))
-	{
-		state_status = identifier_DFSM(str);
-		if (state_status == 1)
-		{
-			a.lexeme = str;
-			if (checkKeyword(str) == true)
-				a.token = "keyword";
-			else
-				a.token = "identifier";
-		}
-		else
-			cerr << "invalid identifier";
-	}*/
-	/*else if (isOperator(c)) {
-		
-	}
-	else if (isSeparator(c)) {
-		
-	}*/
-
-	/*else if (isdigit(str[0]))
-	{
-	     state_status = real_DFSM(str);
-	     if (state_status == 1)
-	     {
-	         a.lexeme = str;
-	         a.token = "real";
-	     }
-	     else
-	         cerr << "invalid real";
-	 }*/
-	/* else
-	 {
-	     state_status = int_DFSM(str);
-	     if (state_status == 1)
-	     {
-	         this->setLexeme(str);
-	         this->setToken("integer");
-	     }
-	     else
-	         cerr << "invalid real";
-	 }*/
 	return a;
 }
 //
