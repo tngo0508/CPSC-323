@@ -241,8 +241,8 @@ void Lex::lexer(ifstream& file)
 		//ch = file.get();
 		ch = file.peek();
 
-		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '='
-			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '=')))
+		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=')
+			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '='))
 			str += ch;
 		/*else
 			file.unget();*/
