@@ -24,6 +24,7 @@ int main() {
 			exit(1);
 		}
 
+		cout << endl;
 		cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
 		cout << endl;
 		Lex check;

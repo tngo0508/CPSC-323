@@ -216,6 +216,7 @@ void Lex::lexer(ifstream& file)
 
 	int classify = Classify(str);
 
+	//check token using FSM for identifier
 	if (classify == 3) {
 		state_status = identifier_DFSM(str);
 		this->setLexeme(str);
@@ -231,27 +232,33 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid identifier");
 		}
 	}
+	//check for operator
 	else if (classify == 1)
 	{
 		str = ch;
+
 		//check if the next character is another operator or not
-		ch = file.get();
+		//ch = file.get();
+		ch = file.peek();
+
 		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '='
 			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '=')))
 			str += ch;
-		else
-			file.unget();
+		/*else
+			file.unget();*/
 		this->setToken("operator");
 		this->setLexeme(str);
 	}
+	//check for separator
 	else if (classify == 2) {
 		str = ch;
-		ch = file.get();
+		//ch = file.get();
+		ch = file.peek();
 		if (str[0] == '%' && ch == '%')
 			str += ch;
-		else
-			file.unget();
-		if (!(str[0] == '%'))
+		/*else
+			file.unget();*/
+		if (!(str[0] == '%') || str == "%%")
 		{
 			this->setLexeme(str);
 			this->setToken("separator");
@@ -262,6 +269,7 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid separator");
 		}
 	}
+	//check token using FSM for real
 	else if (classify == 4) {
 		state_status = real_DFSM(str);
 		this->setLexeme(str);
@@ -273,6 +281,7 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid real");
 		}
 	}
+	//check token using FSM for real
 	else if (classify == 5)
 	{
 		state_status = int_DFSM(str);
