@@ -201,8 +201,17 @@ void Lex::lexer(ifstream& file)
 		}
 		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
+
 		if (str.empty() && !(ch == -1))
 			found = false;
+	}
+
+	//handle the file.txt with another whitespace at the end
+	if (str.empty() && ch == -1)
+	{
+		this->setLexeme("EOF");
+		this->setToken("EOF");
+		return;
 	}
 
 	int classify = Classify(str);

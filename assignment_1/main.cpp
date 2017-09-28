@@ -31,7 +31,8 @@ int main() {
 		while (!file.eof())
 		{
 			check.lexer(file);
-			check.print();
+			if (!(check.getLexeme() == "EOF"))
+				check.print();
 		}
 
 		file.close();
