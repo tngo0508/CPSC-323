@@ -11,30 +11,32 @@ int main() {
 	ifstream file;
     string filename;
 
-    cout << "enter file name\n";
-    cin >> filename;
-    
-	file.open(filename.c_str());
+	do {
+		cout << "Enter a file name .txt (or exit to quit): ";
+		cin >> filename;
 
-	//Make sure file is opened
-	if (!file.is_open())
-	{
-		cerr << "Failed to open the file\n";
-		exit(1);
-	}
+		file.open(filename.c_str());
 
-	cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
-	cout << endl;
-	Lex check;
+		//Make sure file is opened
+		if (!file.is_open())
+		{
+			cerr << "Failed to open the file\n";
+			exit(1);
+		}
 
-	while (!file.eof())
-	{
-		check.lexer(file);
-        if (!file.eof())
-		    check.print();
-	}
+		cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
+		cout << endl;
+		Lex check;
 
-	file.close();
+		while (!file.eof())
+		{
+			check.lexer(file);
+			check.print();
+		}
+
+		file.close();
+		cout << endl;
+	} while (!(filename == "exit"));
     
 	cout << endl;
 	system("Pause");

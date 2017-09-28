@@ -191,8 +191,7 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
-		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch
-			== -1)
+		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
 		}
@@ -200,9 +199,9 @@ void Lex::lexer(ifstream& file)
 		{
 			file.unget();
 		}
-		else if (!isspace(ch))
+		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
-		if (str.empty())
+		if (str.empty() && !(ch == -1))
 			found = false;
 	}
 
@@ -246,7 +245,7 @@ void Lex::lexer(ifstream& file)
 		if (!(str[0] == '%'))
 		{
 			this->setLexeme(str);
-			this->setToken("Separator");
+			this->setToken("separator");
 		}
 		else
 		{
