@@ -1,5 +1,6 @@
 #include "Lex.h"
 
+//constructor
 Lex::Lex()
 {
 	input = 'c';
@@ -41,17 +42,10 @@ bool Lex::checkKeyword(string identifier) const
 	return 0;
 }
 
-/*
-     Function Classify
-     Check string input to detect if the string has a separator, a letter, a digit, '#', '.'
-     and return the number for that type
- */
-
 int Lex::Classify(string s) {
 	int len = s.length();
 
-	//Iterating the array to check if the string has a operator or not
-    //and return 1 if it is.
+	//detect is operator or not
 	for (int i = 0; i < len; i++)
 	{
 		if (isOperator(s[i]))
@@ -59,61 +53,56 @@ int Lex::Classify(string s) {
 	}
 
 
-    //Iterating the array to check if the string has separator or not
-    //and return 2 if it is.
+	//detect is seperator or not
 	for (int i = 0; i < len; i++)
 	{
 		if (isSeparator(s[i]))
 			return 2;
 	}
 
-    //If the first char of the string is a letter or #, iterate the string and check if
-    //the string has # or a letter return 3 , return 6 if not.
-    
+	//detect is identifier or not
 	char classify_ch = s[0];
 	if (isalpha(classify_ch) || classify_ch == '#')
 	{
 		for (int i = 0; i < len; i++)
 		{
+			//if char is either # or letter, keep checking the string sequence
+			//else return 6 which is invalid input
 			if (s[i] == '#' || isalpha(s[i]));
+			else
+				return 6; //invalid input
+		}
+		return 3; 
+	}
+	else if (isdigit(classify_ch))
+	{
+		//first, check for valid input for real or integer
+		//only accept the string with number or dot(.) sign
+		for (int i = 0; i < len; i++)
+		{
+			if (s[i] == '.' || isdigit(s[i]));
 			else
 				return 6;
 		}
-		return 3;
-	}
-    
-    
-     //If the first char of the string is a digit,
-     //iterate the string and check if a string has a point or not.
-     //If the string has a point then return 4, else return 5 as an integer
-    
-	else if (isdigit(classify_ch))
-	{
+
+		//second, check if there is a dot, then string could be a real number
 		for (int i = 0; i < len; i++)
 		{
 			if (s[i] == '.')
 				return 4;
 		}
-        
+
+		//detect is integer
 		return 5;
 	}
 	else
-		return 6;
+		return 6; //invalid input
 
 	//not all path control above return a value. That's why we need return random number here
 	return 7;
 }
 
-/*
-     Function char_to_column
-     Convert char to column in finite machine
-     Return the column number
-     Return column 1 if it is a digit
-     Return column 2 if it is a point
-     Return column 3 if it is a letter
-     Return column 4 if it is a #
-     Return 5 if it is not all of above
-*/
+//Function returns the column number of the character in the table
 int Lex::char_to_col(const char input) const
 {
 	if (isdigit(input))
@@ -134,28 +123,26 @@ int Lex::int_DFSM(const string str)
 	//starting state
 	int state = 1;
 
-    //Create a table with 2 columns and 3 rows for transitions
-    //First column and first row are labels.
-    //Another column and row are states based on converting NFSM to DFSM
-    int a[3][2] = { 0, 'd',
-                    1, 2,
-                    2, 2 };
+	//create table N for the transitions or DFSM table for integer
+	/*	0	d
+		1	2
+		2	2
+	*/
+	int a[3][2] = { 0, 'd', 1, 2, 2, 2 };
 
-	//Accepting state
+	//accepting states
 	int f[1] = { 2 };
 
 	//update the currentState to new transition
 	int size = str.size();
 	for (int i = 0; i < size; i++)
 	{
+		//convert the char to column number in table
 		int col = char_to_col(str[i]);
-		if (col > 1)
-			return 0;
+
+		//update the current state
 		state = a[state][col];
 	}
-    
-    //If current state is equal to accepting state, return 1.
-    //If not, return 0
 	if (state == f[0])
 		return 1;
 	else
@@ -165,19 +152,18 @@ int Lex::int_DFSM(const string str)
 //Finite State Machine for real
 int Lex::real_DFSM(string str)
 {
-    //starting state
+	//starting state
 	int state = 1;
-    
-    //Create a table with 3 columns and 5 rows for transitions
-    //First column and first row are labels.
-    //Other columns and rows are states based on converting NFSM to DFSM
-	int a[5][3] = { 0, 'd', '.',
-                    1, 2, 0,
-                    2, 2, 3,
-                    3, 4, 0,
-                    4, 4, 0 };
 
-    //Accepting state
+	//DFSM table for real
+	/*	0	d	.
+		1	2	0
+		2	2	3
+		3	4	0
+		4	4	0
+	*/
+	int a[5][3] = { 0, 'd', '.', 1, 2, 0, 2, 2, 3, 3, 4, 0, 4, 4, 0 };
+
 	int f[1] = { 4 };
 
 	//convert character to its column number in the table
@@ -185,13 +171,10 @@ int Lex::real_DFSM(string str)
 	for (int i = 0; i < size; i++)
 	{
 		int col = char_to_col(str[i]);
-		if (col > 2)
-			return 0;
 		state = a[state][col];
+		if (state == 0)
+			return 0;
 	}
-    
-    //If current state is equal to accepting state, return 1.
-    //If not, return 0
 	if (state == f[0])
 		return 1;
 	else
@@ -201,20 +184,21 @@ int Lex::real_DFSM(string str)
 //Finite State Machine for identifier
 int Lex::identifier_DFSM(string str)
 {
-    //starting state
+	//starting state
 	int state = 1;
-    
-    //Create a table with 5 columns and 6 rows for transitions
-    //First Column and first row are labels.
-    //Other columns and rows are states based on converting NFSM to DFSM
-	int a[6][5] = { 0, 'd', '.', 'l', '#',
-                    1, 0, 0, 2, 0,
-                    2, 0, 0, 3, 4,
-                    3, 0, 0, 3, 4,
-                    4, 0, 0, 5, 0,
-                    5, 0, 0, 3, 4 };
 
-    //accepting state
+	//transition table
+	//failing state = 0
+	/*	0	d	.	l	#
+		1	0	0	2	0
+		2	0	0	3	4
+		3	0	0	3	4
+		4	0	0	5	0
+		5	0	0	3	4
+	*/
+	int a[6][5] = { 0, 'd', '.', 'l', '#', 1, 0, 0, 2, 0, 2, 0, 0, 3, 4, 3, 0, 0,
+		3, 4, 4, 0, 0, 5, 0, 5, 0, 0, 3, 4 };
+
 	int f[4] = { 2, 3, 4, 5 };
 
 	//convert character to its column number in the table
@@ -223,9 +207,10 @@ int Lex::identifier_DFSM(string str)
 	{
 		int col = char_to_col(str[i]);
 		state = a[state][col];
+		if (state == 0)
+			return 0;
 	}
 
-    //Check state if it is equal in one of these accepting states then return 1 else return 0
 	for (int i = 0; i < 4; i++)
 	{
 		if (state == f[i])
@@ -236,7 +221,7 @@ int Lex::identifier_DFSM(string str)
 
 void Lex::lexer(ifstream& file)
 {
-	string str;
+	string str; //string stores the lexeme
 	int state_status = 0;
 	bool found = false;
 	char ch = 'c';
@@ -246,22 +231,29 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
+		//check if current character is a separator, operator, whitespace, or eof
+		//if yes, put the flag to exit the loop
 		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
 		}
+
+		/*if string is not empty and current character is either operator or separator
+		decrease the current location in stream by one character
+		else if current character is neither whitespace nor eof
+		stores the char into string*/
 		if (!str.empty() && (this->isOperator(ch) || this->isSeparator(ch)))
-		{
 			file.unget();
-		}
 		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
 
+		//if the string is empty and current is not eof, get back to the loop
+		//used to skip the whitespaces
 		if (str.empty() && !(ch == -1))
 			found = false;
 	}
 
-	//handle the file.txt with another whitespace at the end
+	//handle the file.txt with extra whitespaces at the end of the file
 	if (str.empty() && ch == -1)
 	{
 		this->setLexeme("EOF");
@@ -273,7 +265,10 @@ void Lex::lexer(ifstream& file)
 
 	//check token using FSM for identifier
 	if (classify == 3) {
+
+		//use FSM-identifier to check if token is accepted or not
 		state_status = identifier_DFSM(str);
+
 		this->setLexeme(str);
 		if (state_status == 1)
 		{
@@ -292,10 +287,13 @@ void Lex::lexer(ifstream& file)
 	{
 		str = ch;
 
-		//check if the next character is another operator or not
-
+		//return the next char without extracting it from input sequence
 		ch = file.peek();
 
+		/*check for valid operators: /=, :=, <=, >=
+		if current char and next char is a valid operator
+		add next char to string and move to the next location char
+		to keep track of the checking*/
 		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=')
 			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '='))
 		{
@@ -303,6 +301,7 @@ void Lex::lexer(ifstream& file)
 			file.get();
 		}
 
+		//reject invalid operators if neccessary
 		if (!(str[0] == '=') || str == ":=")
 		{
 			this->setToken("operator");
@@ -314,20 +313,16 @@ void Lex::lexer(ifstream& file)
 			this->setLexeme(str);
 		}
 	}
-	
-    /*
-         If the type of the string is a separator,
-    */
+	//check for separator
 	else if (classify == 2) {
 		str = ch;
-		
 		ch = file.peek();
 		if (str[0] == '%' && ch == '%')
 		{
 			str += ch;
 			file.get();
 		}
-		
+
 		if (!(str[0] == '%') || str == "%%")
 		{
 			this->setLexeme(str);
@@ -339,11 +334,7 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid separator");
 		}
 	}
-    
-	/*
-         If classify equals 4, get state status after running Real Finite Machine and set Lexeme
-         Set Token 'Real' if running real finite machine successfuly, else 'invalid real'
-     */
+	//check token using FSM for real
 	else if (classify == 4) {
 		state_status = real_DFSM(str);
 		this->setLexeme(str);
@@ -355,12 +346,8 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid real");
 		}
 	}
-
-    /*
-         If classify equals 5, get state status after running Integer Finite Machine and set Lexeme
-         Set Token 'Integer' if running integer finite machine successfuly, else 'invalid integer'
-     */
-    else if (classify == 5)
+	//check token using FSM for real
+	else if (classify == 5)
 	{
 		state_status = int_DFSM(str);
 		this->setLexeme(str);
@@ -379,49 +366,30 @@ void Lex::lexer(ifstream& file)
 	}
 }
 
-/*
-     Function print
-     Print out the token and lexeme
-*/
 void Lex::print() const
 {
 	cout << left << setw(20) << this->token << setw(20) << this->lexeme << endl;
 }
 
-/*
-     Function setToken
-     Set Token
-*/
 void Lex::setToken(const string newToken)
 {
 	token = newToken;
 }
 
-/*
-     Function setLexeme
-     Set Lexeme
-*/
 void Lex::setLexeme(const string newLexeme)
 {
 	lexeme = newLexeme;
 }
 
-/*
-     Function getToken()
-     Return a token
- */
 string Lex::getToken() const
 {
 	return token;
 }
 
-/*
-     Function getLexeme()
-     Return a lexeme
-*/
 string Lex::getLexeme() const
 {
 	return lexeme;
 }
 
+//destructor
 Lex::~Lex() {}
