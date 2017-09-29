@@ -172,7 +172,9 @@ int Lex::real_DFSM(string str)
 	{
 		int col = char_to_col(str[i]);
 		state = a[state][col];
-		if (state == 0)
+
+		//if state = 0, then it is a failing state. Reject immediately
+		if (state == 0) 
 			return 0;
 	}
 	if (state == f[0])
