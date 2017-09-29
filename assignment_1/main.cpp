@@ -9,28 +9,41 @@ using namespace std;
 
 int main() {
 	ifstream file;
-	file.open("test_case.txt");
+    string filename;
 
-	//Make sure file is opened
-	if (!file.is_open())
-	{
-		cerr << "Failed to open the file";
-		exit(1);
-	}
+	do {
+		cout << "Enter a file name .txt (or exit to quit): ";
+		cin >> filename;
 
-	
-	LexToken a;
-	Lex check;
-	char c;
-	while (!file.eof())
-	{
-		a = check.lexer(file);
-		//if (a.token != "empty string")
-		cout << "Token " << a.token << " " << a.lexeme << endl;
-		
-	}
+        if (!(filename == "exit"))
+        {
+            file.open(filename.c_str());
 
-	file.close();
-	system("pause");
-	return 0;
+            //Make sure file is opened
+            if (!file.is_open())
+            {
+                cerr << "Failed to open the file\n";
+                exit(1);
+            }
+
+            cout << endl;
+            cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
+            cout << endl;
+            Lex check;
+
+            while (!file.eof())
+            {
+                check.lexer(file);
+                if (!(check.getLexeme() == "EOF"))
+                    check.print();
+            }
+
+            file.close();
+        }
+        cout << endl;
+    } while (!(filename == "exit"));
+
+    cout << endl;
+    system("Pause");
+    return 0;
 }
