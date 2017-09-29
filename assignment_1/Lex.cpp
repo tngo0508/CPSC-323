@@ -42,25 +42,33 @@ bool Lex::checkKeyword(string identifier) const
 	return 0;
 }
 
+/*
+ Function Classify
+ Check string input to detect if the string has a separator, a letter, a digit, '#', '.'
+ and return the number for that type
+ */
+
 int Lex::Classify(string s) {
 	int len = s.length();
 
-	//detect is operator or not
-	for (int i = 0; i < len; i++)
+    //Iterating the array to check if the string has a operator or not
+    //and return 1 if it is.
+    for (int i = 0; i < len; i++)
 	{
 		if (isOperator(s[i]))
 			return 1;
 	}
 
 
-	//detect is seperator or not
-	for (int i = 0; i < len; i++)
+    //Iterating the array to check if the string has separator or not
+    //and return 2 if it is.
+    for (int i = 0; i < len; i++)
 	{
 		if (isSeparator(s[i]))
 			return 2;
 	}
 
-	//detect is identifier or not
+	//Get first char of the string
 	char classify_ch = s[0];
 	if (isalpha(classify_ch) || classify_ch == '#')
 	{
@@ -74,6 +82,7 @@ int Lex::Classify(string s) {
 		}
 		return 3; 
 	}
+    
 	else if (isdigit(classify_ch))
 	{
 		//first, check for valid input for real or integer
@@ -102,7 +111,16 @@ int Lex::Classify(string s) {
 	return 7;
 }
 
-//Function returns the column number of the character in the table
+/*
+ Function char_to_column
+ Convert char to column in finite machine
+ Return the column number
+ Return column 1 if it is a digit
+ Return column 2 if it is a point
+ Return column 3 if it is a letter
+ Return column 4 if it is a #
+ Return 5 if it is not all of above
+ */
 int Lex::char_to_col(const char input) const
 {
 	if (isdigit(input))
@@ -124,6 +142,8 @@ int Lex::int_DFSM(const string str)
 	int state = 1;
 
 	//create table N for the transitions or DFSM table for integer
+    //First column and first row are labels.
+    //Another column and row are states based on converting NFSM to DFSM
 	/*	0	d
 		1	2
 		2	2
@@ -143,6 +163,9 @@ int Lex::int_DFSM(const string str)
 		//update the current state
 		state = a[state][col];
 	}
+    
+    //If current state is equal to accepting state, return 1.
+    //If not, return 0
 	if (state == f[0])
 		return 1;
 	else
@@ -156,6 +179,8 @@ int Lex::real_DFSM(string str)
 	int state = 1;
 
 	//DFSM table for real
+    //First column and first row are labels.
+    //Other columns and rows are states based on converting NFSM to DFSM
 	/*	0	d	.
 		1	2	0
 		2	2	3
@@ -177,6 +202,9 @@ int Lex::real_DFSM(string str)
 		if (state == 0) 
 			return 0;
 	}
+    
+    //If current state is equal to accepting state, return 1.
+    //If not, return 0
 	if (state == f[0])
 		return 1;
 	else
@@ -208,11 +236,14 @@ int Lex::identifier_DFSM(string str)
 	for (int i = 0; i < size; i++)
 	{
 		int col = char_to_col(str[i]);
+        
+        //update the current state
 		state = a[state][col];
 		if (state == 0)
 			return 0;
 	}
 
+    //Check state if it is equal in one of these accepting states then return 1 else return 0
 	for (int i = 0; i < 4; i++)
 	{
 		if (state == f[i])
@@ -272,7 +303,13 @@ void Lex::lexer(ifstream& file)
 		state_status = identifier_DFSM(str);
 
 		this->setLexeme(str);
-		if (state_status == 1)
+		
+        /*If the string is accepted, check if it is keyword or not.
+         Set token 'keyword' if it is, else set token 'identifier'.
+         If the string is not accepted, set token 'invalid identifier'
+        */
+        
+        if (state_status == 1)
 		{
 			if (checkKeyword(str))
 				this->setToken("keyword");
@@ -336,8 +373,13 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid separator");
 		}
 	}
-	//check token using FSM for real
-	else if (classify == 4) {
+    
+    /*
+         If classify equals 4, get status from putting the string in real DFSM.
+         If state status equals 1, set Token Real else Invalid Real
+     */
+    
+    else if (classify == 4) {
 		state_status = real_DFSM(str);
 		this->setLexeme(str);
 		if (state_status == 1)
@@ -348,8 +390,13 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid real");
 		}
 	}
-	//check token using FSM for real
-	else if (classify == 5)
+    
+    /*
+     If classify equals 5, get status from putting the string in Integer DFSM.
+     If state status equals 1, set Token 'Integer' else Invalid Integer
+     */
+    
+    else if (classify == 5)
 	{
 		state_status = int_DFSM(str);
 		this->setLexeme(str);
@@ -368,11 +415,19 @@ void Lex::lexer(ifstream& file)
 	}
 }
 
+/*
+ Function setToken
+ Set Token
+ */
 void Lex::print() const
 {
 	cout << left << setw(20) << this->token << setw(20) << this->lexeme << endl;
 }
 
+/*
+ Function setLexeme
+ Set Lexeme
+*/
 void Lex::setToken(const string newToken)
 {
 	token = newToken;
@@ -383,11 +438,19 @@ void Lex::setLexeme(const string newLexeme)
 	lexeme = newLexeme;
 }
 
+/*
+ Function getToken()
+ Return a token
+ */
 string Lex::getToken() const
 {
 	return token;
 }
 
+/*
+ Function getLexeme()
+ Return a lexeme
+*/
 string Lex::getLexeme() const
 {
 	return lexeme;
