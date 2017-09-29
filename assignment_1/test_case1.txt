@@ -1,0 +1,1 @@
+while (fahr#x  < upper)   a := 23.00
