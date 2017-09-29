@@ -124,12 +124,6 @@ int Lex::int_DFSM(const string str)
 	int state = 1;
 
 	//create table N for the transitions or DFSM table for integer
-<<<<<<< HEAD
-=======
-    //Create a table with 2 columns and 3 rows for transitions
-    //First column and first row are labels.
-    //Another column and row are states based on converting NFSM to DFSM
->>>>>>> f9e1aca8cdc8715b9326c9e4fd59ba6e2ee63e7f
 	/*	0	d
 		1	2
 		2	2
@@ -161,12 +155,6 @@ int Lex::real_DFSM(string str)
 	//starting state
 	int state = 1;
 
-<<<<<<< HEAD
-=======
-    //Create a table with 3 columns and 5 rows for transitions
-    //First column and first row are labels.
-    //Other columns and rows are states based on converting NFSM to DFSM
->>>>>>> f9e1aca8cdc8715b9326c9e4fd59ba6e2ee63e7f
 	//DFSM table for real
 	/*	0	d	.
 		1	2	0
@@ -176,10 +164,6 @@ int Lex::real_DFSM(string str)
 	*/
 	int a[5][3] = { 0, 'd', '.', 1, 2, 0, 2, 2, 3, 3, 4, 0, 4, 4, 0 };
 
-<<<<<<< HEAD
-=======
-    //Accepting state
->>>>>>> f9e1aca8cdc8715b9326c9e4fd59ba6e2ee63e7f
 	int f[1] = { 4 };
 
 	//convert character to its column number in the table
@@ -203,13 +187,7 @@ int Lex::identifier_DFSM(string str)
 	//starting state
 	int state = 1;
 
-<<<<<<< HEAD
 	//transition table
-=======
-	//Create a table with 5 columns and 6 rows for transitions
-    //First Column and first row are labels.
-    //Other columns and rows are states based on converting NFSM to DFSM
->>>>>>> f9e1aca8cdc8715b9326c9e4fd59ba6e2ee63e7f
 	//failing state = 0
 	/*	0	d	.	l	#
 		1	0	0	2	0
@@ -221,10 +199,6 @@ int Lex::identifier_DFSM(string str)
 	int a[6][5] = { 0, 'd', '.', 'l', '#', 1, 0, 0, 2, 0, 2, 0, 0, 3, 4, 3, 0, 0,
 		3, 4, 4, 0, 0, 5, 0, 5, 0, 0, 3, 4 };
 
-<<<<<<< HEAD
-=======
-    //accepting state
->>>>>>> f9e1aca8cdc8715b9326c9e4fd59ba6e2ee63e7f
 	int f[4] = { 2, 3, 4, 5 };
 
 	//convert character to its column number in the table
