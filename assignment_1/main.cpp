@@ -66,11 +66,15 @@ int main() {
 
             file.close();
 			cout << endl;
+			outFile << endl;
         }
         
     } while (!(filename == "exit"));
 
+	outFile.close();
     cout << endl;
+	//comment out system("Pause") if you are trying execute file on Linux OS
+	//otherwise, uncomment it if on Windows OS
     system("Pause");
     return 0;
 }
