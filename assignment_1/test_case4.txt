@@ -13,20 +13,23 @@
              low := low + step#xy;
          } 
 
-@ convert  (fahr : integer)
+@ project  (is : floating)
 {
-           return 5*(fahr -32)/9;
+           return 10.0/(fahr -32.97)/9.9764;
 }
 
 %%
-     integer   low, high, step#xy;
+     boolean   found#nmd#;
 
-     read(low, high, step#xy );
+	 found#nmd# := true;
+	 if (found#nmd# = false)
+     read(#xy#);
      while (low < high)  
          {  write  (low);
              write (convert [low]);
              low := low + step#xy;
          }
+		 %%
 		 
 while (fahr#x  < upper)   a := 23.00
 
