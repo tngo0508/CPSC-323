@@ -15,35 +15,32 @@ int main() {
 		cout << "Enter a file name .txt (or exit to quit): ";
 		cin >> filename;
 
-        if (!(filename == "exit"))
-        {
-            file.open(filename.c_str());
+		file.open(filename.c_str());
 
-            //Make sure file is opened
-            if (!file.is_open())
-            {
-                cerr << "Failed to open the file\n";
-                exit(1);
-            }
+		//Make sure file is opened
+		if (!file.is_open())
+		{
+			cerr << "Failed to open the file\n";
+			exit(1);
+		}
 
-            cout << endl;
-            cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
-            cout << endl;
-            Lex check;
+		cout << endl;
+		cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
+		cout << endl;
+		Lex check;
 
-            while (!file.eof())
-            {
-                check.lexer(file);
-                if (!(check.getLexeme() == "EOF"))
-                    check.print();
-            }
+		while (!file.eof())
+		{
+			check.lexer(file);
+			if (!(check.getLexeme() == "EOF"))
+				check.print();
+		}
 
-            file.close();
-        }
-        cout << endl;
-    } while (!(filename == "exit"));
-
-    cout << endl;
-    system("Pause");
-    return 0;
+		file.close();
+		cout << endl;
+	} while (!(filename == "exit"));
+    
+	cout << endl;
+	system("Pause");
+	return 0;
 }
