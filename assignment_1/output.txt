@@ -1,0 +1,17 @@
+SOURCE CODE:
+
+while (fahr#x  < upper)   a := 23.00
+
+
+OUTPUT:
+Token               Lexeme              
+
+keyword             while               
+separator           (                   
+identifier          fahr#x              
+operator            <                   
+identifier          upper               
+separator           )                   
+identifier          a                   
+operator            :=                  
+real                23.00               
