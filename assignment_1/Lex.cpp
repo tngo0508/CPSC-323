@@ -75,11 +75,13 @@ int Lex::Classify(string s) {
 	{
 		for (int i = 0; i < len; i++)
 		{
+			//if char is either # or letter, keep checking the string sequence
+			//else return 6 which is invalid input
 			if (s[i] == '#' || isalpha(s[i]));
 			else
-				return 6;
+				return 6; //invalid input
 		}
-		return 3;
+		return 3; 
 	}
     
     
@@ -89,6 +91,16 @@ int Lex::Classify(string s) {
     
 	else if (isdigit(classify_ch))
 	{
+		//first, check for valid input for real or integer
+		//only accept the string with number or dot(.) sign
+		for (int i = 0; i < len; i++)
+		{
+			if (s[i] == '.' || isdigit(s[i]));
+			else
+				return 6;
+		}
+
+		//second, check if there is a dot, then string could be a real number
 		for (int i = 0; i < len; i++)
 		{
 			if (s[i] == '.')
@@ -98,7 +110,7 @@ int Lex::Classify(string s) {
 		return 5;
 	}
 	else
-		return 6;
+		return 6; //invalid input
 
 	//not all path control above return a value. That's why we need return random number here
 	return 7;
@@ -134,12 +146,15 @@ int Lex::int_DFSM(const string str)
 	//starting state
 	int state = 1;
 
+	//create table N for the transitions or DFSM table for integer
     //Create a table with 2 columns and 3 rows for transitions
     //First column and first row are labels.
     //Another column and row are states based on converting NFSM to DFSM
-    int a[3][2] = { 0, 'd',
-                    1, 2,
-                    2, 2 };
+	/*	0	d
+		1	2
+		2	2
+	*/
+	int a[3][2] = { 0, 'd', 1, 2, 2, 2 };
 
 	//Accepting state
 	int f[1] = { 2 };
@@ -149,8 +164,8 @@ int Lex::int_DFSM(const string str)
 	for (int i = 0; i < size; i++)
 	{
 		int col = char_to_col(str[i]);
-		if (col > 1)
-			return 0;
+
+		//update the current state
 		state = a[state][col];
 	}
     
@@ -165,17 +180,20 @@ int Lex::int_DFSM(const string str)
 //Finite State Machine for real
 int Lex::real_DFSM(string str)
 {
-    //starting state
+	//starting state
 	int state = 1;
-    
+
     //Create a table with 3 columns and 5 rows for transitions
     //First column and first row are labels.
     //Other columns and rows are states based on converting NFSM to DFSM
-	int a[5][3] = { 0, 'd', '.',
-                    1, 2, 0,
-                    2, 2, 3,
-                    3, 4, 0,
-                    4, 4, 0 };
+	//DFSM table for real
+	/*	0	d	.
+		1	2	0
+		2	2	3
+		3	4	0
+		4	4	0
+	*/
+	int a[5][3] = { 0, 'd', '.', 1, 2, 0, 2, 2, 3, 3, 4, 0, 4, 4, 0 };
 
     //Accepting state
 	int f[1] = { 4 };
@@ -185,9 +203,9 @@ int Lex::real_DFSM(string str)
 	for (int i = 0; i < size; i++)
 	{
 		int col = char_to_col(str[i]);
-		if (col > 2)
-			return 0;
 		state = a[state][col];
+		if (state == 0)
+			return 0;
 	}
     
     //If current state is equal to accepting state, return 1.
@@ -201,18 +219,22 @@ int Lex::real_DFSM(string str)
 //Finite State Machine for identifier
 int Lex::identifier_DFSM(string str)
 {
-    //starting state
+	//starting state
 	int state = 1;
-    
-    //Create a table with 5 columns and 6 rows for transitions
+
+	//Create a table with 5 columns and 6 rows for transitions
     //First Column and first row are labels.
     //Other columns and rows are states based on converting NFSM to DFSM
-	int a[6][5] = { 0, 'd', '.', 'l', '#',
-                    1, 0, 0, 2, 0,
-                    2, 0, 0, 3, 4,
-                    3, 0, 0, 3, 4,
-                    4, 0, 0, 5, 0,
-                    5, 0, 0, 3, 4 };
+	//failing state = 0
+	/*	0	d	.	l	#
+		1	0	0	2	0
+		2	0	0	3	4
+		3	0	0	3	4
+		4	0	0	5	0
+		5	0	0	3	4
+	*/
+	int a[6][5] = { 0, 'd', '.', 'l', '#', 1, 0, 0, 2, 0, 2, 0, 0, 3, 4, 3, 0, 0,
+		3, 4, 4, 0, 0, 5, 0, 5, 0, 0, 3, 4 };
 
     //accepting state
 	int f[4] = { 2, 3, 4, 5 };
@@ -223,6 +245,8 @@ int Lex::identifier_DFSM(string str)
 	{
 		int col = char_to_col(str[i]);
 		state = a[state][col];
+		if (state == 0)
+			return 0;
 	}
 
     //Check state if it is equal in one of these accepting states then return 1 else return 0
@@ -261,7 +285,7 @@ void Lex::lexer(ifstream& file)
 			found = false;
 	}
 
-	//handle the file.txt with another whitespace at the end
+	//handle the file.txt with extra whitespaces at the end of the file
 	if (str.empty() && ch == -1)
 	{
 		this->setLexeme("EOF");
@@ -327,7 +351,7 @@ void Lex::lexer(ifstream& file)
 			str += ch;
 			file.get();
 		}
-		
+
 		if (!(str[0] == '%') || str == "%%")
 		{
 			this->setLexeme(str);
