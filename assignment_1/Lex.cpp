@@ -1,5 +1,6 @@
 #include "Lex.h"
 
+//constructor
 Lex::Lex()
 {
 	input = 'c';
@@ -65,14 +66,26 @@ int Lex::Classify(string s) {
 	{
 		for (int i = 0; i < len; i++)
 		{
+			//if char is either # or letter, keep checking the string sequence
+			//else return 6 which is invalid input
 			if (s[i] == '#' || isalpha(s[i]));
 			else
-				return 6;
+				return 6; //invalid input
 		}
-		return 3;
+		return 3; 
 	}
 	else if (isdigit(classify_ch))
 	{
+		//first, check for valid input for real or integer
+		//only accept the string with number or dot(.) sign
+		for (int i = 0; i < len; i++)
+		{
+			if (s[i] == '.' || isdigit(s[i]));
+			else
+				return 6;
+		}
+
+		//second, check if there is a dot, then string could be a real number
 		for (int i = 0; i < len; i++)
 		{
 			if (s[i] == '.')
@@ -83,7 +96,7 @@ int Lex::Classify(string s) {
 		return 5;
 	}
 	else
-		return 6;
+		return 6; //invalid input
 
 	//not all path control above return a value. That's why we need return random number here
 	return 7;
@@ -110,7 +123,11 @@ int Lex::int_DFSM(const string str)
 	//starting state
 	int state = 1;
 
-	//create table N for the transitions
+	//create table N for the transitions or DFSM table for integer
+	/*	0	d
+		1	2
+		2	2
+	*/
 	int a[3][2] = { 0, 'd', 1, 2, 2, 2 };
 
 	//accepting states
@@ -120,9 +137,10 @@ int Lex::int_DFSM(const string str)
 	int size = str.size();
 	for (int i = 0; i < size; i++)
 	{
+		//convert the char to column number in table
 		int col = char_to_col(str[i]);
-		if (col > 1)
-			return 0;
+
+		//update the current state
 		state = a[state][col];
 	}
 	if (state == f[0])
@@ -134,7 +152,16 @@ int Lex::int_DFSM(const string str)
 //Finite State Machine for real
 int Lex::real_DFSM(string str)
 {
+	//starting state
 	int state = 1;
+
+	//DFSM table for real
+	/*	0	d	.
+		1	2	0
+		2	2	3
+		3	4	0
+		4	4	0
+	*/
 	int a[5][3] = { 0, 'd', '.', 1, 2, 0, 2, 2, 3, 3, 4, 0, 4, 4, 0 };
 
 	int f[1] = { 4 };
@@ -144,9 +171,9 @@ int Lex::real_DFSM(string str)
 	for (int i = 0; i < size; i++)
 	{
 		int col = char_to_col(str[i]);
-		if (col > 2)
-			return 0;
 		state = a[state][col];
+		if (state == 0)
+			return 0;
 	}
 	if (state == f[0])
 		return 1;
@@ -157,7 +184,18 @@ int Lex::real_DFSM(string str)
 //Finite State Machine for identifier
 int Lex::identifier_DFSM(string str)
 {
+	//starting state
 	int state = 1;
+
+	//transition table
+	//failing state = 0
+	/*	0	d	.	l	#
+		1	0	0	2	0
+		2	0	0	3	4
+		3	0	0	3	4
+		4	0	0	5	0
+		5	0	0	3	4
+	*/
 	int a[6][5] = { 0, 'd', '.', 'l', '#', 1, 0, 0, 2, 0, 2, 0, 0, 3, 4, 3, 0, 0,
 		3, 4, 4, 0, 0, 5, 0, 5, 0, 0, 3, 4 };
 
@@ -169,6 +207,8 @@ int Lex::identifier_DFSM(string str)
 	{
 		int col = char_to_col(str[i]);
 		state = a[state][col];
+		if (state == 0)
+			return 0;
 	}
 
 	for (int i = 0; i < 4; i++)
@@ -181,7 +221,7 @@ int Lex::identifier_DFSM(string str)
 
 void Lex::lexer(ifstream& file)
 {
-	string str;
+	string str; //string stores the lexeme
 	int state_status = 0;
 	bool found = false;
 	char ch = 'c';
@@ -191,22 +231,29 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
+		//check if current character is a separator, operator, whitespace, or eof
+		//if yes, put the flag to exit the loop
 		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
 		}
+
+		/*if string is not empty and current character is either operator or separator
+		decrease the current location in stream by one character
+		else if current character is neither whitespace nor eof
+		stores the char into string*/
 		if (!str.empty() && (this->isOperator(ch) || this->isSeparator(ch)))
-		{
 			file.unget();
-		}
 		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
 
+		//if the string is empty and current is not eof, get back to the loop
+		//used to skip the whitespaces
 		if (str.empty() && !(ch == -1))
 			found = false;
 	}
 
-	//handle the file.txt with another whitespace at the end
+	//handle the file.txt with extra whitespaces at the end of the file
 	if (str.empty() && ch == -1)
 	{
 		this->setLexeme("EOF");
@@ -218,7 +265,10 @@ void Lex::lexer(ifstream& file)
 
 	//check token using FSM for identifier
 	if (classify == 3) {
+
+		//use FSM-identifier to check if token is accepted or not
 		state_status = identifier_DFSM(str);
+
 		this->setLexeme(str);
 		if (state_status == 1)
 		{
@@ -237,27 +287,42 @@ void Lex::lexer(ifstream& file)
 	{
 		str = ch;
 
-		//check if the next character is another operator or not
-		//ch = file.get();
+		//return the next char without extracting it from input sequence
 		ch = file.peek();
 
-		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '='
-			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '=')))
+		/*check for valid operators: /=, :=, <=, >=
+		if current char and next char is a valid operator
+		add next char to string and move to the next location char
+		to keep track of the checking*/
+		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=')
+			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '='))
+		{
 			str += ch;
-		/*else
-			file.unget();*/
-		this->setToken("operator");
-		this->setLexeme(str);
+			file.get();
+		}
+
+		//reject invalid operators if neccessary
+		if (isOperator(str[0]) || str == ":=" || str == "/=" || str == "<=" || str == ">=")
+		{
+			this->setToken("operator");
+			this->setLexeme(str);
+		}
+		else
+		{
+			this->setToken("invalid operator");
+			this->setLexeme(str);
+		}
 	}
 	//check for separator
 	else if (classify == 2) {
 		str = ch;
-		//ch = file.get();
 		ch = file.peek();
 		if (str[0] == '%' && ch == '%')
+		{
 			str += ch;
-		/*else
-			file.unget();*/
+			file.get();
+		}
+
 		if (!(str[0] == '%') || str == "%%")
 		{
 			this->setLexeme(str);
@@ -326,4 +391,5 @@ string Lex::getLexeme() const
 	return lexeme;
 }
 
+//destructor
 Lex::~Lex() {}
