@@ -1,5 +1,6 @@
 #include "Lex.h"
 
+//constructor
 Lex::Lex()
 {
 	input = 'c';
@@ -120,6 +121,7 @@ int Lex::int_DFSM(const string str)
 	int size = str.size();
 	for (int i = 0; i < size; i++)
 	{
+		//convert the char to column number in table
 		int col = char_to_col(str[i]);
 		if (col > 1)
 			return 0;
@@ -181,7 +183,7 @@ int Lex::identifier_DFSM(string str)
 
 void Lex::lexer(ifstream& file)
 {
-	string str;
+	string str; //string stores the lexeme
 	int state_status = 0;
 	bool found = false;
 	char ch = 'c';
@@ -191,17 +193,24 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
+		//check if current character is a separator, operator, whitespace, or eof
+		//if yes, put the flag to exit the loop
 		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
 		}
+
+		/*if string is not empty and current character is either operator or separator
+		decrease the current location in stream by one character
+		else if current character is neither whitespace nor eof
+		stores the char into string*/
 		if (!str.empty() && (this->isOperator(ch) || this->isSeparator(ch)))
-		{
 			file.unget();
-		}
 		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
 
+		//if the string is empty and current is not eof, get back to the loop
+		//used to skip the whitespaces
 		if (str.empty() && !(ch == -1))
 			found = false;
 	}
@@ -218,7 +227,10 @@ void Lex::lexer(ifstream& file)
 
 	//check token using FSM for identifier
 	if (classify == 3) {
+
+		//use FSM-identifier to check if token is accepted or not
 		state_status = identifier_DFSM(str);
+
 		this->setLexeme(str);
 		if (state_status == 1)
 		{
@@ -237,10 +249,13 @@ void Lex::lexer(ifstream& file)
 	{
 		str = ch;
 
-		//check if the next character is another operator or not
-
+		//return the next char without extracting it from input sequence
 		ch = file.peek();
 
+		/*check for valid operators: /=, :=, <=, >=
+		if current char and next char is a valid operator
+		add next char to string and move to the next location char
+		to keep track of the checking*/
 		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=')
 			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '='))
 		{
@@ -248,6 +263,7 @@ void Lex::lexer(ifstream& file)
 			file.get();
 		}
 
+		//reject invalid operators if neccessary
 		if (!(str[0] == '=') || str == ":=")
 		{
 			this->setToken("operator");
@@ -262,7 +278,6 @@ void Lex::lexer(ifstream& file)
 	//check for separator
 	else if (classify == 2) {
 		str = ch;
-		
 		ch = file.peek();
 		if (str[0] == '%' && ch == '%')
 		{
@@ -338,4 +353,5 @@ string Lex::getLexeme() const
 	return lexeme;
 }
 
+//destructor
 Lex::~Lex() {}
