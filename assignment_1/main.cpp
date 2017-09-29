@@ -31,16 +31,20 @@ int main() {
             cout << endl;
             Lex check;
 
+			//start to do the lexical analysis
             while (!file.eof())
             {
                 check.lexer(file);
+
+				//if there is a whitespace at eof, skip printing
                 if (!(check.getLexeme() == "EOF"))
                     check.print();
             }
 
             file.close();
+			cout << endl;
         }
-        cout << endl;
+        
     } while (!(filename == "exit"));
 
     cout << endl;
