@@ -1,5 +1,5 @@
-#ifndef LEXER_HPP
-#define LEXER_HPP
+#ifndef LEXER_H
+#define LEXER_H
 
 #include <string>
 #include <iostream>
@@ -9,32 +9,29 @@
 
 using namespace std;
 
-struct LexToken {
-	 string lexeme;
-	string token;
-};
-
-
 class Lex
 {
 public:
 	Lex();
 	int int_DFSM(const string str);
-	int real_DFSM(string str);
-	int identifier_DFSM(string str);
+	int real_DFSM(const string str);
+	int identifier_DFSM(const string str);
 	int char_to_col(const char input) const;
-	bool isSeparator( char input) ;
-	bool isOperator( char input) ;
-	bool checkKeyword(string identifier) ;
-	LexToken lexer(ifstream& file);
+	bool isSeparator(const char input) const;
+	bool isOperator(const char input) const;
+	bool checkKeyword(string identifier) const;
+	int Classify(string);
+	void lexer(ifstream& file);
 	void print() const;
-	void setToken(const string);
-	void setLexeme(const string);
-	int Classify(string s);
+	void setToken(const string newToken);
+	void setLexeme(const string newLexeme);
+	string getToken() const;
+	string getLexeme() const;
 	~Lex();
 private:
-	int currentState;
 	char input;
+	string lexeme;
+	string token;
 };
 
 #endif
