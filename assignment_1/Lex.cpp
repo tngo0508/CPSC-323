@@ -238,23 +238,37 @@ void Lex::lexer(ifstream& file)
 		str = ch;
 
 		//check if the next character is another operator or not
-		
+
 		ch = file.peek();
 
 		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=')
 			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '='))
+		{
 			str += ch;
-		
-		this->setToken("operator");
-		this->setLexeme(str);
+			file.get();
+		}
+
+		if (!(str[0] == '=') || str == ":=")
+		{
+			this->setToken("operator");
+			this->setLexeme(str);
+		}
+		else
+		{
+			this->setToken("invalid operator");
+			this->setLexeme(str);
+		}
 	}
 	//check for separator
 	else if (classify == 2) {
 		str = ch;
-		//ch = file.get();
+		
 		ch = file.peek();
 		if (str[0] == '%' && ch == '%')
+		{
 			str += ch;
+			file.get();
+		}
 		
 		if (!(str[0] == '%') || str == "%%")
 		{
