@@ -1,6 +1,5 @@
 #include "Lex.h"
 
-//constructor
 Lex::Lex()
 {
 	input = 'c';
@@ -42,10 +41,17 @@ bool Lex::checkKeyword(string identifier) const
 	return 0;
 }
 
+/*
+     Function Classify
+     Check string input to detect the type of the string
+     and return the number for that type
+ */
+
 int Lex::Classify(string s) {
 	int len = s.length();
 
-	//detect is operator or not
+	//Detect operator by iterating the array to check if the string has a operator or not
+    //and return 1 if it is.
 	for (int i = 0; i < len; i++)
 	{
 		if (isOperator(s[i]))
@@ -53,14 +59,17 @@ int Lex::Classify(string s) {
 	}
 
 
-	//detect is seperator or not
+    //Detect separator by iterating the array to check if the string has separator or not
+    //and return 2 if it is.
 	for (int i = 0; i < len; i++)
 	{
 		if (isSeparator(s[i]))
 			return 2;
 	}
 
-	//detect is identifier or not
+    //If the first char of the string is a letter or #, iterate the string and check if
+    //
+    
 	char classify_ch = s[0];
 	if (isalpha(classify_ch) || classify_ch == '#')
 	{
@@ -72,6 +81,12 @@ int Lex::Classify(string s) {
 		}
 		return 3;
 	}
+    
+    
+     //If the first char of the string is a digit,
+     //iterate the string and check if a string has a point or not.
+     //If the string has a point, return 4 as a real number, else return 5 as an integer
+    
 	else if (isdigit(classify_ch))
 	{
 		for (int i = 0; i < len; i++)
@@ -79,8 +94,7 @@ int Lex::Classify(string s) {
 			if (s[i] == '.')
 				return 4;
 		}
-
-		//detect is integer
+        
 		return 5;
 	}
 	else
@@ -90,7 +104,16 @@ int Lex::Classify(string s) {
 	return 7;
 }
 
-//Function returns the column number of the character in the table
+/*
+     Function char_to_column
+     Convert char to column in finite machine
+     Return the column number
+     Return column 1 if it is a digit
+     Return column 2 if it is a point
+     Return column 3 if it is a letter
+     Return column 4 if it is a #
+     Return 5 if it is not all of above
+*/
 int Lex::char_to_col(const char input) const
 {
 	if (isdigit(input))
@@ -112,7 +135,9 @@ int Lex::int_DFSM(const string str)
 	int state = 1;
 
 	//create table N for the transitions
-	int a[3][2] = { 0, 'd', 1, 2, 2, 2 };
+	int a[3][2] = { 0, 'd',
+                    1, 2,
+                    2, 2 };
 
 	//accepting states
 	int f[1] = { 2 };
@@ -121,7 +146,6 @@ int Lex::int_DFSM(const string str)
 	int size = str.size();
 	for (int i = 0; i < size; i++)
 	{
-		//convert the char to column number in table
 		int col = char_to_col(str[i]);
 		if (col > 1)
 			return 0;
@@ -160,8 +184,12 @@ int Lex::real_DFSM(string str)
 int Lex::identifier_DFSM(string str)
 {
 	int state = 1;
-	int a[6][5] = { 0, 'd', '.', 'l', '#', 1, 0, 0, 2, 0, 2, 0, 0, 3, 4, 3, 0, 0,
-		3, 4, 4, 0, 0, 5, 0, 5, 0, 0, 3, 4 };
+	int a[6][5] = { 0, 'd', '.', 'l', '#',
+                    1, 0, 0, 2, 0,
+                    2, 0, 0, 3, 4,
+                    3, 0, 0, 3, 4,
+                    4, 0, 0, 5, 0,
+                    5, 0, 0, 3, 4 };
 
 	int f[4] = { 2, 3, 4, 5 };
 
@@ -183,7 +211,7 @@ int Lex::identifier_DFSM(string str)
 
 void Lex::lexer(ifstream& file)
 {
-	string str; //string stores the lexeme
+	string str;
 	int state_status = 0;
 	bool found = false;
 	char ch = 'c';
@@ -193,24 +221,17 @@ void Lex::lexer(ifstream& file)
 	{
 		ch = file.get();
 
-		//check if current character is a separator, operator, whitespace, or eof
-		//if yes, put the flag to exit the loop
 		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
 		}
-
-		/*if string is not empty and current character is either operator or separator
-		decrease the current location in stream by one character
-		else if current character is neither whitespace nor eof
-		stores the char into string*/
 		if (!str.empty() && (this->isOperator(ch) || this->isSeparator(ch)))
+		{
 			file.unget();
+		}
 		else if (!isspace(ch) && !(ch == -1))
 			str += ch;
 
-		//if the string is empty and current is not eof, get back to the loop
-		//used to skip the whitespaces
 		if (str.empty() && !(ch == -1))
 			found = false;
 	}
@@ -227,10 +248,7 @@ void Lex::lexer(ifstream& file)
 
 	//check token using FSM for identifier
 	if (classify == 3) {
-
-		//use FSM-identifier to check if token is accepted or not
 		state_status = identifier_DFSM(str);
-
 		this->setLexeme(str);
 		if (state_status == 1)
 		{
@@ -249,13 +267,10 @@ void Lex::lexer(ifstream& file)
 	{
 		str = ch;
 
-		//return the next char without extracting it from input sequence
+		//check if the next character is another operator or not
+
 		ch = file.peek();
 
-		/*check for valid operators: /=, :=, <=, >=
-		if current char and next char is a valid operator
-		add next char to string and move to the next location char
-		to keep track of the checking*/
 		if ((str[0] == ':' && ch == '=') || (str[0] == '/' && ch == '=')
 			|| (str[0] == '=' && ch == '>') || (str[0] == '<' && ch == '='))
 		{
@@ -263,7 +278,6 @@ void Lex::lexer(ifstream& file)
 			file.get();
 		}
 
-		//reject invalid operators if neccessary
 		if (!(str[0] == '=') || str == ":=")
 		{
 			this->setToken("operator");
@@ -278,6 +292,7 @@ void Lex::lexer(ifstream& file)
 	//check for separator
 	else if (classify == 2) {
 		str = ch;
+		
 		ch = file.peek();
 		if (str[0] == '%' && ch == '%')
 		{
@@ -353,5 +368,4 @@ string Lex::getLexeme() const
 	return lexeme;
 }
 
-//destructor
 Lex::~Lex() {}
