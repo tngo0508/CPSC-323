@@ -1,0 +1,11 @@
+SOURCE CODE:
+
+a 123
+
+
+OUTPUT:
+Token               Lexeme              
+
+identifier          a                   
+integer             123                 
+
