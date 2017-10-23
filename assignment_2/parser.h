@@ -6,8 +6,8 @@ class parser
 public:
 
 	Lex currentToken;
-	Lex getToken();
-	void accept(string s);
+	string getToken();
+	bool accept(string s);
 	void expect(string s);
 	parser();
 	void RAT17F();
