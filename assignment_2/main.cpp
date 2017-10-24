@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <ctype.h>
 #include "Lex.h"
+#include "parser.h"
 
 using namespace std;
 
@@ -30,11 +31,11 @@ int main() {
 			else
 			{
 				cout << "SOURCE CODE:\n\n";
-				outFile << "SOURCE CODE:\n\n";
+				//outFile << "SOURCE CODE:\n\n";
 				while (getline(file, line))
 				{
 					cout << line << endl;
-					outFile << line << endl;
+					//outFile << line << endl;
 				}
 			}
 
@@ -43,11 +44,12 @@ int main() {
             cout << endl;
 
 			
-			outFile << "\n\nOUTPUT:\n";
+			/*outFile << "\n\nOUTPUT:\n";
 			outFile << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
-			outFile << endl;
+			outFile << endl;*/
 
             Lex check;
+			parser a;
 
 			file.clear();
 			file.seekg(0);
@@ -60,7 +62,7 @@ int main() {
 				if (!(check.getLexeme() == "EOF"))
 				{
 					check.print();
-					outFile << left << setw(20) << check.getToken() << setw(20) << check.getLexeme() << endl;
+					//outFile << left << setw(20) << check.getToken() << setw(20) << check.getLexeme() << endl;
 				}
             }
 
@@ -71,10 +73,10 @@ int main() {
         
     } while (!(filename == "exit"));
 
-	outFile.close();
+	//outFile.close();
     cout << endl;
 	//comment out system("Pause") if you are trying execute file on Linux OS
 	//otherwise, uncomment it if on Windows OS
-    //system("Pause");
+    system("Pause");
     return 0;
 }

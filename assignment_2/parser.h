@@ -1,15 +1,18 @@
 #pragma once
 #include "Lex.h"
+#include <fstream>
 
 class parser
 {
 public:
 
-	Lex currentToken;
-	string getToken();
+	Lex getNextToken();
+	void Program();
 	bool accept(string s);
 	void expect(string s);
+	void writeError(string s);
 	parser();
+	void Parser(ifstream &file);
 	void RAT17F();
 	void optFunctionDef();
 	void functionDef();
@@ -39,5 +42,8 @@ public:
 	void primary();
 	void empty();
 	~parser();
+
+private:
+	Lex currentToken;
 };
 
