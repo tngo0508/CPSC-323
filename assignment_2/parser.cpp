@@ -38,24 +38,24 @@ parser::parser()
 //}
 
 //<ids> -> identifier | Identifier,IDs
-void parser::iDs(ifstream &fin) {
-	if (currentToken.getToken() == "identifier") {
-		currentToken.lexer(fin);
-		if (currentToken.getLexeme() == ",") {
-			cout << "<ids>-><identifier>,<ids>\n";
-			currentToken.lexer(fin);
-			iDs(fin);
-		}
-		else {
-			cout << "Expected ,\n";
-		}
-		cout << "<ids>-><identifier>\n";
-	}
-	else {
-		cout << "Expected Identifier" << endl;
-	}
-
-}
+//void parser::iDs(ifstream &fin) {
+//	if (currentToken.getToken() == "identifier") {
+//		currentToken.lexer(fin);
+//		if (currentToken.getLexeme() == ",") {
+//			cout << "<ids>-><identifier>,<ids>\n";
+//			currentToken.lexer(fin);
+//			iDs(fin);
+//		}
+//		else {
+//			cout << "Expected ,\n";
+//		}
+//		cout << "<ids>-><identifier>\n";
+//	}
+//	else {
+//		cout << "Expected Identifier" << endl;
+//	}
+//
+//}
 
 void parser::stmt(ifstream &fin)
 {
@@ -210,27 +210,27 @@ void parser::whileKeyword(ifstream &fin) {
 }
 
 //<return> -> return ; | return <Expression>;
-void parser::returnKeyword(ifstream &fin) {
-	if (currentToken.getLexeme() == "return") {
-		currentToken.lexer(fin);
-		if (currentToken.getLexeme() == ";") {
-			currentToken.lexer(fin);
-		}
-		else {
-			expression(fin);
-			if (currentToken.getLexeme() == ";") {
-				currentToken.lexer(fin);
-			}
-			else {
-				cout << "Expected ;\n";
-			}
-		}
-
-	}
-	else {
-		cout << "Expected return\n";
-	}
-}
+//void parser::returnKeyword(ifstream &fin) {
+//	if (currentToken.getLexeme() == "return") {
+//		currentToken.lexer(fin);
+//		if (currentToken.getLexeme() == ";") {
+//			currentToken.lexer(fin);
+//		}
+//		else {
+//			expression(fin);
+//			if (currentToken.getLexeme() == ";") {
+//				currentToken.lexer(fin);
+//			}
+//			else {
+//				cout << "Expected ;\n";
+//			}
+//		}
+//
+//	}
+//	else {
+//		cout << "Expected return\n";
+//	}
+//}
 
 /*
 	<Condition>-><Expression><Relop><Expression>
