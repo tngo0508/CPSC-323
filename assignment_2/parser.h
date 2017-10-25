@@ -2,7 +2,7 @@
 #include "Lex.h"
 #include <fstream>
 
-class parser
+class parser : public Lex
 {
 public:
 
@@ -41,7 +41,8 @@ public:
 	void primary(ifstream &);
 	void empty(ifstream &);
 	~parser();
+protected:
+	string token = getToken();
+	string lexeme = getLexeme();
 
-private:
-	Lex currentToken;
 };

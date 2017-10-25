@@ -13,9 +13,9 @@ using namespace std;
 
 void parser::Parser(ifstream &file)
 {
-	currentToken.lexer(file);
-	if (!(currentToken.getLexeme() == "EOF")) {
-		currentToken.print();
+	lexer(file);
+	if (!(lexeme == "EOF")) {
+		print();
 	}
 }
 
@@ -39,11 +39,11 @@ parser::parser()
 
 //<ids> -> identifier | Identifier,IDs
 //void parser::iDs(ifstream &fin) {
-//	if (currentToken.getToken() == "identifier") {
-//		currentToken.lexer(fin);
-//		if (currentToken.getLexeme() == ",") {
+//	if (token == "identifier") {
+//		lexer(fin);
+//		if (lexeme == ",") {
 //			cout << "<ids>-><identifier>,<ids>\n";
-//			currentToken.lexer(fin);
+//			lexer(fin);
 //			iDs(fin);
 //		}
 //		else {
@@ -59,36 +59,39 @@ parser::parser()
 
 void parser::stmt(ifstream &fin)
 {
-    if (currentToken.getToken() == "identifier") {
+	
+    if (token == "identifier") {
         assign(fin);
         cout << "<Statement>-><Assign>" << endl;
     }
-    else if (currentToken.getToken() == "compound") {
+
+	//if (a>b)
+    else if (lexeme == "compound") {
         compound(fin);
         cout << "<Statement>-><compound>" << endl;
     }
-    else if (currentToken.getToken() == "if") {
+    else if (lexeme == "if") {
         ifKeyword(fin);
         cout << "<Statement>-><If>" << endl;
     }
-    else if (currentToken.getToken() == "return") {
+    else if (lexeme == "return") {
         returnKeyword(fin);
         cout << "<Statement>-><Return>" << endl;
     }
-    else if (currentToken.getToken() == "write") {
+    else if (lexeme == "write") {
         writeKeyword(fin);
         cout << "<Statement>-><Write>" << endl;
     }
-    else if (currentToken.getToken() == "read") {
+    else if (lexeme == "read") {
         readKeyword(fin);
         cout << "<Statement>-><Read>" << endl;
     }
-    else if (currentToken.getToken() == "while") {
+    else if (lexeme == "while") {
         whileKeyword(fin);
         cout << "<Statement>-><While>" << endl;
     }
     else {
-        writeError("Line number: , error: unexpected string: " + currentToken.getLexeme() + ", expected end");
+        writeError("Line number: , error: unexpected string: " + lexeme + ", expected end");
     }
 }
 
@@ -99,13 +102,13 @@ void parser::compound(ifstream &fin)
 //Function assign
 void parser::assign(ifstream &fin)
 {
-	if (currentToken.getToken() == "identifier") {
-		currentToken.lexer(fin);
-		if (currentToken.getLexeme() == ":=") {
-			currentToken.lexer(fin);
+	if (token == "identifier") {
+		lexer(fin);
+		if (lexeme == ":=") {
+			lexer(fin);
 			expression(fin);
-			if (currentToken.getLexeme() == ";") {
-				currentToken.lexer(fin);
+			if (lexeme == ";") {
+				lexer(fin);
 			}
 			else {
 				cout << "Expected ;\n";
@@ -123,15 +126,15 @@ void parser::assign(ifstream &fin)
 //<write> -> write (<expression>);
 void parser::writeKeyword(ifstream &fin)
 {
-	if (currentToken.getLexeme() == "write") {
-		currentToken.lexer(fin);
-		if (currentToken.getLexeme() == "(") {
-			currentToken.lexer(fin);
+	if (lexeme == "write") {
+		lexer(fin);
+		if (lexeme == "(") {
+			lexer(fin);
 			expression(fin);
-			if (currentToken.getLexeme() == ")") {
-				currentToken.lexer(fin);
-				if (currentToken.getLexeme() == ";") {
-					currentToken.lexer(fin);
+			if (lexeme == ")") {
+				lexer(fin);
+				if (lexeme == ";") {
+					lexer(fin);
 				}
 				else {
 					cout << "Expected ;\n";
@@ -154,15 +157,15 @@ void parser::writeKeyword(ifstream &fin)
 //<Read> -> read (<IDs>);
 void parser::readKeyword(ifstream &fin)
 {
-	if (currentToken.getLexeme() == "read") {
-		currentToken.lexer(fin);
-		if (currentToken.getLexeme() == "(") {
-			currentToken.lexer(fin);
+	if (lexeme == "read") {
+		lexer(fin);
+		if (lexeme == "(") {
+			lexer(fin);
 			iDs(fin);
-			if (currentToken.getLexeme() == ")") {
-				currentToken.lexer(fin);
-				if (currentToken.getLexeme() == ";") {
-					currentToken.lexer(fin);
+			if (lexeme == ")") {
+				lexer(fin);
+				if (lexeme == ";") {
+					lexer(fin);
 				}
 				else {
 					cout << "Expected ;\n";
@@ -186,13 +189,13 @@ void parser::readKeyword(ifstream &fin)
 
 //while (<condition>) <Statement>
 void parser::whileKeyword(ifstream &fin) {
-	if (currentToken.getLexeme() == "while") {
-		currentToken.lexer(fin);
-		if (currentToken.getLexeme() == "(") {
-			currentToken.lexer(fin);
+	if (lexeme == "while") {
+		lexer(fin);
+		if (lexeme == "(") {
+			lexer(fin);
 			condition(fin);
-			if (currentToken.getLexeme() == ")") {
-				currentToken.lexer(fin);
+			if (lexeme == ")") {
+				lexer(fin);
 				stmt(fin);
 			}
 			else {
@@ -209,28 +212,31 @@ void parser::whileKeyword(ifstream &fin) {
 	cout << "while(<condition>)<Statement>\n";
 }
 
-//<return> -> return ; | return <Expression>;
-//void parser::returnKeyword(ifstream &fin) {
-//	if (currentToken.getLexeme() == "return") {
-//		currentToken.lexer(fin);
-//		if (currentToken.getLexeme() == ";") {
-//			currentToken.lexer(fin);
-//		}
-//		else {
-//			expression(fin);
-//			if (currentToken.getLexeme() == ";") {
-//				currentToken.lexer(fin);
-//			}
-//			else {
-//				cout << "Expected ;\n";
-//			}
-//		}
-//
-//	}
-//	else {
-//		cout << "Expected return\n";
-//	}
-//}
+//<Return> ::=  return <Return Prime> ;
+//<Return Prime> :: = ; | <Expression>;
+
+void parser::returnKeyword(ifstream &fin) {
+	if (lexeme == "return") {
+		lexer(fin);
+		cout << "<Return>-> return <Return Prime>\n";
+		if (lexeme == ";") {
+			cout << "<Return Prime>-> ;\n";
+			lexer(fin);
+		}
+		else {
+			cout << "<Return Prime>-><Expression>\n";
+			expression(fin);
+			if (lexeme == ";") {
+				lexer(fin);
+			
+			}
+		}
+
+	}
+	else {
+		cout << "Expected return\n";
+	}
+}
 
 /*
 	<Condition>-><Expression><Relop><Expression>
@@ -246,32 +252,32 @@ void parser::condition(ifstream &fin)
 
 void parser::relop(ifstream &fin)
 {
-    if (currentToken.getLexeme() == "=") {
+    if (lexeme == "=") {
         cout << "<Relop>-> =" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-    else if (currentToken.getLexeme() == "/=") {
+    else if (lexeme == "/=") {
         cout << "<Relop>-> /=" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-    else if (currentToken.getLexeme() == ">") {
+    else if (lexeme == ">") {
         cout << "<Relop>-> >" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-    else if (currentToken.getLexeme() == "<") {
+    else if (lexeme == "<") {
         cout << "<Relop>-> <" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-    else if (currentToken.getLexeme() == "=>") {
+    else if (lexeme == "=>") {
         cout << "<Relop>-> =>" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
     }
-    else if (currentToken.getLexeme() == "<=") {
+    else if (lexeme == "<=") {
         cout << "<Relop>-> <=" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
     }
     else {
-        writeError("Expected: " + currentToken.getLexeme() + ", expected end");
+        writeError("Expected: " + lexeme + ", expected end");
     }
 }
 
@@ -281,18 +287,17 @@ E'->+TE' | -TE'
 */
 void parser::expression(ifstream &fin)
 {
+	cout << "<Expression> -> <Term><Expression Prime>\n";
 	term(fin);
-	while (currentToken.getLexeme() == "+" || currentToken.getLexeme() == "-") {
-
-		//expect(currentToken.getToken(), fin);
-		if (currentToken.getLexeme() == "+" || currentToken.getLexeme() == "-") {
-			if (currentToken.getLexeme() == "+") {
+	while (lexeme == "+" || lexeme == "-") {
+		if (lexeme == "+" || lexeme == "-") {
+			if (lexeme == "+") {
 				cout << "<Expression Prime> -> + <Term><Expression Prime>";
 			}   
-			else if (currentToken.getLexeme() == "-") {
+			else if (lexeme == "-") {
 				cout << "<Expression Prime> -> -<Term><Expression Prime>";
 			}
-			currentToken.lexer(fin);
+			lexer(fin);
 			term(fin);
 			
 		}
@@ -306,16 +311,17 @@ void parser::expression(ifstream &fin)
 
 void parser::term(ifstream &fin)
 {
+	cout << "<Term>-><Factor><TermPrime>\n";
 	factor(fin);
-	while (currentToken.getLexeme() == "*" || currentToken.getLexeme() == "/") {
-		if (currentToken.getLexeme() == "*" || currentToken.getLexeme() == "/") {
-			if (currentToken.getLexeme() == "*") {
+	while (lexeme == "*" || lexeme == "/") {
+		if (lexeme == "*" || lexeme == "/") {
+			if (lexeme == "*") {
 				cout << "<Term Prime>->*<Factor><Term Prime>";
 			}
-			else if (currentToken.getLexeme() == "/") {
+			else if (lexeme == "/") {
 				cout << "<Term Prime>->/<Factor><Term Prime>";
 			}
-			currentToken.lexer(fin);
+			lexer(fin);
 			factor(fin);
 		}
 		else {
@@ -328,32 +334,32 @@ void parser::term(ifstream &fin)
 //<Factor> -> - <Primary> || <Primary>
 void parser::factor(ifstream &fin)
 {
-	if (currentToken.getLexeme() == "-") {
+	if (lexeme == "-") {
 		cout << "<Factor>-> - <Primary>" << endl;
 	}
 	else {
 		cout << "<Factor>-> <Primary>" << endl;
 	}
-	currentToken.lexer(fin);
+	lexer(fin);
 	primary(fin);
 }
 
 // <Primary> ::= <Identifier> | < Integer> | <Identifier>[<IDs>] | (<Expression>) | <Real> | true | false
 void parser::primary(ifstream &fin)
 {
-	if (currentToken.getToken() == "identifier") {
+	if (token == "identifier") {
 		cout << "<Primary>-><Identifier>" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-	else if (currentToken.getToken() == "integer") {
+	else if (token == "integer") {
 		cout << "<Primary>-><Integer>" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-	else if (currentToken.getLexeme() == "(") {
-		currentToken.lexer(fin);
+	else if (lexeme == "(") {
+		lexer(fin);
 		expression(fin);
-		if (currentToken.getLexeme() == ")") {
-			currentToken.lexer(fin);
+		if (lexeme == ")") {
+			lexer(fin);
 		}
 		else {
 			cout << "Expected )\n";
@@ -361,17 +367,17 @@ void parser::primary(ifstream &fin)
 
 		cout << "Primary -> (Expression)" << endl;
 	}
-	else if (currentToken.getToken() == "real") {
+	else if (token == "real") {
 		cout << "<Primary>-><real>" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-	else if (currentToken.getToken() == "true") {
+	else if (token == "true") {
 		cout << "<Primary>-><true>" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
-	else if (currentToken.getToken() == "false") {
+	else if (token == "false") {
 		cout << "<Primary>-><false>" << endl;
-		currentToken.lexer(fin);
+		lexer(fin);
 	}
 
 	/*
@@ -379,11 +385,11 @@ void parser::primary(ifstream &fin)
 	*/
 	else {
 		cout << "<Primary>-><Identifier>[<IDs>]\n";
-		if (currentToken.getLexeme() == "[") {
-			currentToken.lexer(fin);
+		if (lexeme == "[") {
+			lexer(fin);
 			iDs(fin);
-			if (currentToken.getLexeme() == "]") {
-				currentToken.lexer(fin);
+			if (lexeme == "]") {
+				lexer(fin);
 			}
 			else {
 				cout << "Expected ]\n";

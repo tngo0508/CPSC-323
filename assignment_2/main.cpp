@@ -13,6 +13,8 @@ int main() {
 	ofstream outFile("output.txt");
     string filename;
 	string line;
+	string token;
+	string lexeme;
 
 	do {
 		cout << "Enter a file name .txt (or exit to quit): ";
@@ -48,7 +50,6 @@ int main() {
 			outFile << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
 			outFile << endl;*/
 
-            Lex check;
 			parser a;
 
 			file.clear();
@@ -56,9 +57,8 @@ int main() {
 			//start to do the lexical analysis
             while (!file.eof())
             {
-				a.Parser(file);
-
-				
+				token = a.getToken();
+				lexeme = a.getLexeme();
             }
 
             file.close();
