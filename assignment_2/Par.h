@@ -13,47 +13,48 @@ public:
 	void parser();
 
 	//syntax rule functions
-	void RAT17F() const;
-	void OptFunctionDefinition()const;
-	void FunctionDefinition() const;
-	void FunctionDefinitionPrime() const;
-	void Function() const;
-	void OptParameterList() const;
-	void ParameterList() const;
-	void ParameterListPrime() const;
-	void Parameter() const;
-	void Qualifier() const;
-	void Body() const;
-	void OptDeclarationList() const;
-	void DeclarationList() const;
-	void DeclarationListPrime() const;
-	void Declaration() const;
-	void IDs() const;
-	void IDsPrime() const;
-	void StatementList() const;
-	void StatementListPrime() const;
-	void Statement() const;
-	void Compound() const;
-	void Assign() const;
-	void If() const;
-	void IfPrime() const;
-	void Return() const;
-	void ReturnPrime() const;
-	void Write() const;
-	void Read() const;
-	void While() const;
-	void Condition() const;
-	void Relop() const;
-	void Expression() const;
-	void ExpressionPrime() const;
-	void Term() const;
-	void TermPrime() const;
-	void Factor() const;
-	void Primary() const;
-	void Empty() const;
+	void RAT17F(ifstream& file) const;
+	void OptFunctionDefinition(ifstream& file)const;
+	void FunctionDefinition(ifstream& file) const;
+	void FunctionDefinitionPrime(ifstream& file) const;
+	void Function(ifstream& file) const;
+	void OptParameterList(ifstream& file) const;
+	void ParameterList(ifstream& file) const;
+	void ParameterListPrime(ifstream& file) const;
+	void Parameter(ifstream& file) const;
+	void Qualifier(ifstream& file) const;
+	void Body(ifstream& file) const;
+	void OptDeclarationList(ifstream& file) const;
+	void DeclarationList(ifstream& file) const;
+	void DeclarationListPrime(ifstream& file) const;
+	void Declaration(ifstream& file) const;
+	void IDs(ifstream& file) const;
+	void IDsPrime(ifstream& file) const;
+	void StatementList(ifstream& file) const;
+	void StatementListPrime(ifstream& file) const;
+	void Statement(ifstream& file) const;
+	void Compound(ifstream& file) const;
+	void Assign(ifstream& file) const;
+	void If(ifstream& file) const;
+	void IfPrime(ifstream& file) const;
+	void Return(ifstream& file) const;
+	void ReturnPrime(ifstream& file) const;
+	void Write(ifstream& file) const;
+	void Read(ifstream& file) const;
+	void While(ifstream& file) const;
+	void Condition(ifstream& file) const;
+	void Relop(ifstream& file) const;
+	void Expression(ifstream& file) const;
+	void ExpressionPrime(ifstream& file) const;
+	void Term(ifstream& file) const;
+	void TermPrime(ifstream& file) const;
+	void Factor(ifstream& file) const;
+	void Primary(ifstream& file) const;
+	void Empty(ifstream& file) const;
 
 	//Destructor
 	~Par();
+
 private:
 	
 };
