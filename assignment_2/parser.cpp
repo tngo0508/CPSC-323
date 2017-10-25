@@ -8,7 +8,7 @@ using namespace std;
 
 void parser::Parser(ifstream &file)
 {
-	
+	currentToken.lexer(file);
 }
 
 
@@ -217,33 +217,38 @@ void parser::condition(ifstream &fin)
     cout << "<Condition>-><Expression><Relop><Expression>" << endl;
 }
 
-//
-//void parser::relop()
-//{
-//    if (currentToken.getLexeme() == "=") {
-//        cout << "<Relop>-> =" << endl;
-//    }
-//    else if (currentToken.getLexeme() == "/=") {
-//        cout << "<Relop>-> /=" << endl;
-//    }
-//    else if (currentToken.getLexeme() == ">") {
-//        cout << "<Relop>-> >" << endl;
-//    }
-//    else if (currentToken.getLexeme() == "<") {
-//        cout << "<Relop>-> <" << endl;
-//    }
-//    else if (currentToken.getLexeme() == "=>") {
-//        cout << "<Relop>-> =>" << endl;
-//    }
-//    else if (currentToken.getLexeme() == "<=") {
-//        cout << "<Relop>-> <=" << endl;
-//    }
-//    else {
-//        writeError("Line number: , error: unexpected string: " + currentToken.getLexeme() + ", expected end");
-//        accept(currentToken.getLexeme()); //get next lexeme
-//    }
-//}
-//
+
+void parser::relop(ifstream &fin)
+{
+    if (currentToken.getLexeme() == "=") {
+        cout << "<Relop>-> =" << endl;
+		currentToken.lexer(fin);
+	}
+    else if (currentToken.getLexeme() == "/=") {
+        cout << "<Relop>-> /=" << endl;
+		currentToken.lexer(fin);
+	}
+    else if (currentToken.getLexeme() == ">") {
+        cout << "<Relop>-> >" << endl;
+		currentToken.lexer(fin);
+	}
+    else if (currentToken.getLexeme() == "<") {
+        cout << "<Relop>-> <" << endl;
+		currentToken.lexer(fin);
+	}
+    else if (currentToken.getLexeme() == "=>") {
+        cout << "<Relop>-> =>" << endl;
+		currentToken.lexer(fin);
+    }
+    else if (currentToken.getLexeme() == "<=") {
+        cout << "<Relop>-> <=" << endl;
+		currentToken.lexer(fin);
+    }
+    else {
+        writeError("Expected: " + currentToken.getLexeme() + ", expected end");
+    }
+}
+
 /*
 E->TE'
 E'->+TE' | -TE'
