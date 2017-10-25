@@ -1,0 +1,39 @@
+SOURCE CODE:
+
+@ compare (value#a : floating; value#b : floating)
+{
+	if (value#a > value#b)
+		return value#a
+	else
+		return value#b
+}
+
+
+OUTPUT:
+Token               Lexeme              
+
+separator           @                   
+identifier          compare             
+separator           (                   
+identifier          value#a             
+operator            :                   
+keyword             floating            
+separator           ;                   
+identifier          value#b             
+operator            :                   
+keyword             floating            
+separator           )                   
+separator           {                   
+keyword             if                  
+separator           (                   
+identifier          value#a             
+operator            >                   
+identifier          value#b             
+separator           )                   
+keyword             return              
+identifier          value#a             
+keyword             else                
+keyword             return              
+identifier          value#b             
+separator           }                   
+
