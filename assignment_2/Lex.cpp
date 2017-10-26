@@ -304,7 +304,8 @@ void Lex::lexer(ifstream& file)
 		}
 
 		//reject invalid operators if neccessary
-		if (isOperator(str[0]) || str == ":=" || str == "/=" || str == "<=" || str == ">=")
+		if (isOperator(str[0]) || str == ":=" || str == "/=" || str == "<=" 
+			|| str == ">=")
 		{
 			this->setToken("operator");
 			this->setLexeme(str);

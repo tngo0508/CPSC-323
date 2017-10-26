@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <ctype.h>
 #include "Lex.h"
+#include "Par.h"
 
 using namespace std;
 
@@ -47,7 +48,8 @@ int main() {
 			outFile << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
 			outFile << endl;
 
-            Lex check;
+            Par check;
+			string token, lexeme;
 
 			file.clear();
 			file.seekg(0);
@@ -60,7 +62,10 @@ int main() {
 				if (!(check.getLexeme() == "EOF"))
 				{
 					check.print();
-					outFile << left << setw(20) << check.getToken() << setw(20) << check.getLexeme() << endl;
+					token = check.getToken();
+					lexeme = check.getLexeme();
+					outFile << left << setw(20) << token << setw(20) << lexeme 
+						<< endl;
 				}
             }
 
@@ -75,6 +80,6 @@ int main() {
     cout << endl;
 	//comment out system("Pause") if you are trying execute file on Linux OS
 	//otherwise, uncomment it if on Windows OS
-    //system("Pause");
+    system("Pause");
     return 0;
 }

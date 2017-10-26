@@ -27,6 +27,7 @@ public:
 	//function returns the column number of the character in the table
 	int char_to_col(const char input) const;
 
+	//Helper functions checking separator, operator and keyword
 	bool isSeparator(const char input) const;
 	bool isOperator(const char input) const;
 	bool checkKeyword(string identifier) const;
@@ -50,7 +51,7 @@ public:
 
 	//destructor
 	~Lex();
-private:
+protected:
 	char input;
 	string lexeme;
 	string token;
