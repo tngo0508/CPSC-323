@@ -47,6 +47,7 @@ public:
 	void TermPrime(ifstream& file);
 	void Factor(ifstream& file);
 	void Primary(ifstream& file);
+	void PrimaryPrime(ifstream& file);
 	void Empty(ifstream& file);
 
 	void printError();
