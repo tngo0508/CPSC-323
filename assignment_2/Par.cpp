@@ -2,12 +2,12 @@
 
 //ructor
 Par::Par()
-{}
+{ bool _switch = false;}
 
 //parser
 void Par::parser()
 {
-
+    
 }
 
 //syntax rule functions
@@ -193,131 +193,160 @@ void Par::ReturnPrime(ifstream& file)
 
 void Par::Write(ifstream& file)
 {
-	if (lexeme == "write") {
-		lexer(file);
 		if (lexeme == "(") {
-			cout << "<Read> -> read (<IDs>);" << endl;
-			lexer(file);
+            if (!_switch)
+            {
+                cout << "<Write> -> "
+                << "<Write>(EXpression)\n";
+            }
+            lexer(file);
+            Lex::print();
 			Expression(file);
 			if (lexeme == ")") {
-				lexer(file);
+                lexer(file);
+                Lex::print();
 				if (lexeme == ";") {
 					lexer(file);
+                    Lex::print();
 				}
 				else {
-					cout << "Expected ;\n";
-				}
-			}
+                        printError();
+                    
+                }
+            }
 			else {
-				cout << "Expected )\n";
-			}
+                printError();
+            }
 		}
 		else {
-			cout << "Expected (\n";
-		}
-	}
-	else {
-		cout << "Expected write\n";
-	}
+            printError();
+        }
+	
 }
+///            cout << "<Read> -> read (<IDs>);" << endl;
 
 void Par::Read(ifstream& file)
 {
-	if (lexeme == "read") {
-		lexer(file);
-		if (lexeme == "(") {
-			cout << "<Read> -> read (<IDs>);" << endl;
-			lexer(file);
-			IDs(file);
-			if (lexeme == ")") {
-				lexer(file);
-				if (lexeme == ";") {
-					lexer(file);
-				}
-				else {
-					cout << "Expected ;\n";
-				}
-			}
-			else {
-				cout << "Expected )\n";
-			}
-		}
-		else {
-			cout << "Expected (\n";
-		}
-	}
-	else {
-		cout << "Expected read\n";
-	}
+    if (lexeme == "(") {
+        if (!_switch)
+        {
+            cout << "<Read> -> read (<IDs>);" << endl;
+
+        }
+        lexer(file);
+        Lex::print();
+        IDs(file);
+        if (lexeme == ")") {
+            lexer(file);
+            Lex::print();
+            if (lexeme == ";") {
+                lexer(file);
+                Lex::print();
+            }
+            else {
+                printError();
+                
+            }
+        }
+        else {
+            printError();
+        }
+    }
+    else {
+        printError();
+    }
+
 }
+//            cout << "while(<condition>)<Statement>\n";
 
 void Par::While(ifstream& file)
 {
-	if (lexeme == "while") {
-		lexer(file);
-		if (lexeme == "(") {
-			cout << "while(<condition>)<Statement>\n";
-			lexer(file);
-			Condition(file);
-			if (lexeme == ")") {
-				lexer(file);
-				Statement(file);
-			}
-			else {
-				cout << "Expected )\n";
-			}
-		}
-		else {
-			cout << "Expected (\n";
-		}
-	}
-	else {
-		cout << "Expected while\n";
-	}
+    if (lexeme == "(") {
+        if (!_switch)
+        {
+            cout << "<while> -> while(<condition)<Statement>;" << endl;
+            
+        }
+        lexer(file);
+        Lex::print();
+        condition(file);
+        if (lexeme == ")") {
+            lexer(file);
+            Lex::print();
+            Statement(file);
+            if (lexeme == ";") {
+                lexer(file);
+                Lex::print();
+            }
+            else {
+                printError();
+                
+            }
+        }
+        else {
+            printError();
+        }
+    }
+    else {
+        printError();
+    }
 }
 
 void Par::Condition(ifstream& file)
 {
+    if(!_switch){
+        cout << "<Condition>-><Expression><Relop><Expression>" << endl;
+    }
 	Expression(file);
 	Relop(file);
 	Expression(file);
-	cout << "<Condition>-><Expression><Relop><Expression>" << endl;
 }
 
 void Par::Relop(ifstream& file)
 {
 	if (lexeme == "=") {
-		cout << "<Relop>-> =" << endl;
+        if(!_switch){
+            cout << "<Relop>-> =" << endl;
+        }
 		lexer(file);
 	}
 	else if (lexeme == "/=") {
-		cout << "<Relop>-> /=" << endl;
-		lexer(file);
+        if(!_switch){
+            cout << "<Relop>-> /=" << endl;
+        }
+        lexer(file);
 	}
 	else if (lexeme == ">") {
-		cout << "<Relop>-> >" << endl;
+        if(!_switch){
+            cout << "<Relop>-> >" << endl;
+        }
 		lexer(file);
 	}
 	else if (lexeme == "<") {
-		cout << "<Relop>-> <" << endl;
-		lexer(file);
+        if(!_switch){
+            cout << "<Relop>-> <" << endl;
+        }
+        lexer(file);
 	}
 	else if (lexeme == "=>") {
-		cout << "<Relop>-> =>" << endl;
+        if(!_switch){
+            cout << "<Relop>-> =>" << endl;
+        }
 		lexer(file);
 	}
 	else if (lexeme == "<=") {
-		cout << "<Relop>-> <=" << endl;
+        if(!_switch){
+            cout << "<Relop>-> <=" << endl;
+        }
 		lexer(file);
-	}
-	else {
-		cout << "Error" << endl;
 	}
 }
 
 void Par::Expression(ifstream& file)
 {
-	cout << "<Expression> -> <Term><Expression Prime>\n";
+    if(!_switch){
+        cout << "<Expression> -> <Term><Expression Prime>\n";
+    }
 	Term(file);
 	ExpressionPrime(file);
 }
@@ -346,61 +375,61 @@ void Par::Factor(ifstream& file)
 }
 
 //need to check token or lexeme
-void Par::Primary(ifstream& file)
-{
-	if (token == "identifier") {
-		cout << "<Primary>-><Identifier>" << endl;
-		lexer(file);
-	}
-	else if (token == "integer") {
-		cout << "<Primary>-><Integer>" << endl;
-		lexer(file);
-	}
-	else if (lexeme == "(") {
-		lexer(file);
-		Expression(file);
-		if (lexeme == ")") {
-			lexer(file);
-		}
-		else {
-			cout << "Expected )\n";
-		}
-
-		cout << "Primary -> (Expression)" << endl;
-	}
-	else if (token == "real") {
-		cout << "<Primary>-><real>" << endl;
-		lexer(file);
-	}
-	else if (token == "true") {
-		cout << "<Primary>-><true>" << endl;
-		lexer(file);
-	}
-	else if (token == "false") {
-		cout << "<Primary>-><false>" << endl;
-		lexer(file);
-	}
-
-	/*
-	<Identifier>[<IDs>]
-	*/
-	else {
-		cout << "<Primary>-><Identifier>[<IDs>]\n";
-		if (lexeme == "[") {
-			lexer(file);
-			IDs(file);
-			if (lexeme == "]") {
-				lexer(file);
-			}
-			else {
-				cout << "Expected ]\n";
-			}
-		}
-		else {
-			cout << "Expected [\n";
-		}
-	}
-}
+//void Par::Primary(ifstream& file)
+//{
+//    if (token == "identifier") {
+//        cout << "<Primary>-><Identifier>" << endl;
+//        lexer(file);
+//    }
+//    else if (token == "integer") {
+//        cout << "<Primary>-><Integer>" << endl;
+//        lexer(file);
+//    }
+//    else if (lexeme == "(") {
+//        lexer(file);
+//        Expression(file);
+//        if (lexeme == ")") {
+//            lexer(file);
+//        }
+//        else {
+//            cout << "Expected )\n";
+//        }
+//
+//        cout << "Primary -> (Expression)" << endl;
+//    }
+//    else if (token == "real") {
+//        cout << "<Primary>-><real>" << endl;
+//        lexer(file);
+//    }
+//    else if (token == "true") {
+//        cout << "<Primary>-><true>" << endl;
+//        lexer(file);
+//    }
+//    else if (token == "false") {
+//        cout << "<Primary>-><false>" << endl;
+//        lexer(file);
+//    }
+//
+//    /*
+//    <Identifier>[<IDs>]
+//    */
+//    else {
+//        cout << "<Primary>-><Identifier>[<IDs>]\n";
+//        if (lexeme == "[") {
+//            lexer(file);
+//            IDs(file);
+//            if (lexeme == "]") {
+//                lexer(file);
+//            }
+//            else {
+//                cout << "Expected ]\n";
+//            }
+//        }
+//        else {
+//            cout << "Expected [\n";
+//        }
+//    }
+//}
 
 void Par::Empty(ifstream& file)
 {
