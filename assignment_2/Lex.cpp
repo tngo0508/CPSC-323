@@ -228,7 +228,8 @@ void Lex::lexer(ifstream& file)
 	bool found = false;
 	char ch = 'c';
 
-	//get the character and add it into a string until see space, separator, or operator
+	//get the character and add it into a string until see space, separator, or
+	//operator
 	while (!found)
 	{
 		ch = file.get();
