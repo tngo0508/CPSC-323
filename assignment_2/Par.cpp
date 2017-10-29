@@ -16,7 +16,7 @@ void Par::RAT17F(ifstream& file)
 		cout << "<RAT17F -> <Opt Function Definitions>"
 			<< " %% <Opt Declaration List> <Statement List>\n";
 	}
-	OptDeclarationList(file);
+	OptFunctionDefinition(file);
 	if (lexeme == "%%")
 	{
 		lexer(file);
@@ -44,7 +44,7 @@ void Par::OptFunctionDefinition(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Opt Function Definition> -> \u03B5\n";
+			cout << "<Opt Function Definition> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -78,7 +78,7 @@ void Par::FunctionDefinitionPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Function Definition Prime> -> \u03B5\n";
+			cout << "<Function Definition Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -89,7 +89,7 @@ void Par::Function(ifstream& file)
 	if (!_switch)
 	{
 		cout << "<Function> ->"
-			<< " <Identifier> (<Opt Parameter List>)"
+			<< " @ <Identifier> (<Opt Parameter List>)"
 			<< " <Opt Declaration List> <Body>\n";
 	}
 	if (token == "identifier")
@@ -140,7 +140,7 @@ void Par::OptParameterList(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Opt Parameter List> -> \u03B5\n";
+			cout << "<Opt Parameter List> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -151,7 +151,7 @@ void Par::ParameterList(ifstream& file)
 	if (!_switch)
 	{
 		cout << "<Parameter List> -> "
-			<< "<Parameter> <Parameter List Prime\n";
+			<< "<Parameter> <Parameter List Prime>\n";
 	}
 	Parameter(file);
 	ParameterListPrime(file);
@@ -174,7 +174,7 @@ void Par::ParameterListPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Parameter List Prime> -> \u03B5\n";
+			cout << "<Parameter List Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -182,23 +182,16 @@ void Par::ParameterListPrime(ifstream& file)
 
 void Par::Parameter(ifstream& file)
 {
-	if (token == "identifier")
+	if (!_switch)
 	{
-		if (!_switch)
-		{
-			cout << "<Parameter> -> <IDs> : <Qualifier>\n";
-		}
+		cout << "<Parameter> -> <IDs> : <Qualifier>\n";
+	}
+	IDs(file);
+	if (lexeme == ":")
+	{
 		lexer(file);
 		Lex::print();
-		IDs(file);
-		if (lexeme == ":")
-		{
-			lexer(file);
-			Lex::print();
-			Qualifier(file);
-		}
-		else
-			printError();
+		Qualifier(file);
 	}
 	else
 		printError();
@@ -266,8 +259,7 @@ void Par::OptDeclarationList(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Opt Declaration List> -> "
-				<< "<Declaration List>\n";
+			cout << "<Opt Declaration List> -> <Declaration List>\n";
 		}
 		lexer(file);
 		Lex::print();
@@ -277,7 +269,7 @@ void Par::OptDeclarationList(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Opt Declaration List> -> \u03B5\n";
+			cout << "<Opt Declaration List> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -318,7 +310,7 @@ void Par::DeclarationListPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Declaration List Prime> -> \u03B5\n";
+			cout << "<Declaration List Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -337,19 +329,12 @@ void Par::Declaration(ifstream& file)
 
 void Par::IDs(ifstream& file)
 {
-	if (token == "identifier")
+	if (!_switch)
 	{
-		if (!_switch)
-		{
-			cout << "<IDs> -> "
-				<< "<IDs Prime>\n";
-		}
-		lexer(file);
-		Lex::print();
-		IDsPrime(file);
+		cout << "<IDs> -> "
+			<< "<IDs Prime>\n";
 	}
-	else
-		printError();
+	IDsPrime(file);
 }
 
 void Par::IDsPrime(ifstream& file)
@@ -369,7 +354,7 @@ void Par::IDsPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<IDs Prime> -> \u03B5\n";
+			cout << "<IDs Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -405,7 +390,7 @@ void Par::StatementListPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<IDs Prime> -> \u03B5\n";
+			cout << "<IDs Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -626,10 +611,10 @@ void Par::ReturnPrime(ifstream& file)
 		if (!_switch)
 		{
 			cout << "<Return Prime> -> "
-				<< "<Expression> ;\n";
+				<< "<Expression>;\n";
 		}
-		lexer(file);
-		Lex::print();
+		/*lexer(file);
+		Lex::print();*/
 		Expression(file);
 		if (lexeme == ";")
 		{
@@ -833,7 +818,7 @@ void Par::ExpressionPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Expression Prime> -> \u03B5\n";
+			cout << "<Expression Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -877,7 +862,7 @@ void Par::TermPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Term Prime> -> \u03B5\n";
+			cout << "<Term Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}
@@ -901,8 +886,8 @@ void Par::Factor(ifstream& file)
 		{
 			cout << "<Factor> -> <Primary>\n";
 		}
-		lexer(file);
-		Lex::print();
+		/*lexer(file);
+		Lex::print();*/
 		Primary(file);
 	}
 }
@@ -913,7 +898,7 @@ void Par::Primary(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Prime> -> <identifier> <Primary Prime>\n";
+			cout << "<Primary> -> <identifier> <Primary Prime>\n";
 		}
 		lexer(file);
 		Lex::print();
@@ -923,7 +908,7 @@ void Par::Primary(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Prime> -> <integer>\n";
+			cout << "<Primary> -> <integer>\n";
 		}
 		lexer(file);
 		Lex::print();
@@ -932,7 +917,7 @@ void Par::Primary(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Prime> -> <floating>\n";
+			cout << "<Primary> -> <floating>\n";
 		}
 		lexer(file);
 		Lex::print();
@@ -941,7 +926,7 @@ void Par::Primary(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Prime> -> (<Expression>)\n";
+			cout << "<Primary> -> (<Expression>)\n";
 		}
 		lexer(file);
 		Lex::print();
@@ -991,7 +976,7 @@ void Par::PrimaryPrime(ifstream& file)
 	{
 		if (!_switch)
 		{
-			cout << "<Primary Prime> -> \u03B5\n";
+			cout << "<Primary Prime> -> " << "Epsilon" << endl;
 		}
 		Empty(file);
 	}

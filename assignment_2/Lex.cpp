@@ -371,7 +371,8 @@ void Lex::lexer(ifstream& file)
 
 void Lex::print() const
 {
-	cout << left << setw(20) << this->token << setw(20) << this->lexeme << endl;
+	cout << "Token: " << left << setw(20) << this->token 
+		<< "Lexeme: " << setw(20) << this->lexeme << endl;
 }
 
 void Lex::setToken(const string newToken)
