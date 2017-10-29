@@ -1,5 +1,7 @@
 #include "Lex.h"
 
+int Lex::lineNum = 1;
+
 //constructor
 Lex::Lex()
 {
@@ -239,6 +241,9 @@ void Lex::lexer(ifstream& file)
 		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
+			//Update line number
+			if (ch == '\n')
+				lineNum++;
 		}
 
 		/*if string is not empty and current character is either operator or separator

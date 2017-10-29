@@ -55,6 +55,7 @@ protected:
 	char input;
 	string lexeme;
 	string token;
+	static int lineNum;
 };
 
 #endif

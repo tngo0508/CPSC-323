@@ -23,6 +23,12 @@ void Par::RAT17F(ifstream& file)
 		Lex::print();
 		OptDeclarationList(file);
 		StatementList(file);
+		if (!(lexeme == "EOF"))
+		{
+			cerr << "This is not EOF marker.\n"
+				<< "Error at line " << lineNum << endl;
+		}
+		lineNum = 1;
 	}
 	else
 		printError();
@@ -1068,7 +1074,8 @@ void Par::Empty(ifstream& file)
 
 void Par::printError()
 {
-	cerr << "Error\n";
+	cerr << "Error at line " << lineNum <<endl;
+	lineNum = 1;
 }
 
 //Destructor
