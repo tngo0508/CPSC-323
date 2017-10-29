@@ -1,0 +1,7 @@
+@ compare (value#a : floating; value#b : floating)
+{
+	if (value#a > value#b)
+		return value#a
+	else
+		return value#b
+}
