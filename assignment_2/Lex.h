@@ -18,8 +18,8 @@ public:
 	//finite state machine for integer
 	int int_DFSM(const string str);
 
-	//finite state machine for real
-	int real_DFSM(const string str);
+	//finite state machine for floating
+	int floating_DFSM(const string str);
 
 	//finite state machine for identifier
 	int identifier_DFSM(const string str);
@@ -51,7 +51,7 @@ public:
 
 	//destructor
 	~Lex();
-private:
+protected:
 	char input;
 	string lexeme;
 	string token;

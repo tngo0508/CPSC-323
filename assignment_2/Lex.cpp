@@ -76,7 +76,7 @@ int Lex::Classify(string s) {
 	}
 	else if (isdigit(classify_ch))
 	{
-		//first, check for valid input for real or integer
+		//first, check for valid input for floating or integer
 		//only accept the string with number or dot(.) sign
 		for (int i = 0; i < len; i++)
 		{
@@ -85,7 +85,7 @@ int Lex::Classify(string s) {
 				return 6;
 		}
 
-		//second, check if there is a dot, then string could be a real number
+		//second, check if there is a dot, then string could be a floating number
 		for (int i = 0; i < len; i++)
 		{
 			if (s[i] == '.')
@@ -149,13 +149,13 @@ int Lex::int_DFSM(const string str)
 		return 0;
 }
 
-//Finite State Machine for real
-int Lex::real_DFSM(string str)
+//Finite State Machine for floating
+int Lex::floating_DFSM(string str)
 {
 	//starting state
 	int state = 1;
 
-	//DFSM table for real
+	//DFSM table for floating
 	/*	0	d	.
 		1	2	0
 		2	2	3
@@ -304,7 +304,8 @@ void Lex::lexer(ifstream& file)
 		}
 
 		//reject invalid operators if neccessary
-		if (isOperator(str[0]) || str == ":=" || str == "/=" || str == "<=" || str == ">=")
+		if (isOperator(str[0]) || str == ":=" || str == "/=" || str == "<=" 
+			|| str == ">=")
 		{
 			this->setToken("operator");
 			this->setLexeme(str);
@@ -336,19 +337,19 @@ void Lex::lexer(ifstream& file)
 			this->setToken("invalid separator");
 		}
 	}
-	//check token using FSM for real
+	//check token using FSM for floating
 	else if (classify == 4) {
-		state_status = real_DFSM(str);
+		state_status = floating_DFSM(str);
 		this->setLexeme(str);
 		if (state_status == 1)
 		{
-			this->setToken("real");
+			this->setToken("floating");
 		}
 		else {
-			this->setToken("invalid real");
+			this->setToken("invalid floating");
 		}
 	}
-	//check token using FSM for real
+	//check token using FSM for floating
 	else if (classify == 5)
 	{
 		state_status = int_DFSM(str);
