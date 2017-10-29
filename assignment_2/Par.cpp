@@ -409,7 +409,7 @@ void Par::StatementListPrime(ifstream& file)
 	}
 	else
 	{
-		if (!_switch)
+		if (!_switch && !(lexeme == "EOF"))
 		{
 			cout << "\t<Statement List Prime> -> " << "Epsilon" << endl;
 		}
