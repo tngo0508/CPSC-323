@@ -43,10 +43,10 @@ void Par::RAT17F(ifstream& infile, ofstream& outfile)
 		StatementList(infile, outfile);
 		if (!(lexeme == "EOF"))
 		{
-			cerr << "This is not EOF marker.\n"
+			outfile << "This is not EOF marker.\n"
 				<< "Error at line " << lineNum << endl
 				<< "Only <Opt Declaration List> <StatementList> is allowed after %%.\n";
-			outfile<< "This is not EOF marker.\n"
+			cerr << "This is not EOF marker.\n"
 				<< "Error at line " << lineNum << endl
 				<< "Only <Opt Declaration List> <StatementList> is allowed after %%.\n";
 			system("Pause");
@@ -57,10 +57,10 @@ void Par::RAT17F(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Invalid separator, '%%' is expected "
-			<<" after function definitions and before declaration list.\n";
 		outfile << "Invalid separator, '%%' is expected "
 			<< " after function definitions and before declaration list.\n";
+		cerr << "Invalid separator, '%%' is expected "
+			<<" after function definitions and before declaration list.\n";
 		system("Pause");
 		exit(1);
 	}
@@ -72,9 +72,9 @@ void Par::OptFunctionDefinition(ifstream& infile, ofstream& outfile)
 	{
 		if (!_switch)
 		{
-			cout << "\t<Opt Function Definition> -> "
-				<< "<Function Definition>\n";
 			outfile << "\t<Opt Function Definition> -> "
+				<< "<Function Definition>\n";
+			cout << "\t<Opt Function Definition> -> "
 				<< "<Function Definition>\n";
 		}
 		FunctionDefinition(infile, outfile);
@@ -83,8 +83,8 @@ void Par::OptFunctionDefinition(ifstream& infile, ofstream& outfile)
 	{
 		if (!_switch)
 		{
-			cout << "\t<Opt Function Definition> -> " << "Epsilon" << endl;
 			outfile << "\t<Opt Function Definition> -> " << "Epsilon" << endl;
+			cout << "\t<Opt Function Definition> -> " << "Epsilon" << endl;
 		}
 		Empty(infile, outfile);
 	}
@@ -94,9 +94,9 @@ void Par::FunctionDefinition(ifstream& infile, ofstream& outfile)
 {
 	if (!_switch)
 	{
-		cout << "\t<Function Definition> ->"
-			<< " <Function> <Function Definition Prime>\n";
 		outfile << "\t<Function Definition> ->"
+			<< " <Function> <Function Definition Prime>\n";
+		cout << "\t<Function Definition> ->"
 			<< " <Function> <Function Definition Prime>\n";
 	}
 	Function(infile, outfile);
@@ -161,11 +161,11 @@ void Par::Function(ifstream& infile, ofstream& outfile)
 				else
 				{
 					printError(outfile);
-					cerr << "Function syntax error\n";
-					cerr << "Invalid separator, ')' is expected"
-						<< " after parameter list.\n";
 					outfile << "Function syntax error\n";
 					outfile << "Invalid separator, ')' is expected"
+						<< " after parameter list.\n";
+					cerr << "Function syntax error\n";
+					cerr << "Invalid separator, ')' is expected"
 						<< " after parameter list.\n";
 					system("Pause");
 					exit(1);
@@ -174,11 +174,11 @@ void Par::Function(ifstream& infile, ofstream& outfile)
 			else
 			{
 				printError(outfile);
-				cerr << "Function syntax error\n";
-				cerr << "Invalid separator, '(' is expected"
-					<< " after <identifier> and before parameter list.\n";
 				outfile << "Function syntax error\n";
 				outfile << "Invalid separator, '(' is expected"
+					<< " after <identifier> and before parameter list.\n";
+				cerr << "Function syntax error\n";
+				cerr << "Invalid separator, '(' is expected"
 					<< " after <identifier> and before parameter list.\n";
 				system("Pause");
 				exit(1);
@@ -187,10 +187,10 @@ void Par::Function(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Function syntax error\n";
-			cerr << "Invalid token, <identifier> is expected after '@'.\n";
 			outfile << "Function syntax error\n";
 			outfile << "Invalid token, <identifier> is expected after '@'.\n";
+			cerr << "Function syntax error\n";
+			cerr << "Invalid token, <identifier> is expected after '@'.\n";
 			system("Pause");
 			exit(1);
 		}
@@ -198,11 +198,11 @@ void Par::Function(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Function syntax error\n";
-		cerr << "Invalid separator, '@' is expected"
-			<< " at the beginning of a function.\n";
 		outfile << "Function syntax error\n";
 		outfile << "Invalid separator, '@' is expected"
+			<< " at the beginning of a function.\n";
+		cerr << "Function syntax error\n";
+		cerr << "Invalid separator, '@' is expected"
 			<< " at the beginning of a function.\n";
 		system("Pause");
 		exit(1);
@@ -292,22 +292,22 @@ void Par::Parameter(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Parameter syntax error\n";
-			cerr << "Invalid operator, ':' is expected"
-				<< " before qualifier.\n";
 			outfile << "Parameter syntax error\n";
 			outfile << "Invalid operator, ':' is expected"
+				<< " before qualifier.\n";
+			cerr << "Parameter syntax error\n";
+			cerr << "Invalid operator, ':' is expected"
 				<< " before qualifier.\n";
 		}
 	}
 	else
 	{
 		printError(outfile);
-		cerr << "Parameter syntax error\n";
-		cerr << "Invalid token, <identifier> is expected"
-			<< " after '(' and before ':'.\n";
 		outfile << "Parameter syntax error\n";
 		outfile << "Invalid token, <identifier> is expected"
+			<< " after '(' and before ':'.\n";
+		cerr << "Parameter syntax error\n";
+		cerr << "Invalid token, <identifier> is expected"
 			<< " after '(' and before ':'.\n";
 		system("Pause");
 		exit(1);
@@ -349,13 +349,13 @@ void Par::Qualifier(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Qualifier syntax error\n"
-			<< "Invalid keyword\n";
-		cerr << "'integer', 'boolean' or 'floating' keyword is expected"
-			<< " after ':'.\n";
 		outfile << "Qualifier syntax error\n"
 			<< "Invalid keyword\n";
 		outfile << "'integer', 'boolean' or 'floating' keyword is expected"
+			<< " after ':'.\n";
+		cerr << "Qualifier syntax error\n"
+			<< "Invalid keyword\n";
+		cerr << "'integer', 'boolean' or 'floating' keyword is expected"
 			<< " after ':'.\n";
 		system("Pause");
 		exit(1);
@@ -382,11 +382,11 @@ void Par::Body(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Function Body syntax error\n";
-			cerr << "Invalid separator, '}' is expected"
-				<< " after statements. Specifically, after ';'.\n";
 			outfile << "Function Body syntax error\n";
 			outfile << "Invalid separator, '}' is expected"
+				<< " after statements. Specifically, after ';'.\n";
+			cerr << "Function Body syntax error\n";
+			cerr << "Invalid separator, '}' is expected"
 				<< " after statements. Specifically, after ';'.\n";
 			system("Pause");
 			exit(1);
@@ -395,11 +395,11 @@ void Par::Body(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Function Body syntax error";
-		cerr << "Invalid separator, '{' is expected"
-			<< " before any statements.\n";
 		outfile << "Function Body syntax error";
 		outfile << "Invalid separator, '{' is expected"
+			<< " before any statements.\n";
+		cerr << "Function Body syntax error";
+		cerr << "Invalid separator, '{' is expected"
 			<< " before any statements.\n";
 		system("Pause");
 		exit(1);
@@ -447,11 +447,11 @@ void Par::DeclarationList(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Declaration List syntax error\n";
-		cerr << "Invalid separator, ';' is expected"
-			<< " at the end of declaration.\n";
 		outfile << "Declaration List syntax error\n";
 		outfile << "Invalid separator, ';' is expected"
+			<< " at the end of declaration.\n";
+		cerr << "Declaration List syntax error\n";
+		cerr << "Invalid separator, ';' is expected"
 			<< " at the end of declaration.\n";
 		system("Pause");
 		exit(1);
@@ -513,11 +513,11 @@ void Par::IDs(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "IDs syntax error\n";
-		cerr << "Invalid token, <identifier> is expected"
-			" after '(' or ','.\n";
 		outfile << "IDs syntax error\n";
 		outfile << "Invalid token, <identifier> is expected"
+			" after '(' or ','.\n";
+		cerr << "IDs syntax error\n";
+		cerr << "Invalid token, <identifier> is expected"
 			" after '(' or ','.\n";
 		system("Pause");
 		exit(1);
@@ -671,13 +671,13 @@ void Par::Statement(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Statement syntax error\n";
-		cerr << "Invalid token or keyword or separator\n";
-		cerr << "<identifier> or if, fi, return, write, read and while "
-			<< "keyword or '{'is expected at the beginning of a statement.\n";
 		outfile << "Statement syntax error\n";
 		outfile << "Invalid token or keyword or separator\n";
 		outfile << "<identifier> or if, fi, return, write, read and while "
+			<< "keyword or '{'is expected at the beginning of a statement.\n";
+		cerr << "Statement syntax error\n";
+		cerr << "Invalid token or keyword or separator\n";
+		cerr << "<identifier> or if, fi, return, write, read and while "
 			<< "keyword or '{'is expected at the beginning of a statement.\n";
 		system("Pause");
 		exit(1);
@@ -706,11 +706,11 @@ void Par::Compound(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Compound syntax error\n";
-			cerr << "Invalid separator, '}' is expected"
-				<< " at the end of statement list(code block).\n";
 			outfile << "Compound syntax error\n";
 			outfile << "Invalid separator, '}' is expected"
+				<< " at the end of statement list(code block).\n";
+			cerr << "Compound syntax error\n";
+			cerr << "Invalid separator, '}' is expected"
 				<< " at the end of statement list(code block).\n";
 			system("Pause");
 			exit(1);
@@ -719,11 +719,11 @@ void Par::Compound(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Compound syntax error\n";
-		cerr << "Invalid separator, '{' is expected"
-			<< " at the beginning of statement list(code block).\n";
 		outfile << "Compound syntax error\n";
 		outfile << "Invalid separator, '{' is expected"
+			<< " at the beginning of statement list(code block).\n";
+		cerr << "Compound syntax error\n";
+		cerr << "Invalid separator, '{' is expected"
 			<< " at the beginning of statement list(code block).\n";
 		system("Pause");
 		exit(1);
@@ -756,11 +756,11 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 			else
 			{
 				printError(outfile);
-				cerr << "Assign syntax error\n";
-				cerr << "Invalid separator, ';' is expected"
-					" at the end of assign statement.\n";
 				outfile << "Assign syntax error\n";
 				outfile << "Invalid separator, ';' is expected"
+					" at the end of assign statement.\n";
+				cerr << "Assign syntax error\n";
+				cerr << "Invalid separator, ';' is expected"
 					" at the end of assign statement.\n";
 				system("Pause");
 				exit(1);
@@ -769,11 +769,11 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Assign syntax error\n";
-			cerr << "Invalid operator, ':=' is expected"
-				<< " after <identifier> and before <expression>.\n";
 			outfile << "Assign syntax error\n";
 			outfile << "Invalid operator, ':=' is expected"
+				<< " after <identifier> and before <expression>.\n";
+			cerr << "Assign syntax error\n";
+			cerr << "Invalid operator, ':=' is expected"
 				<< " after <identifier> and before <expression>.\n";
 			system("Pause");
 			exit(1);
@@ -782,11 +782,11 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Assign syntax error\n";
-		cerr << "Invalid token, <identifier> is expected"
-			" at the beginning of assign statement.\n";
 		outfile << "Assign syntax error\n";
 		outfile << "Invalid token, <identifier> is expected"
+			" at the beginning of assign statement.\n";
+		cerr << "Assign syntax error\n";
+		cerr << "Invalid token, <identifier> is expected"
 			" at the beginning of assign statement.\n";
 		system("Pause");
 		exit(1);
@@ -821,11 +821,11 @@ void Par::If(ifstream& infile, ofstream& outfile)
 			else
 			{
 				printError(outfile);
-				cerr << "If statement syntax error\n";
-				cerr << "Invalid separator, ')' is expected"
-					<< " after condition.\n";
 				outfile << "If statement syntax error\n";
 				outfile << "Invalid separator, ')' is expected"
+					<< " after condition.\n";
+				cerr << "If statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected"
 					<< " after condition.\n";
 				system("Pause");
 				exit(1);
@@ -834,12 +834,13 @@ void Par::If(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "If statement syntax error\n";
-			cerr << "Invalid separator, '(' is expected"
-				<< " before condition.\n";
 			outfile << "If statement syntax error\n";
 			outfile << "Invalid separator, '(' is expected"
 				<< " before condition.\n";
+			cerr << "If statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected"
+				<< " before condition.\n";
+			
 			system("Pause");
 			exit(1);
 		}
@@ -847,11 +848,11 @@ void Par::If(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "If statement syntax error\n";
-		cerr << "Invalid keyword, 'if' keyword is expected"
-			<< " at the beginning of If statement.\n";
 		outfile << "If statement syntax error\n";
 		outfile << "Invalid keyword, 'if' keyword is expected"
+			<< " at the beginning of If statement.\n";
+		cerr << "If statement syntax error\n";
+		cerr << "Invalid keyword, 'if' keyword is expected"
 			<< " at the beginning of If statement.\n";
 		system("Pause");
 		exit(1);
@@ -892,11 +893,11 @@ void Par::IfPrime(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "If statement syntax error\n";
-			cerr << "Invalid keyword, 'fi' is expected"
-				<< " at the end of If statement.\n";
 			outfile << "If statement syntax error\n";
 			outfile << "Invalid keyword, 'fi' is expected"
+				<< " at the end of If statement.\n";
+			cerr << "If statement syntax error\n";
+			cerr << "Invalid keyword, 'fi' is expected"
 				<< " at the end of If statement.\n";
 			system("Pause");
 			exit(1);
@@ -905,11 +906,11 @@ void Par::IfPrime(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "If statement syntax error\n";
-		cerr << "Invalid keyword, 'fi' is expected at the end of If Statement\n"
-			<< "Or 'else' is expected if there is an If-else statement.\n";
 		outfile << "If statement syntax error\n";
 		outfile << "Invalid keyword, 'fi' is expected at the end of If Statement\n"
+			<< "Or 'else' is expected if there is an If-else statement.\n";
+		cerr << "If statement syntax error\n";
+		cerr << "Invalid keyword, 'fi' is expected at the end of If Statement\n"
 			<< "Or 'else' is expected if there is an If-else statement.\n";
 		system("Pause");
 		exit(1);
@@ -934,11 +935,11 @@ void Par::Return(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Return statement syntax error\n";
-		cerr << "Invalid keyword, 'return' is expected"
-			<< " at the beginning of Return statement.\n";
 		outfile << "Return statement syntax error\n";
 		outfile << "Invalid keyword, 'return' is expected"
+			<< " at the beginning of Return statement.\n";
+		cerr << "Return statement syntax error\n";
+		cerr << "Invalid keyword, 'return' is expected"
 			<< " at the beginning of Return statement.\n";
 		system("Pause");
 		exit(1);
@@ -977,12 +978,12 @@ void Par::ReturnPrime(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Return statement syntax error\n";
-			cerr << "Invalid separator, ';' is expected"
-				<< " at the end of Return statement.\n";
 			outfile << "Return statement syntax error\n";
 			outfile << "Invalid separator, ';' is expected"
 				<< " at the end of Return statement.\n";
+			cerr << "Return statement syntax error\n";
+			cerr << "Invalid separator, ';' is expected"
+				<< " at the end of Return statement.\n";	
 			system("Pause");
 			exit(1);
 		}
@@ -1019,12 +1020,12 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 				else
 				{
 					printError(outfile);
-					cerr << "Write statement syntax error\n";
-					cerr << "Invalid separator, ';' is expected"
-						<< " at the end of Write statement.\n";
 					outfile << "Write statement syntax error\n";
 					outfile << "Invalid separator, ';' is expected"
 						<< " at the end of Write statement.\n";
+					cerr << "Write statement syntax error\n";
+					cerr << "Invalid separator, ';' is expected"
+						<< " at the end of Write statement.\n";	
 					system("Pause");
 					exit(1);
 				}
@@ -1032,11 +1033,11 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 			else
 			{
 				printError(outfile);
-				cerr << "Write statement syntax error\n";
-				cerr << "Invalid separator, ')' is expected"
-					<< " before ';' and after <Expression>.\n";
 				outfile << "Write statement syntax error\n";
 				outfile << "Invalid separator, ')' is expected"
+					<< " before ';' and after <Expression>.\n";
+				cerr << "Write statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected"
 					<< " before ';' and after <Expression>.\n";
 				system("Pause");
 				exit(1);
@@ -1045,11 +1046,11 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Write statement syntax error\n";
-			cerr << "Invalid separator, '(' is expected"
-				<< " after 'write' keyword and before <Expression>.\n";
 			outfile << "Write statement syntax error\n";
 			outfile << "Invalid separator, '(' is expected"
+				<< " after 'write' keyword and before <Expression>.\n";
+			cerr << "Write statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected"
 				<< " after 'write' keyword and before <Expression>.\n";
 			system("Pause");
 			exit(1);
@@ -1058,11 +1059,11 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Write statement syntax error\n";
-		cerr << "Invalid keyword, 'write' is expected"
-			<< " at the beginning of Write statement.\n";
 		outfile << "Write statement syntax error\n";
 		outfile << "Invalid keyword, 'write' is expected"
+			<< " at the beginning of Write statement.\n";
+		cerr << "Write statement syntax error\n";
+		cerr << "Invalid keyword, 'write' is expected"
 			<< " at the beginning of Write statement.\n";
 		system("Pause");
 		exit(1);
@@ -1099,11 +1100,11 @@ void Par::Read(ifstream& infile, ofstream& outfile)
 				else
 				{
 					printError(outfile);
-					cerr << "Read statement syntax error\n";
-					cerr << "Invalid separator, ';' is expected"
-						<< " at the end of Read statement.\n";
 					outfile << "Read statement syntax error\n";
 					outfile << "Invalid separator, ';' is expected"
+						<< " at the end of Read statement.\n";
+					cerr << "Read statement syntax error\n";
+					cerr << "Invalid separator, ';' is expected"
 						<< " at the end of Read statement.\n";
 					system("Pause");
 					exit(1);
@@ -1112,11 +1113,11 @@ void Par::Read(ifstream& infile, ofstream& outfile)
 			else
 			{
 				printError(outfile);
-				cerr << "Read statement syntax error\n";
-				cerr << "Invalid separator, ')' is expected"
-					<< " after <IDs> and before ';'.\n";
 				outfile << "Read statement syntax error\n";
 				outfile << "Invalid separator, ')' is expected"
+					<< " after <IDs> and before ';'.\n";
+				cerr << "Read statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected"
 					<< " after <IDs> and before ';'.\n";
 				system("Pause");
 				exit(1);
@@ -1125,12 +1126,12 @@ void Par::Read(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Read statement syntax error\n";
-			cerr << "Invalid separator, '(' is expected"
-				<< " after 'read' keyword and before <IDs>.\n";
 			outfile << "Read statement syntax error\n";
 			outfile << "Invalid separator, '(' is expected"
 				<< " after 'read' keyword and before <IDs>.\n";
+			cerr << "Read statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected"
+				<< " after 'read' keyword and before <IDs>.\n";	
 			system("Pause");
 			exit(1);
 		}
@@ -1138,11 +1139,11 @@ void Par::Read(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Read statement syntax error\n";
-		cerr << "Invalid keyword, 'read' is expected"
-			<< " at the beginning of Read statement.\n";
 		outfile << "Read statement syntax error\n";
 		outfile << "Invalid keyword, 'read' is expected"
+			<< " at the beginning of Read statement.\n";
+		cerr << "Read statement syntax error\n";
+		cerr << "Invalid keyword, 'read' is expected"
 			<< " at the beginning of Read statement.\n";
 		system("Pause");
 		exit(1);
@@ -1176,11 +1177,11 @@ void Par::While(ifstream& infile, ofstream& outfile)
 			else
 			{
 				printError(outfile);
-				cerr << "While statement syntax error\n";
-				cerr << "Invalid separator, ')' is expected"
-					<< " after condition and before any statements.\n";
 				outfile << "While statement syntax error\n";
 				outfile << "Invalid separator, ')' is expected"
+					<< " after condition and before any statements.\n";
+				cerr << "While statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected"
 					<< " after condition and before any statements.\n";
 				system("Pause");
 				exit(1);
@@ -1189,11 +1190,11 @@ void Par::While(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "While statement syntax error\n";
-			cerr << "Invalid separator, '(' is expected"
-				<< " before condition and after 'while' keyword.\n";
 			outfile << "While statement syntax error\n";
 			outfile << "Invalid separator, '(' is expected"
+				<< " before condition and after 'while' keyword.\n";
+			cerr << "While statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected"
 				<< " before condition and after 'while' keyword.\n";
 			system("Pause");
 			exit(1);
@@ -1202,11 +1203,11 @@ void Par::While(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "While-loop syntax error\n";
-		cerr << "Invalid keyword, 'while' is expected"
-			<< " at the beginning of While-loop.\n";
 		outfile << "While-loop syntax error\n";
 		outfile << "Invalid keyword, 'while' is expected"
+			<< " at the beginning of While-loop.\n";
+		cerr << "While-loop syntax error\n";
+		cerr << "Invalid keyword, 'while' is expected"
 			<< " at the beginning of While-loop.\n";
 		system("Pause");
 		exit(1);
@@ -1292,12 +1293,12 @@ void Par::Relop(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Relop syntax error\n";
-		cerr << "Invalid operator\n"
-			<< "'=', '/=', '>', '<', '=>' or '<=' is expected"
-			<< " between 2 <Expression>.\n";
 		outfile << "Relop syntax error\n";
 		outfile << "Invalid operator\n"
+			<< "'=', '/=', '>', '<', '=>' or '<=' is expected"
+			<< " between 2 <Expression>.\n";
+		cerr << "Relop syntax error\n";
+		cerr << "Invalid operator\n"
 			<< "'=', '/=', '>', '<', '=>' or '<=' is expected"
 			<< " between 2 <Expression>.\n";
 		system("Pause");
@@ -1480,8 +1481,8 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Invalid separator, ')' is expected.\n";
 			outfile << "Invalid separator, ')' is expected.\n";
+			cerr << "Invalid separator, ')' is expected.\n";
 			system("Pause");
 			exit(1);
 		}
@@ -1509,14 +1510,14 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	else
 	{
 		printError(outfile);
-		cerr << "Primary syntax error\n";
-		cerr << "Invalid token, separator, or boolean value\n";
-		cerr << "<identifier>, <integer>, <floating>, "
-			<< "'(', 'true' or 'false' is expected"
-			<< " after '-', '*' or '/'.\n";
 		outfile << "Primary syntax error\n";
 		outfile << "Invalid token, separator, or boolean value\n";
 		outfile << "<identifier>, <integer>, <floating>, "
+			<< "'(', 'true' or 'false' is expected"
+			<< " after '-', '*' or '/'.\n";
+		cerr << "Primary syntax error\n";
+		cerr << "Invalid token, separator, or boolean value\n";
+		cerr << "<identifier>, <integer>, <floating>, "
 			<< "'(', 'true' or 'false' is expected"
 			<< " after '-', '*' or '/'.\n";
 		system("Pause");
@@ -1544,11 +1545,11 @@ void Par::PrimaryPrime(ifstream& infile, ofstream& outfile)
 		else
 		{
 			printError(outfile);
-			cerr << "Primary syntax error\n";
-			cerr << "Invalid separator, ']' is expected"
-				<< " after <IDs>.\n";
 			outfile << "Primary syntax error\n";
 			outfile << "Invalid separator, ']' is expected"
+				<< " after <IDs>.\n";
+			cerr << "Primary syntax error\n";
+			cerr << "Invalid separator, ']' is expected"
 				<< " after <IDs>.\n";
 			system("Pause");
 			exit(1);
@@ -1572,8 +1573,8 @@ void Par::Empty(ifstream& infile, ofstream& outfile)
 
 void Par::printError(ofstream& outfile)
 {
-	cerr << "Error at line " << lineNum << endl;
 	outfile << "Error at line " << lineNum << endl;
+	cerr << "Error at line " << lineNum << endl;
 	lineNum = 1;
 }
 
