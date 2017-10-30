@@ -13,7 +13,7 @@ void Par::RAT17F(ifstream& file)
 	Lex::print();
 	if (!_switch)
 	{
-		cout << "\t<RAT17F -> <Opt Function Definitions>"
+		cout << "\t<RAT17F> -> <Opt Function Definitions>"
 			<< " %% <Opt Declaration List> <Statement List>\n";
 	}
 	OptFunctionDefinition(file);
@@ -26,12 +26,20 @@ void Par::RAT17F(ifstream& file)
 		if (!(lexeme == "EOF"))
 		{
 			cerr << "This is not EOF marker.\n"
-				<< "Error at line " << lineNum << endl;
+				<< "Error at line " << lineNum << endl
+				<< "Only <Opt Declaration List> <StatementList> is allowed after %%.\n";
+			system("Pause");
+			exit(1);
 		}
 		lineNum = 1;
 	}
 	else
+	{
 		printError();
+		cerr << "Invalid separator, '%%' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::OptFunctionDefinition(ifstream& file)
@@ -43,8 +51,6 @@ void Par::OptFunctionDefinition(ifstream& file)
 			cout << "\t<Opt Function Definition> -> "
 				<< "<Function Definition>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		FunctionDefinition(file);
 	}
 	else
@@ -77,8 +83,6 @@ void Par::FunctionDefinitionPrime(ifstream& file)
 			cout << "\t<Function Definition Prime> ->"
 				<< " <Function Definition>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		FunctionDefinition(file);
 	}
 	else
@@ -120,16 +124,40 @@ void Par::Function(ifstream& file)
 					Body(file);
 				}
 				else
+				{
 					printError();
+					cerr << "Function syntax error\n";
+					cerr << "Invalid separator, ')' is expected.\n";
+					system("Pause");
+					exit(1);
+				}
 			}
 			else
+			{
 				printError();
+				cerr << "Function syntax error\n";
+				cerr << "Invalid separator, '(' is expected.\n";
+				system("Pause");
+				exit(1);
+			}
 		}
 		else
+		{
 			printError();
+			cerr << "Function syntax error\n";
+			cerr << "Invalid token, <identifier> is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "Function syntax error\n";
+		cerr << "Invalid separator, '@' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 
 }
 
@@ -142,8 +170,6 @@ void Par::OptParameterList(ifstream& file)
 			cout << "\t<Opt Parameter List> -> "
 				<< "<Parameter List>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		ParameterList(file);
 	}
 	else
@@ -207,7 +233,13 @@ void Par::Parameter(ifstream& file)
 		}
 	}
 	else
+	{
 		printError();
+		cerr << "Parameter syntax error\n";
+		cerr << "Invalid token, <identifier> is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Qualifier(ifstream& file)
@@ -240,7 +272,14 @@ void Par::Qualifier(ifstream& file)
 		Lex::print();
 	}
 	else
+	{
 		printError();
+		cerr << "Qualifier syntax error\n"
+			<< "Invalid keyword\n";
+		cerr << "integer, boolean or floating keyword is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Body(ifstream& file)
@@ -260,10 +299,22 @@ void Par::Body(ifstream& file)
 			Lex::print();
 		}
 		else
+		{
 			printError();
+			cerr << "Function Body syntax error";
+			cerr << "Invalid separator, '}' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "Function Body syntax error";
+		cerr << "Invalid separator, '{' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::OptDeclarationList(ifstream& file)
@@ -274,8 +325,6 @@ void Par::OptDeclarationList(ifstream& file)
 		{
 			cout << "\t<Opt Declaration List> -> <Declaration List>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		DeclarationList(file);
 	}
 	else
@@ -303,7 +352,13 @@ void Par::DeclarationList(ifstream& file)
 		DeclarationListPrime(file);
 	}
 	else
+	{
 		printError();
+		cerr << "Declaration List syntax error\n";
+		cerr << "Invalid separator, ';' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::DeclarationListPrime(ifstream& file)
@@ -315,8 +370,6 @@ void Par::DeclarationListPrime(ifstream& file)
 			cout << "\t<Declaration List Prime> -> "
 				<< "<Declaration List>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		DeclarationList(file);
 	}
 	else
@@ -331,20 +384,13 @@ void Par::DeclarationListPrime(ifstream& file)
 
 void Par::Declaration(ifstream& file)
 {
-	if (lexeme == "integer" || lexeme == "boolean" || lexeme == "floating")
+	if (!_switch)
 	{
-		if (!_switch)
-		{
-			cout << "\t<Declaration> -> "
-				<< "<Qualifier> <IDs>\n";
-		}
-		/*lexer(file);
-		Lex::print();*/
-		Qualifier(file);
-		IDs(file);
+		cout << "\t<Declaration> -> "
+			<< "<Qualifier> <IDs>\n";
 	}
-	else
-		printError();
+	Qualifier(file);
+	IDs(file);
 }
 
 void Par::IDs(ifstream& file)
@@ -361,7 +407,13 @@ void Par::IDs(ifstream& file)
 		IDsPrime(file);
 	}
 	else
+	{
 		printError();
+		cerr << "IDs syntax error\n";
+		cerr << "Invalid token, <identifier> is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::IDsPrime(ifstream& file)
@@ -409,8 +461,6 @@ void Par::StatementListPrime(ifstream& file)
 			cout << "\t<Statement List Prime> -> "
 				<< "<Statement List>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		StatementList(file);
 	}
 	else
@@ -432,8 +482,6 @@ void Par::Statement(ifstream& file)
 			cout << "\t<Statement> -> "
 				<< "<Compound>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		Compound(file);
 	}
 	else if (token == "identifier")
@@ -443,8 +491,6 @@ void Par::Statement(ifstream& file)
 			cout << "\t<Statement> -> "
 				<< "<Assign>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		Assign(file);
 	}
 	else if (lexeme == "if")
@@ -454,8 +500,6 @@ void Par::Statement(ifstream& file)
 			cout << "\t<Statement> -> "
 				<< "<If>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		If(file);
 	}
 	else if (lexeme == "return")
@@ -465,8 +509,6 @@ void Par::Statement(ifstream& file)
 			cout << "\t<Statement> -> "
 				<< "<Return>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		Return(file);
 	}
 	else if (lexeme == "write")
@@ -476,8 +518,6 @@ void Par::Statement(ifstream& file)
 			cout << "\t<Statement> -> "
 				<< "<Write>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		Write(file);
 	}
 	else if (lexeme == "read")
@@ -487,8 +527,6 @@ void Par::Statement(ifstream& file)
 			cout << "\t<Statement> -> "
 				<< "<Read>\n";
 		}
-		/*lexer(file);
-		Lex::print()*/;
 		Read(file);
 	}
 	else if (lexeme == "while")
@@ -498,12 +536,18 @@ void Par::Statement(ifstream& file)
 			cout << "\t<Statement> -> "
 				<< "<While>\n";
 		}
-		/*lexer(file);
-		Lex::print()*/;
 		While(file);
 	}
 	else
+	{
 		printError();
+		cerr << "Statement syntax error\n";
+		cerr << "Invalid token or keyword or separator\n";
+		cerr << "<identifier> or if, fi, return, write, read and while "
+			<< "keyword or '{'is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Compound(ifstream& file)
@@ -523,9 +567,23 @@ void Par::Compound(ifstream& file)
 			lexer(file);
 			Lex::print();
 		}
+		else
+		{
+			printError();
+			cerr << "Compound syntax error\n";
+			cerr << "Invalid separator, '}' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "Compound syntax error\n";
+		cerr << "Invalid separator, '{' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Assign(ifstream& file)
@@ -550,13 +608,31 @@ void Par::Assign(ifstream& file)
 				Lex::print();
 			}
 			else
+			{
 				printError();
+				cerr << "Assign syntax error\n";
+				cerr << "Invalid separator, ';' is expected.\n";
+				system("Pause");
+				exit(1);
+			}
 		}
 		else
+		{
 			printError();
+			cerr << "Assign syntax error\n";
+			cerr << "Invalid operator, ':=' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "Assign syntax error\n";
+		cerr << "Invalid token, <identifier> is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::If(ifstream& file)
@@ -583,13 +659,31 @@ void Par::If(ifstream& file)
 				IfPrime(file);
 			}
 			else
+			{
 				printError();
+				cerr << "If statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected.\n";
+				system("Pause");
+				exit(1);
+			}
 		}
 		else
+		{
 			printError();
+			cerr << "If statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "If statement syntax error\n";
+		cerr << "Invalid keyword, 'if' keyword is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::IfPrime(ifstream& file)
@@ -620,10 +714,22 @@ void Par::IfPrime(ifstream& file)
 			Lex::print();
 		}
 		else
+		{
 			printError();
+			cerr << "If statement syntax error\n";
+			cerr << "Invalid keyword, 'fi' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "If statement syntax error\n";
+		cerr << "Invalid keyword, 'fi' or 'else' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Return(ifstream& file)
@@ -640,7 +746,13 @@ void Par::Return(ifstream& file)
 		ReturnPrime(file);
 	}
 	else
+	{
 		printError();
+		cerr << "Return statement syntax error\n";
+		cerr << "Invalid keyword, 'return' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::ReturnPrime(ifstream& file)
@@ -671,7 +783,13 @@ void Par::ReturnPrime(ifstream& file)
 			Lex::print();
 		}
 		else
+		{
 			printError();
+			cerr << "Return statement syntax error\n";
+			cerr << "Invalid separator, ';' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 }
 
@@ -701,16 +819,40 @@ void Par::Write(ifstream& file)
 					Lex::print();
 				}
 				else
+				{
 					printError();
+					cerr << "Write statement syntax error\n";
+					cerr << "Invalid separator, ';' is expected.\n";
+					system("Pause");
+					exit(1);
+				}
 			}
 			else
+			{
 				printError();
+				cerr << "Write statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected.\n";
+				system("Pause");
+				exit(1);
+			}
 		}
 		else
+		{
 			printError();
+			cerr << "Write statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "Write statement syntax error\n";
+		cerr << "Invalid keyword, 'write' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Read(ifstream& file)
@@ -739,16 +881,40 @@ void Par::Read(ifstream& file)
 					Lex::print();
 				}
 				else
+				{
 					printError();
+					cerr << "Read statement syntax error\n";
+					cerr << "Invalid separator, ';' is expected.\n";
+					system("Pause");
+					exit(1);
+				}
 			}
 			else
+			{
 				printError();
+				cerr << "Read statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected.\n";
+				system("Pause");
+				exit(1);
+			}
 		}
 		else
+		{
 			printError();
+			cerr << "Read statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "Read statement syntax error\n";
+		cerr << "Invalid keyword, 'read' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::While(ifstream& file)
@@ -774,13 +940,31 @@ void Par::While(ifstream& file)
 				Statement(file);
 			}
 			else
+			{
 				printError();
+				cerr << "While statement syntax error\n";
+				cerr << "Invalid separator, ')' is expected.\n";
+				system("Pause");
+				exit(1);
+			}
 		}
 		else
+		{
 			printError();
+			cerr << "While statement syntax error\n";
+			cerr << "Invalid separator, '(' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
+	{
 		printError();
+		cerr << "While statement syntax error\n";
+		cerr << "Invalid keyword, 'while' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Condition(ifstream& file)
@@ -852,7 +1036,14 @@ void Par::Relop(ifstream& file)
 		Lex::print();
 	}
 	else
+	{
 		printError();
+		cerr << "Relop syntax error\n";
+		cerr << "Invalid operator\n"
+			<< "'=', '/=', '>', '<', '=>' or '<=' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Expression(ifstream& file)
@@ -963,8 +1154,6 @@ void Par::Factor(ifstream& file)
 		{
 			cout << "\t<Factor> -> <Primary>\n";
 		}
-		/*lexer(file);
-		Lex::print();*/
 		Primary(file);
 	}
 }
@@ -1014,7 +1203,12 @@ void Par::Primary(ifstream& file)
 			Lex::print();
 		}
 		else
+		{
 			printError();
+			cerr << "Invalid separator, ')' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else if (lexeme == "true")
 	{
@@ -1035,7 +1229,15 @@ void Par::Primary(ifstream& file)
 		Lex::print();
 	}
 	else
+	{
 		printError();
+		cerr << "Primary syntax error\n";
+		cerr << "Invalid token, separator, or boolean value\n";
+		cerr << "<identifier>, <integer>, <floating>, "
+			<< "'(', 'true' or 'false' is expected.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::PrimaryPrime(ifstream& file)
@@ -1055,7 +1257,13 @@ void Par::PrimaryPrime(ifstream& file)
 			Lex::print();
 		}
 		else
+		{
 			printError();
+			cerr << "Primary syntax error\n";
+			cerr << "Invalid separator, ']' is expected.\n";
+			system("Pause");
+			exit(1);
+		}
 	}
 	else
 	{
@@ -1074,7 +1282,7 @@ void Par::Empty(ifstream& file)
 
 void Par::printError()
 {
-	cerr << "Error at line " << lineNum <<endl;
+	cerr << "Error at line " << lineNum << endl;
 	lineNum = 1;
 }
 
