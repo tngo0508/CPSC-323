@@ -72,7 +72,7 @@ int main() {
 			cout << "Press 0(on) or 1(off) for syntax rules: ";
 			cin >> On_off;
 			check.setSwitch(On_off);
-			check.RAT17F(inFile);
+			check.RAT17F(inFile, outFile);
 			/*while (!inFile.eof())
 			{
 				check.RAT17F(inFile);
