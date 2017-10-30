@@ -1,32 +1,39 @@
-@ convert  (month : integer)
-{
-           return month / 12;
-}
-%%
-     integer  month;
-	 floating age, remainder;
-	 read (month);
-	 write(convert [month]);
-     age := age + remainder;
-	 
-	 if(age < 1) 
-		write(Baby);
-	 else if (age < 3)
-		write (Toddler);
-	 else if (age < 5)
-		write (Preschool);
-	 else if (age < 12)
-		write (GradeSchool);
-	 else if (age < 18)
-	    write (Teen);
-	 else if (age < 21)
-	    write (YoungAdult);
-	 else if (age => 21)
-	    write (Adult); 
-	 fi
-	 fi
-	 fi
-	 fi
-	 fi
-	 fi
-	 fi
+a###
+a####
+###
+#abc
+a# 
+ab 
+abc 
+a#abc 
+abcd# 
+abc#x#y 
+abc#xyz#def 
+ab## 
+a#a#
+ab##c
+123#
+1.2#
+#123
+#1.2
+2#a#
+
+abcd
+
+123.
+.123
+.2.2
+a3jfj12
+
+123#
+???$%^^
+#123
+!!123
+
+123a
+
+1..
+
+() %% [] ; {} @ ,
+
+:= = /= > < => <= + - * /

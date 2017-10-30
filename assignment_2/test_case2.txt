@@ -1,10 +1,5 @@
-@ transferToVND  (amount : integer)
-{
-           return 22000 * amount;
+while (f#x <  lower) a := 23.00 adf
+{  write  (low);
+             write (convert [low]);
+             low := low + step##y + 35;
 }
-%%
-	integer amount;
-	write(transferToUsd[amount]);
-
-   
-   
