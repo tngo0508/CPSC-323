@@ -1,0 +1,10 @@
+@ transferToVND  (amount : integer)
+{
+           return 22000 * amount;
+}
+%%
+	integer amount;
+	write(transferToUsd[amount]);
+
+   
+   
