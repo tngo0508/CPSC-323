@@ -1,28 +1,14 @@
-while (fahr#x  < upper)   a := 23.00
-
-while (f#x <  lower) a := 23.00 adf
-{  write  (low);
-             write (convert [low]);
-             low := low + step##y + 35;
+@ convert  (fahr : integer)
+{
+           return 5*(fahr -32)/9
 }
 
-a# ab abc a#abc abcd# abc#x#y abc#xyz#def ab## a#a#
-#abc ab##c
+%%
+     integer   low, high, step#xy;
 
-abcd
-
-
-a3jfj12
-
-123#
-???$%^^
-#123
-!!123
-
-123a
-
-1..
-
-() %% [] ; {} @ ,
-
-:= = /= > < => <= + - * / >= :
+     read(low, high, step#xy );
+     while (low < high)  
+         {  write  (low);
+             write (convert [low]);
+             low := low + step#xy;
+         } 
