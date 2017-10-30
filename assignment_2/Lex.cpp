@@ -228,22 +228,23 @@ void Lex::lexer(ifstream& file)
 	string str; //string stores the lexeme
 	int state_status = 0;
 	bool found = false;
-	char ch = 'c';
+	char ch = 'c', prevChar = 'c';
 
 	//get the character and add it into a string until see space, separator, or
 	//operator
 	while (!found)
 	{
+		//Update line number for Error Handler in Par.h
+		if (prevChar == '\n')
+			lineNum++;
 		ch = file.get();
+		prevChar = ch;
 
 		//check if current character is a separator, operator, whitespace, or eof
 		//if yes, put the flag to exit the loop
 		if (this->isSeparator(ch) || this->isOperator(ch) || isspace(ch) || ch == -1)
 		{
 			found = true;
-			//Update line number
-			if (ch == '\n')
-				lineNum++;
 		}
 
 		/*if string is not empty and current character is either operator or separator
