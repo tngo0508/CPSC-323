@@ -1,4 +1,4 @@
-while (f#x <  lower) a := 23.00 adf
+while (f#x <  lower) a := 23.00
 {  write  (low);
              write (convert [low]);
              low := low + step##y + 35;
