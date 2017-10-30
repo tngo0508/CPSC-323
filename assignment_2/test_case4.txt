@@ -1,18 +1,3 @@
-@ convert  (fahr : integer)
-{
-           return 5*(fahr -32)/9;
-}
-
-%%
-     integer   low, high, step#xy;
-
-     read(low, high, step#xy );
-     while (low < high)  
-         {  write  (low);
-             write (convert [low]);
-             low := low + step#xy;
-         } 
-
 @ project  (is : floating)
 {
            return 10.0/(fahr -32.97)/9.9764;
@@ -29,12 +14,4 @@
              write (convert [low]);
              low := low + step#xy;
          }
-		 %%
 		 
-while (fahr#x  < upper)   a := 23.00
-
-while (f#x <  lower) a := 23.00 adf
-{  write  (low);
-             write (convert [low]);
-             low := low + step##y + 35;
-}
