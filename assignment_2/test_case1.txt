@@ -4,9 +4,9 @@
 }
 
 %%
-     integer   low, high, step#xy
+     integer   low, high, step#xy;
 
-     read(low, high, step#xy );
+     read(low, high, step#xy )
      while (low < high)  
          {  write  (low);
              write (convert [low]);

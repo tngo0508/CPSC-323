@@ -1,11 +1,123 @@
 SOURCE CODE:
 
-a 123
+@ convert  (fahr : integer)
+{
+           return 5*(fahr -32) * 9;
+}
+
+%%
+     integer   low, high, step#xy;
+
+     read(low, high, step#xy )
+     while (low < high)  
+         {  write  (low);
+             write (convert [low]);
+             low := low + step#xy;
+         } 
 
 
 OUTPUT:
-Token               Lexeme              
 
-identifier          a                   
-integer             123                 
-
+Token: separator           Lexeme: @                   
+	<RAT17F> -> <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
+	<Opt Function Definition> -> <Function Definition>
+	<Function Definition> -> <Function> <Function Definition Prime>
+	<Function> -> @ <Identifier> (<Opt Parameter List>) <Opt Declaration List> <Body>
+Token: identifier          Lexeme: convert             
+Token: separator           Lexeme: (                   
+Token: identifier          Lexeme: fahr                
+	<Opt Parameter List> -> <Parameter List>
+	<Parameter List> -> <Parameter> <Parameter List Prime>
+	<Parameter> -> <IDs> : <Qualifier>
+	<IDs> -> <identifier> <IDs Prime>
+Token: operator            Lexeme: :                   
+	<IDs Prime> -> Epsilon
+Token: keyword             Lexeme: integer             
+	<Qualifier> -> integer
+Token: separator           Lexeme: )                   
+	<Parameter List Prime> -> Epsilon
+Token: separator           Lexeme: {                   
+	<Opt Declaration List> -> Epsilon
+	<Body> -> { <Statement List> }
+Token: keyword             Lexeme: return              
+	<Statement List> -> <Statement> <Statement List Prime>
+	<Statement> -> <Return>
+	<Return> -> return <Return Prime>
+Token: integer             Lexeme: 5                   
+	<Return Prime> -> <Expression>;
+	<Expression> -> <Term> <Expression Prime>
+	<Term> -> <Factor> <Term Prime>
+	<Factor> -> <Primary>
+	<Primary> -> <integer>
+Token: operator            Lexeme: *                   
+	<Term Prime> -> * <Factor> <Term Prime>
+Token: separator           Lexeme: (                   
+	<Factor> -> <Primary>
+	<Primary> -> (<Expression>)
+Token: identifier          Lexeme: fahr                
+	<Expression> -> <Term> <Expression Prime>
+	<Term> -> <Factor> <Term Prime>
+	<Factor> -> <Primary>
+	<Primary> -> <identifier> <Primary Prime>
+Token: operator            Lexeme: -                   
+	<Primary Prime> -> Epsilon
+	<Term Prime> -> Epsilon
+	<Expression Prime> -> - <Term> <Expression Prime>
+Token: integer             Lexeme: 32                  
+	<Term> -> <Factor> <Term Prime>
+	<Factor> -> <Primary>
+	<Primary> -> <integer>
+Token: separator           Lexeme: )                   
+	<Term Prime> -> Epsilon
+	<Expression Prime> -> Epsilon
+Token: operator            Lexeme: *                   
+	<Term Prime> -> * <Factor> <Term Prime>
+Token: integer             Lexeme: 9                   
+	<Factor> -> <Primary>
+	<Primary> -> <integer>
+Token: separator           Lexeme: ;                   
+	<Term Prime> -> Epsilon
+	<Expression Prime> -> Epsilon
+Token: separator           Lexeme: }                   
+	<Statement List Prime> -> Epsilon
+Token: separator           Lexeme: %%                  
+	<Function Definition Prime> -> Epsilon
+Token: keyword             Lexeme: integer             
+	<Opt Declaration List> -> <Declaration List>
+	<Declaration List> -> <Declaration> ; <Declaration List Prime>
+	<Declaration> -> <Qualifier> <IDs>
+	<Qualifier> -> integer
+Token: identifier          Lexeme: low                 
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: ,                   
+	<IDsPrime> -> , <IDs>
+Token: identifier          Lexeme: high                
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: ,                   
+	<IDsPrime> -> , <IDs>
+Token: identifier          Lexeme: step#xy             
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: ;                   
+	<IDs Prime> -> Epsilon
+Token: keyword             Lexeme: read                
+	<Declaration List Prime> -> Epsilon
+	<Statement List> -> <Statement> <Statement List Prime>
+	<Statement> -> <Read>
+	<Read> -> read (<IDs>);
+Token: separator           Lexeme: (                   
+Token: identifier          Lexeme: low                 
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: ,                   
+	<IDsPrime> -> , <IDs>
+Token: identifier          Lexeme: high                
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: ,                   
+	<IDsPrime> -> , <IDs>
+Token: identifier          Lexeme: step#xy             
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: )                   
+	<IDs Prime> -> Epsilon
+Token: keyword             Lexeme: while               
+Error at line 10
+Read statement syntax error
+Invalid separator, ';' is expected at the end of Read statement.
