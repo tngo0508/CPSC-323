@@ -51,7 +51,7 @@ public:
 	void Empty(ifstream& file);
 
 	void printError();
-
+	void setSwitch(const bool number);
 	//Destructor
 	~Par();
 

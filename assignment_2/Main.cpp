@@ -40,12 +40,12 @@ int main() {
 			}
 
 			cout << "\n\nOUTPUT:\n";
-			cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
+			//cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
 			cout << endl;
 
 
 			outFile << "\n\nOUTPUT:\n";
-			outFile << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
+			//outFile << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
 			outFile << endl;
 
 			Par check;
@@ -68,6 +68,10 @@ int main() {
 				//		<< endl;
 				//}
 	//        }
+			int On_off = 0;
+			cout << "Press 0(on) or 1(off) for syntax rules: ";
+			cin >> On_off;
+			check.setSwitch(On_off);
 			check.RAT17F(inFile);
 			/*while (!inFile.eof())
 			{
