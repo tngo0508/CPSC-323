@@ -1,0 +1,14 @@
+SOURCE CODE:
+
+/ ++ == // ** += -= ! ~ ? . <= >= != && || -- + - * / << >> *= /= %=
+
+(( )) {{}} [] ;,.@ @@
+
+
+OUTPUT:
+
+Token: operator            Lexeme: /                   
+	<RAT17F> -> <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
+	<Opt Function Definition> -> Epsilon
+Error at line 1
+Invalid separator, '%%' is expected  after function definitions and before declaration list.

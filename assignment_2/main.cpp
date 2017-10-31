@@ -25,7 +25,9 @@ int main() {
 			//Make sure file is opened
 			if (!inFile.is_open())
 			{
-				cerr << "Failed to open the file\n";
+				cerr << "Failed to open the file.\n";
+				cerr << "Please enter correct file.\n";
+				system("pause");
 				exit(1);
 			}
 			else
@@ -46,17 +48,21 @@ int main() {
 			outFile << endl;
 
 			Par check;
-			string token, lexeme;
 
 			inFile.clear();
 			inFile.seekg(0);
-			//start to do the lexical analysis
+			//start to do the syntax analysis
 			int On_off = 0;
 			cout << "Press 0(on) or 1(off) for syntax rules: ";
 			cin >> On_off;
+
+			//turn on or off syntax rules
 			check.setSwitch(On_off);
+
+			//run top-down RDP parser
 			check.RAT17F(inFile, outFile);
 			inFile.close();
+
 			cout << endl;
 			outFile << endl;
 		}
