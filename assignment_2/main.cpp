@@ -15,7 +15,7 @@ int main() {
 	string line;
 
 	do {
-		cout << "Enter a file name .txt (or exit to quit): ";
+		cout << "Enter a file name .txt (or 'exit' to quit): ";
 		cin >> filename;
 
 		if (!(filename == "exit"))
