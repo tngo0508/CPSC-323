@@ -7,8 +7,8 @@ class Par : public Lex
 {
 	//This class is implemented based on a predictive recursive descent parser(RDP)
 	//It has a syntax rule that is required for syntax analysis
-	//Starting with RAT17F which is the main functions for top-down parser. 
-	//Then, calling the next function recursively to analyze the syntax structure.
+	//Starting with RAT17F which is the main function for top-down parser. 
+	//Then, calling the next functions recursively to analyze the syntax structure.
 public:
 	//constructor
 	Par();
