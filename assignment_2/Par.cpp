@@ -3,7 +3,7 @@
 //constructor
 Par::Par()
 {
-	_switch = false;
+	_switch = false; //Used to turn on/off syntax rules
 }
 
 //Function to turn on/off syntax rules
@@ -12,6 +12,7 @@ void Par::setSwitch(const bool number)
 	_switch = number;
 }
 
+//Print token and lexeme
 void Par::print(ofstream& outfile)
 {
 	if (!_switch)
@@ -25,6 +26,7 @@ void Par::print(ofstream& outfile)
 //syntax rule functions
 void Par::RAT17F(ifstream& infile, ofstream& outfile)
 {
+	//Get the first token in file.txt
 	lexer(infile);
 	print(outfile);
 	if (!_switch)
@@ -52,7 +54,9 @@ void Par::RAT17F(ifstream& infile, ofstream& outfile)
 			system("Pause");
 			exit(1);
 		}
-		lineNum = 1;
+
+		//reset the line number after finishing syntax checking for a file.txt
+		lineNum = 1; 
 	}
 	else
 	{
@@ -1568,13 +1572,15 @@ void Par::PrimaryPrime(ifstream& infile, ofstream& outfile)
 
 void Par::Empty(ifstream& infile, ofstream& outfile)
 {
-
+	//Do nothing in this function
 }
 
 void Par::printError(ofstream& outfile)
 {
 	outfile << "Error at line " << lineNum << endl;
 	cerr << "Error at line " << lineNum << endl;
+	//Reset the line number if there is an syntax error. The program will terminate
+	//right away. So it is necessary to reset this for the next run.
 	lineNum = 1;
 }
 
