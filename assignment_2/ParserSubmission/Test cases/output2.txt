@@ -1,0 +1,89 @@
+SOURCE CODE:
+
+@ transferToVND  (amount : integer)
+{
+           return 22000 * amount;
+}
+%%
+	integer amount;
+	write(transferToUsd[amount]);
+
+
+OUTPUT:
+
+Token: separator           Lexeme: @                   
+	<RAT17F> -> <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
+	<Opt Function Definition> -> <Function Definition>
+	<Function Definition> -> <Function> <Function Definition Prime>
+	<Function> -> @ <Identifier> (<Opt Parameter List>) <Opt Declaration List> <Body>
+Token: identifier          Lexeme: transferToVND       
+Token: separator           Lexeme: (                   
+Token: identifier          Lexeme: amount              
+	<Opt Parameter List> -> <Parameter List>
+	<Parameter List> -> <Parameter> <Parameter List Prime>
+	<Parameter> -> <IDs> : <Qualifier>
+	<IDs> -> <identifier> <IDs Prime>
+Token: operator            Lexeme: :                   
+	<IDs Prime> -> Epsilon
+Token: keyword             Lexeme: integer             
+	<Qualifier> -> integer
+Token: separator           Lexeme: )                   
+	<Parameter List Prime> -> Epsilon
+Token: separator           Lexeme: {                   
+	<Opt Declaration List> -> Epsilon
+	<Body> -> { <Statement List> }
+Token: keyword             Lexeme: return              
+	<Statement List> -> <Statement> <Statement List Prime>
+	<Statement> -> <Return>
+	<Return> -> return <Return Prime>
+Token: integer             Lexeme: 22000               
+	<Return Prime> -> <Expression>;
+	<Expression> -> <Term> <Expression Prime>
+	<Term> -> <Factor> <Term Prime>
+	<Factor> -> <Primary>
+	<Primary> -> <integer>
+Token: operator            Lexeme: *                   
+	<Term Prime> -> * <Factor> <Term Prime>
+Token: identifier          Lexeme: amount              
+	<Factor> -> <Primary>
+	<Primary> -> <identifier> <Primary Prime>
+Token: separator           Lexeme: ;                   
+	<Primary Prime> -> Epsilon
+	<Term Prime> -> Epsilon
+	<Expression Prime> -> Epsilon
+Token: separator           Lexeme: }                   
+	<Statement List Prime> -> Epsilon
+Token: separator           Lexeme: %%                  
+	<Function Definition Prime> -> Epsilon
+Token: keyword             Lexeme: integer             
+	<Opt Declaration List> -> <Declaration List>
+	<Declaration List> -> <Declaration> ; <Declaration List Prime>
+	<Declaration> -> <Qualifier> <IDs>
+	<Qualifier> -> integer
+Token: identifier          Lexeme: amount              
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: ;                   
+	<IDs Prime> -> Epsilon
+Token: keyword             Lexeme: write               
+	<Declaration List Prime> -> Epsilon
+	<Statement List> -> <Statement> <Statement List Prime>
+	<Statement> -> <Write>
+	<Write> -> <write (<Expression>);
+Token: separator           Lexeme: (                   
+Token: identifier          Lexeme: transferToUsd       
+	<Expression> -> <Term> <Expression Prime>
+	<Term> -> <Factor> <Term Prime>
+	<Factor> -> <Primary>
+	<Primary> -> <identifier> <Primary Prime>
+Token: separator           Lexeme: [                   
+	<Primary Prime> -> [<IDs>]
+Token: identifier          Lexeme: amount              
+	<IDs> -> <identifier> <IDs Prime>
+Token: separator           Lexeme: ]                   
+	<IDs Prime> -> Epsilon
+Token: separator           Lexeme: )                   
+	<Term Prime> -> Epsilon
+	<Expression Prime> -> Epsilon
+Token: separator           Lexeme: ;                   
+Token: EOF                 Lexeme: EOF                 
+
