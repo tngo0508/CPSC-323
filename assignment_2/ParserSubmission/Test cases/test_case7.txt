@@ -1,2 +1,0 @@
-string keywords[12] = { while, if, fi, else, return,
-		read, write, integer, true, false, boolean, floating };
