@@ -677,11 +677,11 @@ void Par::Statement(ifstream& infile, ofstream& outfile)
 		printError(outfile);
 		outfile << "Statement syntax error\n";
 		outfile << "Invalid token or keyword or separator\n";
-		outfile << "<identifier> or if, fi, return, write, read and while "
+		outfile << "<identifier>, 'if', 'return', 'write', 'read','while' "
 			<< "keyword or '{'is expected at the beginning of a statement.\n";
 		cerr << "Statement syntax error\n";
 		cerr << "Invalid token or keyword or separator\n";
-		cerr << "<identifier> or if, fi, return, write, read and while "
+		cerr << "<identifier>, 'if', 'return', 'write', 'read','while' "
 			<< "keyword or '{'is expected at the beginning of a statement.\n";
 		system("Pause");
 		exit(1);
