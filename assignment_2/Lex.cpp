@@ -1,5 +1,5 @@
 #include "Lex.h"
-
+#include <string>
 int Lex::lineNum = 1;
 
 //constructor
@@ -400,6 +400,82 @@ string Lex::getToken() const
 string Lex::getLexeme() const
 {
 	return lexeme;
+}
+
+void Lex::SymbolTable(ifstream & infile)
+{
+	lexer(infile);
+	while (!infile.eof())
+	{
+		insertID(lexeme, infile);
+
+	}
+}
+
+/*
+	Insert Id
+	
+
+*/
+void Lex::insertID(string id, ifstream &infile)
+{
+	string previousLexeme;
+	while ((token == "keyword" && lexeme == "integer") || (token == "keyword" && lexeme == "boolean")) {
+		previousLexeme = lexeme;
+		lexer(infile);
+		//Check if next lexeme is identifier
+		if (token == "identifier") {
+			
+				a[rowsType][2] = previousLexeme;
+				rowsType++;
+				while (token == "identifier") {
+					a[rowsId][0] = lexeme;
+					rowsId++;
+					a[rowsAddress][1] = to_string(MEMORY_ADDRESS);
+					rowsAddress++;
+					MEMORY_ADDRESS++;
+					lexer(infile);
+					if (token == "operator" || token == "separator") {
+						lexer(infile);
+					}
+					if (token == "identifier") {
+						a[rowsType][2] = previousLexeme;
+						rowsType++;
+					}
+				}
+			
+			
+		}
+	
+	}
+	lexer(infile);
+
+}
+
+bool Lex::checkDuplicate(string id)
+{
+	for (int i = 0; i < 30; i++)
+	{
+		for (int j = i + 1; j < 30; j++)
+		{
+			if (a[i][0] == a[j][0])
+			{
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+void Lex::printTable()
+{	
+	cout << "Identifier " << setw(20) << "Address " << setw(20) << "Type " << endl;
+	for (int i = 0; i < 30; i++) {
+		for (int j = 0; j < 3; j++) {
+			cout << left << setw(20) << a[i][j];
+		}
+		cout << endl;
+	}
 }
 
 //destructor

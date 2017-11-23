@@ -49,6 +49,12 @@ public:
 	string getToken() const;
 	string getLexeme() const;
 
+	void SymbolTable(ifstream& infile);
+	void insertID(string id, ifstream& infile);
+	bool checkDuplicate(string id);
+	string getAddress(string);
+	void printTable();
+
 	//destructor
 	~Lex();
 protected:
@@ -56,6 +62,11 @@ protected:
 	string lexeme;
 	string token;
 	static int lineNum;
+	string a[30][3];
+	int rowsId = 0;
+	int rowsType = 0;
+	int rowsAddress= 0;
+	int MEMORY_ADDRESS = 10000;
 };
 
 #endif
