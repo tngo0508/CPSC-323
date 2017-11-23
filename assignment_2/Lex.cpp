@@ -456,12 +456,9 @@ bool Lex::checkDuplicate(string id)
 {
 	for (int i = 0; i < 30; i++)
 	{
-		for (int j = i + 1; j < 30; j++)
+		if (a[i][0] == id)
 		{
-			if (a[i][0] == a[j][0])
-			{
-				return 1;
-			}
+			return 1;
 		}
 	}
 	return 0;
