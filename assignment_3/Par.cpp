@@ -91,36 +91,25 @@ void Par::Qualifier(ifstream& infile, ofstream& outfile)
 		lexer(infile);
 		print(outfile);
 	}
-	else if (token == "keyword" && lexeme == "floating")
-	{
-		if (!_switch)
-		{
-			cout << "\t<Qualifier> -> floating\n";
-			outfile << "\t<Qualifier> -> floating\n";
-		}
-		lexer(infile);
-		print(outfile);
-	}
 	else
 	{
 		printError(outfile);
 		outfile << "Qualifier syntax error\n"
 			<< "Invalid keyword\n";
-		outfile << "'integer', 'boolean' or 'floating' keyword is expected"
+		outfile << "'integer', 'boolean' keyword is expected"
 			<< " after ':'.\n";
 		cerr << "Qualifier syntax error\n"
 			<< "Invalid keyword\n";
-		cerr << "'integer', 'boolean' or 'floating' keyword is expected"
+		cerr << "'integer', 'boolean' keyword is expected"
 			<< " after ':'.\n";
 		system("Pause");
 		exit(1);
 	}
 }
 
-
 void Par::OptDeclarationList(ifstream& infile, ofstream& outfile)
 {
-	if (lexeme == "integer" || lexeme == "boolean" || lexeme == "floating")
+	if (lexeme == "integer" || lexeme == "boolean")
 	{
 		if (!_switch)
 		{
@@ -172,7 +161,7 @@ void Par::DeclarationList(ifstream& infile, ofstream& outfile)
 
 void Par::DeclarationListPrime(ifstream& infile, ofstream& outfile)
 {
-	if (lexeme == "integer" || lexeme == "boolean" || lexeme == "floating")
+	if (lexeme == "integer" || lexeme == "boolean")
 	{
 		if (!_switch)
 		{
@@ -1165,16 +1154,6 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 		lexer(infile);
 		print(outfile);
 	}
-	else if (token == "floating")
-	{
-		if (!_switch)
-		{
-			cout << "\t<Primary> -> <floating>\n";
-			outfile << "\t<Primary> -> <floating>\n";
-		}
-		lexer(infile);
-		print(outfile);
-	}
 	else if (lexeme == "(")
 	{
 		if (!_switch)
@@ -1224,12 +1203,12 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 		printError(outfile);
 		outfile << "Primary syntax error\n";
 		outfile << "Invalid token, separator, or boolean value\n";
-		outfile << "<identifier>, <integer>, <floating>, "
+		outfile << "<identifier>, <integer>, "
 			<< "'(', 'true' or 'false' is expected"
 			<< " after '-', '*' or '/'.\n";
 		cerr << "Primary syntax error\n";
 		cerr << "Invalid token, separator, or boolean value\n";
-		cerr << "<identifier>, <integer>, <floating>, "
+		cerr << "<identifier>, <integer>, "
 			<< "'(', 'true' or 'false' is expected"
 			<< " after '-', '*' or '/'.\n";
 		system("Pause");
