@@ -15,7 +15,7 @@ int main() {
 	string line;
 
 	do {
-		cout << "Enter a file name .txt (or exit to quit): ";
+		cout << "Enter a file name .txt (or 'exit' to quit): ";
 		cin >> filename;
 
 		if (!(filename == "exit"))
@@ -25,7 +25,9 @@ int main() {
 			//Make sure file is opened
 			if (!inFile.is_open())
 			{
-				cerr << "Failed to open the file\n";
+				cerr << "Failed to open the file.\n";
+				cerr << "Please enter correct file.\n";
+				system("pause");
 				exit(1);
 			}
 			else
@@ -40,55 +42,29 @@ int main() {
 			}
 
 			cout << "\n\nOUTPUT:\n";
-			//cout << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
 			cout << endl;
 
-
 			outFile << "\n\nOUTPUT:\n";
-			//outFile << left << setw(20) << "Token" << setw(20) << "Lexeme" << endl;
 			outFile << endl;
 
 			Par check;
-			string token, lexeme;
 
 			inFile.clear();
 			inFile.seekg(0);
-			//start to do the lexical analysis
-			//        while (!inFile.eof())
-			//        {
-			//            check.lexer(inFile);
-
-			////if there is a whitespace at eof, skip printing
-			//if (!(check.getLexeme() == "EOF"))
-			//{
-			//	check.print();
-			//	token = check.getToken();
-			//	lexeme = check.getLexeme();
-			//	outFile << left << setw(20) << token << setw(20) << lexeme 
-			//		<< endl;
-			//}
-			//        }
+			//start to do the syntax analysis
 			int On_off = 0;
 			cout << "Press 0(on) or 1(off) for syntax rules: ";
 			cin >> On_off;
+
+			//turn on or off syntax rules
 			check.setSwitch(On_off);
-			check.RAT17F(inFile, outFile);
-			/*while (!inFile.eof())
-			{
-			check.RAT17F(inFile);
-
-			if there is a whitespace at eof, skip printing
-			if (!(check.getLexeme() == "EOF"))
-			{
-			check.print();
-			token = check.getToken();
-			lexeme = check.getLexeme();
-			outFile << left << setw(20) << token << setw(20) << lexeme
-			<< endl;
-			}
-			}*/
-
+			check.SymbolTable(inFile);
+			check.printTable();
+			
+			//run top-down RDP parser
+			//check.RAT17F(inFile, outFile);
 			inFile.close();
+
 			cout << endl;
 			outFile << endl;
 		}
