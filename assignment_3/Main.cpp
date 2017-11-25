@@ -63,7 +63,8 @@ int main() {
 			check.RAT17F(inFile, outFile);
 			check.printSym();
 			inFile.close();
-
+			
+			check.~Par();
 			cout << endl;
 			outFile << endl;
 		}

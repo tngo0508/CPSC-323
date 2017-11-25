@@ -15,4 +15,3 @@ write(sum+max);
 
 OUTPUT:
 
-

@@ -7,6 +7,19 @@ Par::Par()
 	_switch = true; //Used to turn on/off syntax rules
 	sym_idx = 0;
 	sym_table[sym_idx].mem_loc = 0;
+	count = 0;
+}
+
+bool Par::check_sym(string lexeme, int& count)
+{
+	for (int i = 0; i < sym_idx; i++)
+	{
+		if (lexeme == sym_table[i].id && current_type == sym_table[i].idType)
+			return true;
+		else if (lexeme == sym_table[i].id)
+			count++;
+	}
+	return false;
 }
 
 void Par::gen_sym(string lexeme, string id_type)
@@ -20,10 +33,9 @@ void Par::gen_sym(string lexeme, string id_type)
 
 void Par::printSym() const
 {
-	int size = sym_idx;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < sym_idx; i++)
 	{
-		cout << sym_table[i].id << " " << sym_table[i].mem_loc << " " 
+		cout << sym_table[i].id << " " << sym_table[i].mem_loc << " "
 			<< sym_table[i].idType;
 		cout << endl;
 	}
@@ -78,7 +90,7 @@ void Par::RAT17F(ifstream& infile, ofstream& outfile)
 		}
 
 		//reset the line number after finishing syntax checking for a file.txt
-		lineNum = 1; 
+		lineNum = 1;
 	}
 	else
 	{
@@ -86,7 +98,7 @@ void Par::RAT17F(ifstream& infile, ofstream& outfile)
 		outfile << "Invalid separator, '%%' is expected "
 			<< " after function definitions and before declaration list.\n";
 		cerr << "Invalid separator, '%%' is expected "
-			<<" after function definitions and before declaration list.\n";
+			<< " after function definitions and before declaration list.\n";
 		system("Pause");
 		exit(1);
 	}
@@ -225,7 +237,17 @@ void Par::IDs(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		gen_sym(lexeme, current_type);
+		if (!check_sym(lexeme, count))
+		{
+			gen_sym(lexeme, current_type);
+		}
+		if (count == 1)
+		{
+			cerr << "Identifier " << lexeme << " is already declared.\n";
+			system("pause");
+			exit(1);
+		}
+
 		if (!_switch)
 		{
 			cout << "\t<IDs> -> "
@@ -567,7 +589,7 @@ void Par::If(ifstream& infile, ofstream& outfile)
 			cerr << "If statement syntax error\n";
 			cerr << "Invalid separator, '(' is expected"
 				<< " before condition.\n";
-			
+
 			system("Pause");
 			exit(1);
 		}
@@ -710,7 +732,7 @@ void Par::ReturnPrime(ifstream& infile, ofstream& outfile)
 				<< " at the end of Return statement.\n";
 			cerr << "Return statement syntax error\n";
 			cerr << "Invalid separator, ';' is expected"
-				<< " at the end of Return statement.\n";	
+				<< " at the end of Return statement.\n";
 			system("Pause");
 			exit(1);
 		}
@@ -752,7 +774,7 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 						<< " at the end of Write statement.\n";
 					cerr << "Write statement syntax error\n";
 					cerr << "Invalid separator, ';' is expected"
-						<< " at the end of Write statement.\n";	
+						<< " at the end of Write statement.\n";
 					system("Pause");
 					exit(1);
 				}
@@ -858,7 +880,7 @@ void Par::Read(ifstream& infile, ofstream& outfile)
 				<< " after 'read' keyword and before <IDs>.\n";
 			cerr << "Read statement syntax error\n";
 			cerr << "Invalid separator, '(' is expected"
-				<< " after 'read' keyword and before <IDs>.\n";	
+				<< " after 'read' keyword and before <IDs>.\n";
 			system("Pause");
 			exit(1);
 		}
@@ -1298,4 +1320,7 @@ void Par::printError(ofstream& outfile)
 }
 
 //Destructor
-Par::~Par() {}
+Par::~Par()
+{
+	memory_address = 10000;
+}
