@@ -1,6 +1,8 @@
 #include "Par.h"
 
 int memory_address = 10000;
+bool isFromRead = false;
+
 //constructor
 Par::Par()
 {
@@ -14,10 +16,8 @@ bool Par::check_sym(string lexeme, int& count)
 {
 	for (int i = 0; i < sym_idx; i++)
 	{
-		if (lexeme == sym_table[i].id && current_type == sym_table[i].idType)
+		if (lexeme == sym_table[i].id)
 			return true;
-		else if (lexeme == sym_table[i].id)
-			count++;
 	}
 	return false;
 }
@@ -237,13 +237,13 @@ void Par::IDs(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!check_sym(lexeme, count))
+		if (!check_sym(lexeme, count) && isFromRead == false)
 		{
 			gen_sym(lexeme, current_type);
 		}
-		if (count == 1)
+		else if (!check_sym(lexeme, count) && isFromRead == true)
 		{
-			cerr << "Identifier " << lexeme << " is already declared.\n";
+			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
 			exit(1);
 		}
@@ -483,6 +483,12 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
+		if (!check_sym(lexeme, count))
+		{
+			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
+			system("pause");
+			exit(1);
+		}
 		if (!_switch)
 		{
 			cout << "\t<Assign> -> "
@@ -821,6 +827,7 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 
 void Par::Read(ifstream& infile, ofstream& outfile)
 {
+	isFromRead = true;
 	if (lexeme == "read")
 	{
 		if (!_switch)
@@ -1183,6 +1190,12 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
+		if (!check_sym(lexeme, count))
+		{
+			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
+			system("pause");
+			exit(1);
+		}
 		if (!_switch)
 		{
 			cout << "\t<Primary> -> <identifier> <Primary Prime>\n";
@@ -1323,4 +1336,6 @@ void Par::printError(ofstream& outfile)
 Par::~Par()
 {
 	memory_address = 10000;
+	count = 0;
+	isFromRead = false;
 }

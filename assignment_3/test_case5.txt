@@ -1,3 +1,11 @@
-/ ++ == // ** += -= ! ~ ? . <= >= != && || -- + - * / << >> *= /= %=
+%% 
+    integer   i, max, sum;
 
-(( )) {{}} [] ;,.@ @@
+    sum := 0;
+    i := 1;
+    read ( max);
+    while (i <  b)  {
+          sum := sum + i;
+          i  := i + 1; 
+     }
+     write (sum+max);

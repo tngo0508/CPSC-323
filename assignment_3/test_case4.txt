@@ -1,17 +1,12 @@
-@ project  (is : floating)
-{
-           return 10.0/(fahr -32.97)/9.9764;
-}
+%% 
+    integer   i, max, sum;
+	boolean	  i, max, sum;
 
-%%
-     boolean   found#nmd#;
-
-	 found#nmd# := true;
-	 if (found#nmd# = false)
-     read(#xy#);
-     while (low < high)  
-         {  write  (low);
-             write (convert [low]);
-             low := low + step#xy;
-         }
-		 
+    sum := 0;
+    i := 1;
+    read ( max);
+    while (i <  max)  {
+          sum := sum + i;
+          i  := i + 1; 
+     }
+     write (sum+max);
