@@ -613,6 +613,7 @@ void Par::If(ifstream& infile, ofstream& outfile)
 			outfile << "\t<If> -> "
 				<< "if (<Condition>) <Statement> <If Prime>\n";
 		}
+		int addr = instr_idx;
 		lexer(infile);
 		print(outfile);
 		if (lexeme == "(")
@@ -626,6 +627,7 @@ void Par::If(ifstream& infile, ofstream& outfile)
 				print(outfile);
 				Statement(infile, outfile);
 				IfPrime(infile, outfile);
+				backPatch(instr_idx);
 			}
 			else
 			{
