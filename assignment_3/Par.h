@@ -131,7 +131,7 @@ public:
 	void setSwitch(const bool number);
 	void print(ofstream& outfile);
 
-	bool check_sym(string lexeme, int& count);
+	bool check_sym(string lexeme);
 	void gen_sym(string lexeme, string id_type);
 	void printSym() const;
 
@@ -152,7 +152,6 @@ private:
 	stack <int> jumpstack;
 	int instr_idx;
 	string current_type;
-	int count;
 };
 
 #endif

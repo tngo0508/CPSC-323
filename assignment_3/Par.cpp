@@ -4,6 +4,8 @@
 using namespace std;
 int memory_address = 10000;
 bool isFromRead = false;
+int count_sym = 0;
+bool isFromDeclaration = false;
 
 //constructor
 Par::Par()
@@ -11,15 +13,16 @@ Par::Par()
 	_switch = true; //Used to turn on/off syntax rules
 	sym_idx = 0;
 	sym_table[sym_idx].mem_loc = 0;
-	count = 0;
 	instr_idx = 0;
 }
 
-bool Par::check_sym(string lexeme, int& count)
+bool Par::check_sym(string lexeme)
 {
 	for (int i = 0; i < sym_idx; i++)
 	{
 		if (lexeme == sym_table[i].id) {
+			if (isFromDeclaration == true)
+				count_sym++;
 			return true;
 		}
 		
@@ -209,6 +212,7 @@ void Par::OptDeclarationList(ifstream& infile, ofstream& outfile)
 
 void Par::DeclarationList(ifstream& infile, ofstream& outfile)
 {
+	isFromDeclaration = true;
 	if (!_switch)
 	{
 		cout << "\t<Declaration List> -> "
@@ -235,6 +239,7 @@ void Par::DeclarationList(ifstream& infile, ofstream& outfile)
 		system("Pause");
 		exit(1);
 	}
+	isFromDeclaration = false;
 }
 
 void Par::DeclarationListPrime(ifstream& infile, ofstream& outfile)
@@ -278,13 +283,18 @@ void Par::IDs(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!check_sym(lexeme, count) && isFromRead == false)
+		if (!check_sym(lexeme) && isFromRead == false)
 		{
 			gen_sym(lexeme, current_type);
 		}
-		else if (!check_sym(lexeme, count) && isFromRead == true)
+		else if (!check_sym(lexeme) && isFromRead == true)
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
+			system("pause");
+			exit(1);
+		}
+		if (count_sym == 2) {
+			cerr << "Identifier " << lexeme << " is already declared.\n";
 			system("pause");
 			exit(1);
 		}
@@ -524,7 +534,7 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!check_sym(lexeme, count))
+		if (!check_sym(lexeme))
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
@@ -809,7 +819,7 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 			Expression(infile, outfile);
 			if (lexeme == ")")
 			{
-				gen_instr("STDOUT", 0);
+				gen_instr("STDOUT", -1);
 				lexer(infile);
 				print(outfile);
 				if (lexeme == ";")
@@ -893,7 +903,7 @@ void Par::Read(ifstream& infile, ofstream& outfile)
 			if (lexeme == ")")
 			{
 				int addr = get_address(save);
-				gen_instr("STDIN", 0);
+				gen_instr("STDIN", -1);
 				gen_instr("POPM", addr);
 				lexer(infile);
 				print(outfile);
@@ -967,7 +977,7 @@ void Par::While(ifstream& infile, ofstream& outfile)
 				<< "<while (<Condition>) <Statement>\n";
 		}
 		int addr = instr_idx;
-		gen_instr("LABEL", 0);
+		gen_instr("LABEL", -1);
 		lexer(infile);
 		print(outfile);
 		if (lexeme == "(")
@@ -981,7 +991,7 @@ void Par::While(ifstream& infile, ofstream& outfile)
 				if (lexeme == "do") {
 					lexer(infile);
 					Statement(infile, outfile);
-					gen_instr("JUMP", instr_idx);
+					gen_instr("JUMP", addr);
 					backPatch(instr_idx);
 				}
 				else {
@@ -1044,8 +1054,59 @@ void Par::Condition(ifstream& infile, ofstream& outfile)
 			<< "<Expression> <Relop> <Expression>\n";
 	}
 	Expression(infile, outfile);
+	string op = lexeme;
 	Relop(infile, outfile);
 	Expression(infile, outfile);
+	if (op == "=")
+	{
+		gen_instr("EQ", -1);
+		jumpstack.push(instr_idx);
+		gen_instr("JUMPZ", -1);
+	}
+	else if (op == "/=")
+	{
+		gen_instr("DIVEQ", -1);
+		jumpstack.push(instr_idx);
+		gen_instr("JUMPZ", -1);
+	}
+	else if (op == ">")
+	{
+		gen_instr("GRT", -1);
+		jumpstack.push(instr_idx);
+		gen_instr("JUMPZ", -1);
+	}
+	else if (op == "<")
+	{
+		gen_instr("LES", -1);
+		jumpstack.push(instr_idx);
+		gen_instr("JUMPZ", -1);
+	}
+	else if (op == "=>")
+	{
+		gen_instr("GE", -1);
+		jumpstack.push(instr_idx);
+		gen_instr("JUMPZ", -1);
+	}
+	else if (op == "<=")
+	{
+		gen_instr("LE", -1);
+		jumpstack.push(instr_idx);
+		gen_instr("JUMPZ", -1);
+	}
+	else
+	{
+		printError(outfile);
+		outfile << "Relop syntax error\n";
+		outfile << "Invalid operator\n"
+			<< "'=', '/=', '>', '<', '=>' or '<=' is expected"
+			<< " between 2 <Expression>.\n";
+		cerr << "Relop syntax error\n";
+		cerr << "Invalid operator\n"
+			<< "'=', '/=', '>', '<', '=>' or '<=' is expected"
+			<< " between 2 <Expression>.\n";
+		system("Pause");
+		exit(1);
+	}
 }
 
 void Par::Relop(ifstream& infile, ofstream& outfile)
@@ -1151,7 +1212,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 		lexer(infile);
 		print(outfile);
 		Term(infile, outfile);
-		gen_instr("ADD", 0);
+		gen_instr("ADD", -1);
 		ExpressionPrime(infile, outfile);
 	}
 	else if (lexeme == "-")
@@ -1166,7 +1227,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 		lexer(infile);
 		print(outfile);
 		Term(infile, outfile);
-		gen_instr("SUB", 0);
+		gen_instr("SUB", -1);
 		ExpressionPrime(infile, outfile);
 	}
 	else
@@ -1203,7 +1264,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 		lexer(infile);
 		print(outfile);
 		Factor(infile, outfile);
-		gen_instr("MUL", 0);
+		gen_instr("MUL", -1);
 		TermPrime(infile, outfile);
 	}
 	else if (lexeme == "/")
@@ -1216,7 +1277,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 		lexer(infile);
 		print(outfile);
 		Factor(infile, outfile);
-		gen_instr("DIV", 0);
+		gen_instr("DIV", -1);
 		TermPrime(infile, outfile);
 	}
 	else
@@ -1232,27 +1293,33 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 
 void Par::Factor(ifstream& infile, ofstream& outfile)
 {
-	//if (lexeme == "-")
-	//{
-	//	if (!_switch)
-	//	{
-	//		cout << "\t<Factor> -> - <Primary>\n";
-	//		outfile << "\t<Factor> -> - <Primary>\n";
-	//	}
-	//	lexer(infile);
-	//	print(outfile);
-	//	Primary(infile, outfile);
-	//}
-	//else
-	//{
-	//	if (!_switch)
-	//	{
-	//		cout << "\t<Factor> -> <Primary>\n";
-	//		outfile << "\t<Factor> -> <Primary>\n";
-	//	}
-	//	Primary(infile, outfile);
-	//}
+	/*if (lexeme == "-")
+	{
+		if (!_switch)
+		{
+			cout << "\t<Factor> -> - <Primary>\n";
+			outfile << "\t<Factor> -> - <Primary>\n";
+		}
+		lexer(infile);
+		print(outfile);
+		Primary(infile, outfile);
+	}
+	else
+	{
+		if (!_switch)
+		{
+			cout << "\t<Factor> -> <Primary>\n";
+			outfile << "\t<Factor> -> <Primary>\n";
+		}
+		Primary(infile, outfile);
+	}*/
 	if (token == "identifier") {
+		if (!check_sym(lexeme))
+		{
+		cerr << "Identifier " << lexeme << " has not been declared yet.\n";
+		system("pause");
+		exit(1);
+		}
 		if (!_switch)
 		{
 			cout << "\t<Factor> -> - <identifier>\n";
@@ -1280,7 +1347,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!check_sym(lexeme, count))
+		if (!check_sym(lexeme))
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
@@ -1426,6 +1493,6 @@ void Par::printError(ofstream& outfile)
 Par::~Par()
 {
 	memory_address = 10000;
-	count = 0;
+	count_sym = 0;
 	isFromRead = false;
 }
