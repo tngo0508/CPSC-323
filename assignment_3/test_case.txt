@@ -1,14 +1,11 @@
-@ convert  (fahr : integer)
-{
-           return 5*(fahr -32)/9
-}
+%% 
+    integer   i, max, sum;
 
-%%
-     integer   low, high, step#xy;
-
-     read(low, high, step#xy );
-     while (low < high)  
-         {  write  (low);
-             write (convert [low]);
-             low := low + step#xy;
-         } 
+    sum := 0;
+    i := 1;
+    read ( i, a, max);
+    while (i <  max)  {
+          sum := sum + i;
+          i  := i + 1; 
+     }
+     write (sum+max);

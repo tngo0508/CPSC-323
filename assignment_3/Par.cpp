@@ -2,6 +2,8 @@
 
 int memory_address = 10000;
 bool isFromRead = false;
+int count_sym = 0;
+bool isFromDeclaration = false;
 
 //constructor
 Par::Par()
@@ -9,15 +11,18 @@ Par::Par()
 	_switch = true; //Used to turn on/off syntax rules
 	sym_idx = 0;
 	sym_table[sym_idx].mem_loc = 0;
-	count = 0;
 }
 
-bool Par::check_sym(string lexeme, int& count)
+bool Par::check_sym(string lexeme)
 {
 	for (int i = 0; i < sym_idx; i++)
 	{
 		if (lexeme == sym_table[i].id)
+		{
+			if (isFromDeclaration == true)
+				count_sym++;
 			return true;
+		}
 	}
 	return false;
 }
@@ -168,6 +173,7 @@ void Par::OptDeclarationList(ifstream& infile, ofstream& outfile)
 
 void Par::DeclarationList(ifstream& infile, ofstream& outfile)
 {
+	isFromDeclaration = true;
 	if (!_switch)
 	{
 		cout << "\t<Declaration List> -> "
@@ -194,6 +200,7 @@ void Par::DeclarationList(ifstream& infile, ofstream& outfile)
 		system("Pause");
 		exit(1);
 	}
+	isFromDeclaration = false;
 }
 
 void Par::DeclarationListPrime(ifstream& infile, ofstream& outfile)
@@ -237,13 +244,19 @@ void Par::IDs(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!check_sym(lexeme, count) && isFromRead == false)
+		if (!check_sym(lexeme) && isFromRead == false)
 		{
 			gen_sym(lexeme, current_type);
 		}
-		else if (!check_sym(lexeme, count) && isFromRead == true)
+		else if (!check_sym(lexeme) && isFromRead == true)
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
+			system("pause");
+			exit(1);
+		}
+		if (count_sym == 2)
+		{
+			cerr << "Identifier " << lexeme << " is already declared.\n";
 			system("pause");
 			exit(1);
 		}
@@ -483,7 +496,7 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!check_sym(lexeme, count))
+		if (!check_sym(lexeme))
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
@@ -1190,7 +1203,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!check_sym(lexeme, count))
+		if (!check_sym(lexeme))
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
@@ -1336,6 +1349,6 @@ void Par::printError(ofstream& outfile)
 Par::~Par()
 {
 	memory_address = 10000;
-	count = 0;
+	count_sym = 0;
 	isFromRead = false;
 }
