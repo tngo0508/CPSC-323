@@ -140,7 +140,8 @@ public:
 	void backPatch(int instr_address);
 	void gen_instr(string op, int oprnd);
 	void printInstr() const;
-
+	string getType(string input);
+	void checkTypeMatch(string saveToken, string lexeme);
 	//Destructor
 	~Par();
 

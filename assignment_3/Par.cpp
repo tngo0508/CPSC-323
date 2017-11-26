@@ -6,6 +6,7 @@ int memory_address = 10000;
 bool isFromRead = false;
 int count_sym = 0;
 bool isFromDeclaration = false;
+string saveToken;
 
 //constructor
 Par::Par()
@@ -83,6 +84,40 @@ void Par::printInstr() const
 			<< instr_table[i].oprnd;
 		cout << endl;
 	}
+}
+
+string Par::getType(string input)
+{
+	string a = "";
+	if (token == "integer") {
+		a = token;
+	}
+	else if (token == "boolean"){
+		a = token;
+	}
+	else {
+		for (int i = 0; i < sym_idx; i++) {
+			if (sym_table[i].id == input) {
+				a = sym_table[i].idType;
+			}
+		}
+	}
+	return a;
+}
+
+/*
+	Check Type of current lexeme vs previous lexeme
+	if does not match, print error
+*/
+void Par::checkTypeMatch(string saveToken, string lexeme)
+{
+	if (getType(saveToken) == "boolean" || getType(lexeme) == "boolean") {
+		cerr << "No Arithmetic operations are allowed for booleans." << endl;
+		system("pause");
+		exit(1);
+	}
+	
+	
 }
 
 //Function to turn on/off syntax rules
@@ -553,6 +588,11 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 		if (lexeme == ":=")
 		{
 			lexer(infile);
+			if (getType(save) != getType(lexeme)) {
+				cerr << "The type of " << save << " and " << lexeme << " must match" << endl;
+				system("pause");
+				exit(1);
+			}
 			print(outfile);
 			Expression(infile, outfile);
 			int addr = get_address(save);
@@ -1212,6 +1252,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 				<< "+ <Term> <Expression Prime>\n";
 		}
 		lexer(infile);
+		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Term(infile, outfile);
 		gen_instr("ADD", -1);
@@ -1227,6 +1268,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 				<< "- <Term> <Expression Prime>\n";
 		}
 		lexer(infile);
+		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Term(infile, outfile);
 		gen_instr("SUB", -1);
@@ -1264,6 +1306,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 			outfile << "\t<Term Prime> -> * <Factor> <Term Prime>\n";
 		}
 		lexer(infile);
+		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Factor(infile, outfile);
 		gen_instr("MUL", -1);
@@ -1277,6 +1320,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 			outfile << "\t<Term Prime> -> / <Factor> <Term Prime>\n";
 		}
 		lexer(infile);
+		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Factor(infile, outfile);
 		gen_instr("DIV", -1);
@@ -1329,6 +1373,7 @@ void Par::Factor(ifstream& infile, ofstream& outfile)
 		}
 		int addr = get_address(lexeme);
 		gen_instr("PUSHM", addr);
+		saveToken = lexeme;
 		lexer(infile);
 		print(outfile);
 
