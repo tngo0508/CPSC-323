@@ -1,6 +1,7 @@
 #include "Par.h"
 #include <iostream>
 #include <string>
+#define BLANK -9999
 using namespace std;
 int memory_address = 10000;
 bool isFromRead = false;
@@ -14,7 +15,7 @@ Par::Par()
 	_switch = true; //Used to turn on/off syntax rules
 	sym_idx = 0;
 	sym_table[sym_idx].mem_loc = 0;
-	instr_idx = 0;
+	instr_idx = 1;
 }
 
 bool Par::check_sym(string lexeme)
@@ -42,6 +43,7 @@ void Par::gen_sym(string lexeme, string id_type)
 
 void Par::printSym() const
 {
+	cout << "\nSYMBOL TABLE\n";
 	for (int i = 0; i < sym_idx; i++)
 	{
 		cout << sym_table[i].id << " " << sym_table[i].mem_loc << " "
@@ -78,11 +80,22 @@ void Par::gen_instr(string op, int oprnd)
 
 void Par::printInstr() const
 {
-	for (int i = 0; i < instr_idx; i++)
-	{
-		cout << instr_table[i].address << " " << instr_table[i].op << " "
-			<< instr_table[i].oprnd;
-		cout << endl;
+	string a;
+	cout << "\nINSTRUCTION TABLE\n";
+	for (int i = 1; i < instr_idx; i++)
+	{	
+		if (instr_table[i].oprnd == BLANK) {
+			a = "";
+			cout << instr_table[i].address << " " << instr_table[i].op << " "
+				<< a;
+			cout << endl;
+		}
+		else {
+			cout << instr_table[i].address << " " << instr_table[i].op << " "
+				<< instr_table[i].oprnd;
+			cout << endl;
+		}
+		
 	}
 }
 
@@ -861,7 +874,7 @@ void Par::Write(ifstream& infile, ofstream& outfile)
 			Expression(infile, outfile);
 			if (lexeme == ")")
 			{
-				gen_instr("STDOUT", -1);
+				gen_instr("STDOUT", BLANK);
 				lexer(infile);
 				print(outfile);
 				if (lexeme == ";")
@@ -945,7 +958,7 @@ void Par::Read(ifstream& infile, ofstream& outfile)
 			if (lexeme == ")")
 			{
 				int addr = get_address(save);
-				gen_instr("STDIN", -1);
+				gen_instr("STDIN", BLANK);
 				gen_instr("POPM", addr);
 				lexer(infile);
 				print(outfile);
@@ -1019,7 +1032,7 @@ void Par::While(ifstream& infile, ofstream& outfile)
 				<< "<while (<Condition>) <Statement>\n";
 		}
 		int addr = instr_idx;
-		gen_instr("LABEL", -1);
+		gen_instr("LABEL", BLANK);
 		lexer(infile);
 		print(outfile);
 		if (lexeme == "(")
@@ -1101,39 +1114,39 @@ void Par::Condition(ifstream& infile, ofstream& outfile)
 	Expression(infile, outfile);
 	if (op == "=")
 	{
-		gen_instr("EQ", -1);
+		gen_instr("EQ", BLANK);
 		jumpstack.push(instr_idx);
-		gen_instr("JUMPZ", -1);
+		gen_instr("JUMPZ", BLANK);
 	}
 	else if (op == "/=")
 	{
-		gen_instr("DIVEQ", -1);
+		gen_instr("DIVEQ", BLANK);
 		jumpstack.push(instr_idx);
-		gen_instr("JUMPZ", -1);
+		gen_instr("JUMPZ", BLANK);
 	}
 	else if (op == ">")
 	{
-		gen_instr("GRT", -1);
+		gen_instr("GRT", BLANK);
 		jumpstack.push(instr_idx);
-		gen_instr("JUMPZ", -1);
+		gen_instr("JUMPZ", BLANK);
 	}
 	else if (op == "<")
 	{
-		gen_instr("LES", -1);
+		gen_instr("LES", BLANK);
 		jumpstack.push(instr_idx);
-		gen_instr("JUMPZ", -1);
+		gen_instr("JUMPZ", BLANK);
 	}
 	else if (op == "=>")
 	{
-		gen_instr("GE", -1);
+		gen_instr("GE", BLANK);
 		jumpstack.push(instr_idx);
-		gen_instr("JUMPZ", -1);
+		gen_instr("JUMPZ", BLANK);
 	}
 	else if (op == "<=")
 	{
-		gen_instr("LE", -1);
+		gen_instr("LE", BLANK);
 		jumpstack.push(instr_idx);
-		gen_instr("JUMPZ", -1);
+		gen_instr("JUMPZ", BLANK);
 	}
 	else
 	{
@@ -1255,7 +1268,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Term(infile, outfile);
-		gen_instr("ADD", -1);
+		gen_instr("ADD", BLANK);
 		ExpressionPrime(infile, outfile);
 	}
 	else if (lexeme == "-")
@@ -1271,7 +1284,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Term(infile, outfile);
-		gen_instr("SUB", -1);
+		gen_instr("SUB", BLANK);
 		ExpressionPrime(infile, outfile);
 	}
 	else
@@ -1309,7 +1322,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Factor(infile, outfile);
-		gen_instr("MUL", -1);
+		gen_instr("MUL", BLANK);
 		TermPrime(infile, outfile);
 	}
 	else if (lexeme == "/")
@@ -1323,7 +1336,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 		checkTypeMatch(saveToken, lexeme);
 		print(outfile);
 		Factor(infile, outfile);
-		gen_instr("DIV", -1);
+		gen_instr("DIV", BLANK);
 		TermPrime(infile, outfile);
 	}
 	else
