@@ -2,6 +2,23 @@
 #define PAR_H
 
 #include "Lex.h"
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <stack>
+
+struct sym_elem
+{
+	string id;
+	int mem_loc;
+	string idType;
+};
+
+struct instr_elem {
+	int address;
+	string op;
+	int oprnd;
+};
 
 class Par : public Lex
 {
@@ -114,11 +131,28 @@ public:
 	void setSwitch(const bool number);
 	void print(ofstream& outfile);
 
+	bool check_sym(string lexeme, int& count);
+	void gen_sym(string lexeme, string id_type);
+	void printSym() const;
+
+	//Instruction Table
+	int get_address(string save);
+	void backPatch(int instr_address);
+	void gen_instr(string op, int oprnd);
+	void printInstr() const;
+
 	//Destructor
 	~Par();
 
 private:
 	bool _switch;
+	sym_elem sym_table[30];
+	instr_elem  instr_table[1000];
+	int sym_idx;
+	stack <int> jumpstack;
+	int instr_idx;
+	string current_type;
+	int count;
 };
 
 #endif
