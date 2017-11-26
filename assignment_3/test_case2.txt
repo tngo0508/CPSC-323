@@ -1,12 +1,6 @@
-%%
-integer i,max,sum;
-boolean i,max,sum;
-
-sum := 0;
-i := 1;
-read(max);
-while(i<max){
-sum := sum + i;
-i := I + 1;
-}
-write(sum+max);
+%% 
+	integer a,b,c;
+	
+    if(a<b) 
+		a:=c;
+	fi
