@@ -1,23 +1,11 @@
-@ convert#min#to#hour  (min : integer)
-{
-           return min/60;
-}
+%% 
+    integer   i, max, sum;
 
-@ convert#second#to#hour  (second : integer)
-{
-           return hour/(60*60);
-}
-
-%%
-    kinteger   hour, min, second;
-
-    read(hour, min, second);
-	if (min => 60)
-		convert#minto#hour
-	fi
-
-    while (low < high)  
-         {  write  (low);
-             write (convert [low]);
-             low := low + step#xy;
-         } 
+    sum := 0;
+    i := true;
+    read ( max);
+    while (i <  max) do  {
+          sum := sum + i;
+          i  := i + 1; 
+     }
+     write (sum+max);

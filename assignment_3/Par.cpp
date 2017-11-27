@@ -1375,14 +1375,14 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (!(getType(temp) == getType(lexeme)) && !(temp == "")) {
-			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
-			system("pause");
-			exit(1);
-		}
 		if (!check_sym(lexeme))
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
+			system("pause");
+			exit(1);
+		}
+		if (!(getType(temp) == getType(lexeme)) && !(temp == "")) {
+			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			system("pause");
 			exit(1);
 		}
@@ -1400,7 +1400,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	}
 	else if (token == "integer")
 	{
-		if (!(getType(temp) == getType(lexeme)) && !(temp == "")) {
+		if (!(getType(temp) == "integer") && !(temp == "")) {
 			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			system("pause");
 			exit(1);
