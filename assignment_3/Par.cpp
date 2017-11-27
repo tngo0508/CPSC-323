@@ -1549,4 +1549,6 @@ Par::~Par()
 	count_sym = 0;
 	isFromRead = false;
 	isFromDeclaration = false;
+	prevLexeme = "";
+	temp = "";
 }
