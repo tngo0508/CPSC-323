@@ -107,21 +107,14 @@ void Par::printInstr() const
 string Par::getType(string input) const
 {
 	string a = "";
-	if (token == "integer") {
-		a = token;
-	}
-	else if (token == "boolean") {
-		a = token;
-	}
-	else if(input == "true" || input == "false"){
-		a = "boolean";
-	}
-	else {
-		for (int i = 0; i < sym_idx; i++) {
-			if (sym_table[i].id == input) {
-				a = sym_table[i].idType;
-			}
+	for (int i = 0; i < sym_idx; i++) {
+		if (sym_table[i].id == input) {
+			a = sym_table[i].idType;
 		}
+	}
+	
+	if(input == "true" || input == "false"){
+		a = "boolean";
 	}
 	return a;
 }
@@ -610,6 +603,18 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 		if (lexeme == ":=")
 		{
 			lexer(infile);
+			if (token == "integer") {
+				if (getType(temp) != token) {
+					cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+					system("pause");
+					exit(1);
+				}
+			}
+			else if (getType(temp) != getType(lexeme)) {
+				cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+				system("pause");
+				exit(1);
+			}
 			print(outfile);
 			Expression(infile, outfile);
 			int addr = get_address(save);
@@ -1356,7 +1361,15 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 
 void Par::Factor(ifstream& infile, ofstream& outfile)
 {
-	if (lexeme == "-")
+	if (!_switch)
+	{
+		cout << "\t<Factor> -> - <Primary>\n";
+		outfile << "\t<Factor> -> - <Primary>\n";
+	}
+	temp2 = lexeme;
+	print(outfile);
+	Primary(infile, outfile);
+	/*if (lexeme == "-")
 	{
 		if (!_switch)
 		{
@@ -1386,7 +1399,7 @@ void Par::Factor(ifstream& infile, ofstream& outfile)
 			outfile << "\t<Factor> -> <Primary>\n";
 		}
 		Primary(infile, outfile);
-	}
+	}*/
 }
 
 void Par::Primary(ifstream& infile, ofstream& outfile)
