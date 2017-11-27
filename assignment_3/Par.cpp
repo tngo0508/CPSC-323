@@ -105,20 +105,17 @@ void Par::printInstr() const
 string Par::getType(string input) const
 {
 	string a = "";
-	if (token == "integer") {
-		a = token;
-	}
-	else if (token == "boolean") {
-		a = token;
-	}
-	else {
-		for (int i = 0; i < sym_idx; i++) {
-			if (sym_table[i].id == input) {
-				a = sym_table[i].idType;
-			}
+	for (int i = 0; i < sym_idx; i++) {
+		if (sym_table[i].id == input) {
+			a = sym_table[i].idType;
 		}
 	}
+
+	if (input == "true" || input == "false") {
+		a = "boolean";
+	}
 	return a;
+
 }
 
 /*
@@ -1378,7 +1375,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
-		if (getType(temp) != getType(lexeme)) {
+		if (!(getType(temp) == getType(lexeme)) && !(temp == "")) {
 			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			system("pause");
 			exit(1);
@@ -1403,7 +1400,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	}
 	else if (token == "integer")
 	{
-		if (getType(temp) != getType(lexeme)) {
+		if (!(getType(temp) == getType(lexeme)) && !(temp == "")) {
 			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			system("pause");
 			exit(1);
