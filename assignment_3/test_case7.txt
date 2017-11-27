@@ -1,8 +1,8 @@
 %% 
     integer   i, max, sum;
-
+	boolean a;
     sum := 0;
-    i := -1;
+    a := 4;
     read ( max);
     while (i <  max) do {
           sum := sum + i;

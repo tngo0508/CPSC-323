@@ -2,11 +2,11 @@ SOURCE CODE:
 
 %% 
     integer   i, max, sum;
-
+	boolean a;
     sum := 0;
-    i := true;
+    a := 4;
     read ( max);
-    while (i <  max) do  {
+    while (i <  max) do {
           sum := sum + i;
           i  := i + 1; 
      }
@@ -14,5 +14,4 @@ SOURCE CODE:
 
 
 OUTPUT:
-
 

@@ -1034,6 +1034,7 @@ void Par::While(ifstream& infile, ofstream& outfile)
 		if (lexeme == "(")
 		{
 			lexer(infile);
+			temp = lexeme;
 			print(outfile);
 			Condition(infile, outfile);
 			if (lexeme == ")")
@@ -1393,7 +1394,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 		}
 		int addr = get_address(lexeme);
 		gen_instr("PUSHM", addr);
-		prevLexeme = lexeme;
+		//prevLexeme = lexeme;
 		lexer(infile);
 		print(outfile);
 		PrimaryPrime(infile, outfile);
@@ -1448,21 +1449,41 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	}
 	else if (lexeme == "true")
 	{
+		if (!(getType(temp) == "boolean") && !(temp == "") || prevLexeme == "-") {
+			if (prevLexeme == "-")
+				cerr << "Cannot assign " << temp << " to " << prevLexeme + lexeme << endl;
+			else
+				cerr << "The type of " << temp << " and " << lexeme << " must match" 
+				<< endl;
+			system("pause");
+			exit(1);
+		}
 		if (!_switch)
 		{
 			cout << "\t<Prime> -> true\n";
 			outfile << "\t<Prime> -> true\n";
 		}
+		gen_instr("PUSHI", 1);
 		lexer(infile);
 		print(outfile);
 	}
 	else if (lexeme == "false")
 	{
+		if (!(getType(temp) == "boolean") && !(temp == "") || prevLexeme == "-") {
+			if (prevLexeme == "-")
+				cerr << "Cannot assign " << temp << " to " << prevLexeme + lexeme << endl;
+			else
+				cerr << "The type of " << temp << " and " << lexeme << " must match"
+				<< endl;
+			system("pause");
+			exit(1);
+		}
 		if (!_switch)
 		{
 			cout << "\t<Prime> -> false\n";
 			outfile << "\t<Prime> -> false\n";
 		}
+		gen_instr("PUSHI", 0);
 		lexer(infile);
 		print(outfile);
 	}
