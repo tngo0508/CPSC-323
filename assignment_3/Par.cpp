@@ -603,7 +603,23 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 		if (lexeme == ":=")
 		{
 			lexer(infile);
-			if (token == "integer") {
+			if (lexeme == "-") {
+				temp2 = lexeme;
+				lexer(infile);
+				if (token == "integer") {
+					if (getType(temp) != token) {
+						cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+						system("pause");
+						exit(1);
+					}
+				}
+				else if (getType(temp) != getType(lexeme)) {
+					cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+					system("pause");
+					exit(1);
+				}
+			}
+			else if (token == "integer") {
 				if (getType(temp) != token) {
 					cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
 					system("pause");
@@ -1366,7 +1382,6 @@ void Par::Factor(ifstream& infile, ofstream& outfile)
 		cout << "\t<Factor> -> - <Primary>\n";
 		outfile << "\t<Factor> -> - <Primary>\n";
 	}
-	temp2 = lexeme;
 	print(outfile);
 	Primary(infile, outfile);
 	/*if (lexeme == "-")
