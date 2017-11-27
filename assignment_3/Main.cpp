@@ -13,7 +13,6 @@ int main() {
 	ofstream outFile("output.txt");
 	string filename;
 	string line;
-
 	do {
 		cout << "Enter a file name .txt (or 'exit' to quit): ";
 		cin >> filename;
@@ -62,8 +61,9 @@ int main() {
 			//run top-down RDP parser
 			check.RAT17F(inFile, outFile);
 			check.printSym();
+			check.printInstr();
 			inFile.close();
-			
+
 			check.~Par();
 			cout << endl;
 			outFile << endl;
