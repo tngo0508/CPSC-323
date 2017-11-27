@@ -1,6 +1,7 @@
 #include "Par.h"
 #include <iostream>
 #include <string>
+#include <sstream>
 #define BLANK -9999
 
 using namespace std;
@@ -10,6 +11,8 @@ bool isFromRead = false;
 int count_sym = 0;
 bool isFromDeclaration = false;
 string prevLexeme;
+string temp;
+string temp2;
 
 //constructor
 Par::Par()
@@ -29,7 +32,7 @@ bool Par::check_sym(string lexeme)
 				count_sym++;
 			return true;
 		}
-		
+
 	}
 	return false;
 }
@@ -85,7 +88,7 @@ void Par::printInstr() const
 	string a;
 	cout << "\nINSTRUCTION TABLE\n";
 	for (int i = 1; i < instr_idx; i++)
-	{	
+	{
 		if (instr_table[i].oprnd == BLANK) {
 			a = "";
 			cout << instr_table[i].address << " " << instr_table[i].op << " "
@@ -97,7 +100,7 @@ void Par::printInstr() const
 				<< instr_table[i].oprnd;
 			cout << endl;
 		}
-		
+
 	}
 }
 
@@ -107,8 +110,11 @@ string Par::getType(string input) const
 	if (token == "integer") {
 		a = token;
 	}
-	else if (token == "boolean"){
+	else if (token == "boolean") {
 		a = token;
+	}
+	else if(input == "true" || input == "false"){
+		a = "boolean";
 	}
 	else {
 		for (int i = 0; i < sym_idx; i++) {
@@ -121,8 +127,8 @@ string Par::getType(string input) const
 }
 
 /*
-	Check Type of current lexeme vs previous lexeme
-	if does not match, print error
+Check Type of current lexeme vs previous lexeme
+if does not match, print error
 */
 void Par::checkTypeMatch(string prevLexeme, string lexeme)
 {
@@ -131,8 +137,8 @@ void Par::checkTypeMatch(string prevLexeme, string lexeme)
 		system("pause");
 		exit(1);
 	}
-	
-	
+
+
 }
 
 //Function to turn on/off syntax rules
@@ -591,23 +597,19 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 			exit(1);
 		}
 		if (!_switch)
-		{   
+		{
 			cout << "\t<Assign> -> "
 				<< "<Identifier> := <Expression>;\n";
 			outfile << "\t<Assign> -> "
 				<< "<Identifier> := <Expression>;\n";
 		}
 		string save = lexeme;
+		temp = lexeme;
 		lexer(infile);
 		print(outfile);
 		if (lexeme == ":=")
 		{
 			lexer(infile);
-			if (getType(save) != getType(lexeme)) {
-				cerr << "The type of " << save << " and " << lexeme << " must match" << endl;
-				system("pause");
-				exit(1);
-			}
 			print(outfile);
 			Expression(infile, outfile);
 			int addr = get_address(save);
@@ -1354,54 +1356,36 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 
 void Par::Factor(ifstream& infile, ofstream& outfile)
 {
-	/*if (lexeme == "-")
+	if (lexeme == "-")
 	{
 		if (!_switch)
 		{
 			cout << "\t<Factor> -> - <Primary>\n";
 			outfile << "\t<Factor> -> - <Primary>\n";
 		}
+		temp2 = lexeme;
 		lexer(infile);
+		if (getType(temp) != getType(lexeme)) {
+			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+			system("pause");
+			exit(1);
+		}
 		print(outfile);
 		Primary(infile, outfile);
 	}
 	else
 	{
+		if (getType(temp) != getType(lexeme)) {
+			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+			system("pause");
+			exit(1);
+		}
 		if (!_switch)
 		{
 			cout << "\t<Factor> -> <Primary>\n";
 			outfile << "\t<Factor> -> <Primary>\n";
 		}
 		Primary(infile, outfile);
-	}*/
-	if (token == "identifier") {
-		if (!check_sym(lexeme))
-		{
-		cerr << "Identifier " << lexeme << " has not been declared yet.\n";
-		system("pause");
-		exit(1);
-		}
-		if (!_switch)
-		{
-			cout << "\t<Factor> -> - <identifier>\n";
-			outfile << "\t<Factor> -> - <identifier>\n";
-		}
-		int addr = get_address(lexeme);
-		gen_instr("PUSHM", addr);
-		prevLexeme = lexeme;
-		lexer(infile);
-		print(outfile);
-
-	}
-	else if(token == "integer"){
-		int a = stoi(lexeme);
-		gen_instr("PUSHM", a);
-		lexer(infile);
-	}
-	else {
-		cerr << "identifier expected" << endl;
-		system("pause");
-		exit(1);
 	}
 }
 
@@ -1420,6 +1404,9 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 			cout << "\t<Primary> -> <identifier> <Primary Prime>\n";
 			outfile << "\t<Primary> -> <identifier> <Primary Prime>\n";
 		}
+		int addr = get_address(lexeme);
+		gen_instr("PUSHM", addr);
+		prevLexeme = lexeme;
 		lexer(infile);
 		print(outfile);
 		PrimaryPrime(infile, outfile);
@@ -1431,6 +1418,16 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 			cout << "\t<Primary> -> <integer>\n";
 			outfile << "\t<Primary> -> <integer>\n";
 		}
+		int a;
+		if (temp2 == "-") {
+			string concat = temp2 + lexeme;	
+			stringstream(concat) >> a;
+		}
+		else {
+			stringstream(lexeme) >> a;
+		}
+		gen_instr("PUSHI", a);
+		temp2 = "";
 		lexer(infile);
 		print(outfile);
 	}
@@ -1465,6 +1462,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 			cout << "\t<Prime> -> true\n";
 			outfile << "\t<Prime> -> true\n";
 		}
+		gen_instr("PUSHI", 1);
 		lexer(infile);
 		print(outfile);
 	}
@@ -1475,6 +1473,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 			cout << "\t<Prime> -> false\n";
 			outfile << "\t<Prime> -> false\n";
 		}
+		gen_instr("PUSHI", 0);
 		lexer(infile);
 		print(outfile);
 	}
