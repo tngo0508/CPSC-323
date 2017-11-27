@@ -3,8 +3,8 @@
 
     sum := 0;
     i := 1;
-    read ( max);
-    while (i <  max) do  {
+    read ( i, a, max);
+    while (i <  max)  {
           sum := sum + i;
           i  := i + 1; 
      }

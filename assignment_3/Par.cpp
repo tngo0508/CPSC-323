@@ -2,12 +2,14 @@
 #include <iostream>
 #include <string>
 #define BLANK -9999
+
 using namespace std;
+
 int memory_address = 10000;
 bool isFromRead = false;
 int count_sym = 0;
 bool isFromDeclaration = false;
-string saveToken;
+string prevLexeme;
 
 //constructor
 Par::Par()
@@ -52,7 +54,7 @@ void Par::printSym() const
 	}
 }
 
-int Par::get_address(string save)
+int Par::get_address(string save) const
 {
 	int address = 0;
 	for (int i = 0; i < sym_idx; i++) {
@@ -99,7 +101,7 @@ void Par::printInstr() const
 	}
 }
 
-string Par::getType(string input)
+string Par::getType(string input) const
 {
 	string a = "";
 	if (token == "integer") {
@@ -122,9 +124,9 @@ string Par::getType(string input)
 	Check Type of current lexeme vs previous lexeme
 	if does not match, print error
 */
-void Par::checkTypeMatch(string saveToken, string lexeme)
+void Par::checkTypeMatch(string prevLexeme, string lexeme)
 {
-	if (getType(saveToken) == "boolean" || getType(lexeme) == "boolean") {
+	if (getType(prevLexeme) == "boolean" || getType(lexeme) == "boolean") {
 		cerr << "No Arithmetic operations are allowed for booleans." << endl;
 		system("pause");
 		exit(1);
@@ -1120,7 +1122,7 @@ void Par::Condition(ifstream& infile, ofstream& outfile)
 	}
 	else if (op == "/=")
 	{
-		gen_instr("DIVEQ", BLANK);
+		gen_instr("NEQ", BLANK);
 		jumpstack.push(instr_idx);
 		gen_instr("JUMPZ", BLANK);
 	}
@@ -1138,13 +1140,13 @@ void Par::Condition(ifstream& infile, ofstream& outfile)
 	}
 	else if (op == "=>")
 	{
-		gen_instr("GE", BLANK);
+		gen_instr("GEQ", BLANK);
 		jumpstack.push(instr_idx);
 		gen_instr("JUMPZ", BLANK);
 	}
 	else if (op == "<=")
 	{
-		gen_instr("LE", BLANK);
+		gen_instr("LEQ", BLANK);
 		jumpstack.push(instr_idx);
 		gen_instr("JUMPZ", BLANK);
 	}
@@ -1265,7 +1267,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 				<< "+ <Term> <Expression Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(saveToken, lexeme);
+		checkTypeMatch(prevLexeme, lexeme);
 		print(outfile);
 		Term(infile, outfile);
 		gen_instr("ADD", BLANK);
@@ -1281,7 +1283,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 				<< "- <Term> <Expression Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(saveToken, lexeme);
+		checkTypeMatch(prevLexeme, lexeme);
 		print(outfile);
 		Term(infile, outfile);
 		gen_instr("SUB", BLANK);
@@ -1319,7 +1321,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 			outfile << "\t<Term Prime> -> * <Factor> <Term Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(saveToken, lexeme);
+		checkTypeMatch(prevLexeme, lexeme);
 		print(outfile);
 		Factor(infile, outfile);
 		gen_instr("MUL", BLANK);
@@ -1333,7 +1335,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 			outfile << "\t<Term Prime> -> / <Factor> <Term Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(saveToken, lexeme);
+		checkTypeMatch(prevLexeme, lexeme);
 		print(outfile);
 		Factor(infile, outfile);
 		gen_instr("DIV", BLANK);
@@ -1386,7 +1388,7 @@ void Par::Factor(ifstream& infile, ofstream& outfile)
 		}
 		int addr = get_address(lexeme);
 		gen_instr("PUSHM", addr);
-		saveToken = lexeme;
+		prevLexeme = lexeme;
 		lexer(infile);
 		print(outfile);
 
@@ -1555,4 +1557,5 @@ Par::~Par()
 	memory_address = 10000;
 	count_sym = 0;
 	isFromRead = false;
+	isFromDeclaration = false;
 }
