@@ -131,7 +131,7 @@ public:
 	void setSwitch(const bool number);
 	void print(ofstream& outfile);
 
-	bool check_sym(string lexeme, int& count);
+	bool check_sym(string lexeme);
 	void gen_sym(string lexeme, string id_type);
 	void printSym() const;
 
@@ -140,7 +140,8 @@ public:
 	void backPatch(int instr_address);
 	void gen_instr(string op, int oprnd);
 	void printInstr() const;
-
+	string getType(string input);
+	void checkTypeMatch(string saveToken, string lexeme);
 	//Destructor
 	~Par();
 
@@ -152,7 +153,6 @@ private:
 	stack <int> jumpstack;
 	int instr_idx;
 	string current_type;
-	int count;
 };
 
 #endif
