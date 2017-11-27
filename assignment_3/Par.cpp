@@ -10,6 +10,7 @@ bool isFromRead = false;
 int count_sym = 0;
 bool isFromDeclaration = false;
 string prevLexeme;
+string temp;
 
 //constructor
 Par::Par()
@@ -598,16 +599,12 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 				<< "<Identifier> := <Expression>;\n";
 		}
 		string save = lexeme;
+		temp = lexeme;
 		lexer(infile);
 		print(outfile);
 		if (lexeme == ":=")
 		{
 			lexer(infile);
-			if (getType(save) != getType(lexeme)) {
-				cerr << "The type of " << save << " and " << lexeme << " must match" << endl;
-				system("pause");
-				exit(1);
-			}
 			print(outfile);
 			Expression(infile, outfile);
 			int addr = get_address(save);
@@ -1354,54 +1351,26 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 
 void Par::Factor(ifstream& infile, ofstream& outfile)
 {
-	/*if (lexeme == "-")
+	if (lexeme == "-")
 	{
-	if (!_switch)
-	{
-	cout << "\t<Factor> -> - <Primary>\n";
-	outfile << "\t<Factor> -> - <Primary>\n";
-	}
-	lexer(infile);
-	print(outfile);
-	Primary(infile, outfile);
-	}
-	else
-	{
-	if (!_switch)
-	{
-	cout << "\t<Factor> -> <Primary>\n";
-	outfile << "\t<Factor> -> <Primary>\n";
-	}
-	Primary(infile, outfile);
-	}*/
-	if (token == "identifier") {
-		if (!check_sym(lexeme))
-		{
-			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
-			system("pause");
-			exit(1);
-		}
 		if (!_switch)
 		{
-			cout << "\t<Factor> -> - <identifier>\n";
-			outfile << "\t<Factor> -> - <identifier>\n";
+			cout << "\t<Factor> -> - <Primary>\n";
+			outfile << "\t<Factor> -> - <Primary>\n";
 		}
-		int addr = get_address(lexeme);
-		gen_instr("PUSHM", addr);
 		prevLexeme = lexeme;
 		lexer(infile);
 		print(outfile);
-
+		Primary(infile, outfile);
 	}
-	else if (token == "integer") {
-		int a = stoi(lexeme);
-		gen_instr("PUSHM", a);
-		lexer(infile);
-	}
-	else {
-		cerr << "identifier expected" << endl;
-		system("pause");
-		exit(1);
+	else
+	{
+		if (!_switch)
+		{
+			cout << "\t<Factor> -> <Primary>\n";
+			outfile << "\t<Factor> -> <Primary>\n";
+		}
+		Primary(infile, outfile);
 	}
 }
 
@@ -1409,6 +1378,11 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 {
 	if (token == "identifier")
 	{
+		if (getType(temp) != getType(lexeme)) {
+			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+			system("pause");
+			exit(1);
+		}
 		if (!check_sym(lexeme))
 		{
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
@@ -1420,17 +1394,34 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 			cout << "\t<Primary> -> <identifier> <Primary Prime>\n";
 			outfile << "\t<Primary> -> <identifier> <Primary Prime>\n";
 		}
+		int addr = get_address(lexeme);
+		gen_instr("PUSHM", addr);
+		prevLexeme = lexeme;
 		lexer(infile);
 		print(outfile);
 		PrimaryPrime(infile, outfile);
 	}
 	else if (token == "integer")
 	{
+		if (getType(temp) != getType(lexeme)) {
+			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
+			system("pause");
+			exit(1);
+		}
 		if (!_switch)
 		{
 			cout << "\t<Primary> -> <integer>\n";
 			outfile << "\t<Primary> -> <integer>\n";
 		}
+		int a = 0;
+		if (prevLexeme == "-")
+		{
+			prevLexeme = prevLexeme + lexeme;
+			a = stoi(prevLexeme);
+		}
+		else
+			a = stoi(lexeme);
+		gen_instr("PUSHI", a);
 		lexer(infile);
 		print(outfile);
 	}

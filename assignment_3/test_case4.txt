@@ -1,11 +1,12 @@
 %% 
     integer   i, max, sum;
-	integer	a,b,sum;
+	boolean	a,b;
 
+	a := 1;
     sum := 0;
     i := 1;
     read ( max);
-    while (i <  max)  {
+    while (i <  max) do {
           sum := sum + i;
           i  := i + 1; 
      }
