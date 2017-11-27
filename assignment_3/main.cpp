@@ -13,7 +13,6 @@ int main() {
 	ofstream outFile("output.txt");
 	string filename;
 	string line;
-
 	do {
 		cout << "Enter a file name .txt (or 'exit' to quit): ";
 		cin >> filename;
@@ -52,17 +51,20 @@ int main() {
 			inFile.clear();
 			inFile.seekg(0);
 			//start to do the syntax analysis
-			int On_off = 0;
+			/*int On_off = 0;
 			cout << "Press 0(on) or 1(off) for syntax rules: ";
-			cin >> On_off;
+			cin >> On_off;*/
 
 			//turn on or off syntax rules
-			check.setSwitch(On_off);
+			//check.setSwitch(On_off);
 
 			//run top-down RDP parser
 			check.RAT17F(inFile, outFile);
+			check.printSym();
+			check.printInstr();
 			inFile.close();
 
+			check.~Par();
 			cout << endl;
 			outFile << endl;
 		}
