@@ -675,8 +675,8 @@ void Par::If(ifstream& infile, ofstream& outfile)
 				lexer(infile);
 				print(outfile);
 				Statement(infile, outfile);
-				IfPrime(infile, outfile);
 				backPatch(instr_idx);
+				IfPrime(infile, outfile);
 			}
 			else
 			{
@@ -735,6 +735,7 @@ void Par::IfPrime(ifstream& infile, ofstream& outfile)
 	}
 	else if (lexeme == "else")
 	{
+		int addr = instr_idx;
 		if (!_switch)
 		{
 			cout << "\t<If Prime> -> "
@@ -1040,21 +1041,9 @@ void Par::While(ifstream& infile, ofstream& outfile)
 			if (lexeme == ")")
 			{
 				lexer(infile);
-				if (lexeme == "do") {
-					lexer(infile);
-					Statement(infile, outfile);
-					gen_instr("JUMP", addr);
-					backPatch(instr_idx);
-				}
-				else {
-					printError(outfile);
-					outfile << "While statement syntax error\n";
-					outfile << "Do is expected\n";
-					cerr << "While statement syntax error\n";
-					cerr << "Do is expected\n";
-					system("Pause");
-					exit(1);
-				}
+				Statement(infile, outfile);
+				gen_instr("JUMP", addr);
+				backPatch(instr_idx);
 			}
 			else
 			{
@@ -1453,7 +1442,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 			if (prevLexeme == "-")
 				cerr << "Cannot assign " << temp << " to " << prevLexeme + lexeme << endl;
 			else
-				cerr << "The type of " << temp << " and " << lexeme << " must match" 
+				cerr << "The type of " << temp << " and " << lexeme << " must match"
 				<< endl;
 			system("pause");
 			exit(1);
