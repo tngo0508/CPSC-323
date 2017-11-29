@@ -3,12 +3,8 @@
 
     sum := 0;
     i := 1;
-    read ( max);
-<<<<<<< HEAD
+    read ( i, a, max);
     while (i <  max)  {
-=======
-    while (i <  max) {
->>>>>>> thomas_edit
           sum := sum + i;
           i  := i + 1; 
      }

@@ -136,10 +136,19 @@ public:
 	void printSym() const;
 
 	//Instruction Table
+<<<<<<< HEAD
 	int get_address(string save);
 	void backPatch(int instr_address);
 	void gen_instr(string op, int oprnd);
 	void printInstr() const;
+=======
+	int get_address(string save) const;
+	void backPatch(int instr_address);
+	void gen_instr(string op, int oprnd);
+	void printInstr() const;
+	string getType(string input) const;
+	void checkTypeMatch(string preLexeme, string lexeme);
+>>>>>>> thomas_edit
 
 	//Destructor
 	~Par();

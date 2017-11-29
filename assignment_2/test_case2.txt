@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 @ transferToVND  (amount : integer)
 {
            return 22000 * amount;
 }
 %%
 	integer amount;
+=======
+@ transferToVND  (amount : integer)
+{
+           return 22000 * amount;
+}
+%%
+	integer amount;
+>>>>>>> thomas_edit
 	write(transferToUsd[amount]);

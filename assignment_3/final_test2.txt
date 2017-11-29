@@ -2,13 +2,9 @@
     integer   i, max, sum;
 
     sum := 0;
-    i := 1;
+    i := true;
     read ( max);
-<<<<<<< HEAD
     while (i <  max)  {
-=======
-    while (i <  max) {
->>>>>>> thomas_edit
           sum := sum + i;
           i  := i + 1; 
      }
