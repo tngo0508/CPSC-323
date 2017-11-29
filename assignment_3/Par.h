@@ -133,16 +133,16 @@ public:
 
 	bool check_sym(string lexeme);
 	void gen_sym(string lexeme, string id_type);
-	void printSym() const;
+	void printSym(ifstream& infile, ostream& outfile);
 
 	//Instruction Table
-
 	int get_address(string save) const;
 	void backPatch(int instr_address);
 	void gen_instr(string op, int oprnd);
-	void printInstr() const;
+	void printInstr(ifstream& infile, ostream& outfile);
 	string getType(string input) const;
-	void checkTypeMatch(string preLexeme, string lexeme);
+	void checkTypeMatch(string preLexeme, string lexeme, 
+		ifstream& infile, ostream& outfile);
 
 	//Destructor
 	~Par();

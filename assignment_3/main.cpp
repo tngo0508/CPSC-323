@@ -60,8 +60,8 @@ int main() {
 
 			//run top-down RDP parser
 			check.RAT17F(inFile, outFile);
-			check.printSym();
-			check.printInstr();
+			check.printSym(inFile, outFile);
+			check.printInstr(inFile, outFile);
 			inFile.close();
 
 			check.~Par();
