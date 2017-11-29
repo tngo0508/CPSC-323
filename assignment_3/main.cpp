@@ -50,15 +50,6 @@ int main() {
 
 			inFile.clear();
 			inFile.seekg(0);
-			//start to do the syntax analysis
-			/*int On_off = 0;
-			cout << "Press 0(on) or 1(off) for syntax rules: ";
-			cin >> On_off;*/
-
-			//turn on or off syntax rules
-			//check.setSwitch(On_off);
-
-			//run top-down RDP parser
 			check.RAT17F(inFile, outFile);
 			check.printSym();
 			check.printInstr();
