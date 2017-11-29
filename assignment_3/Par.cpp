@@ -1558,5 +1558,4 @@ Par::~Par()
 	isFromDeclaration = false;
 	prevLexeme = "";
 	temp = "";
->>>>>>> thomas_edit
 }
