@@ -44,14 +44,18 @@ void Par::gen_sym(string lexeme, string id_type)
 	memory_address++;
 }
 
-void Par::printSym() const
+void Par::printSym(ifstream& infile, ostream& outfile)
 {
 	cout << "\nSYMBOL TABLE\n";
+	outfile << "\nSYMBOL TABLE\n";
 	for (int i = 0; i < sym_idx; i++)
 	{
 		cout << sym_table[i].id << " " << sym_table[i].mem_loc << " "
 			<< sym_table[i].idType;
 		cout << endl;
+		outfile << sym_table[i].id << " " << sym_table[i].mem_loc << " "
+			<< sym_table[i].idType;
+		outfile << endl;
 	}
 }
 
@@ -81,10 +85,11 @@ void Par::gen_instr(string op, int oprnd)
 	instr_idx++;
 }
 
-void Par::printInstr() const
+void Par::printInstr(ifstream& infile, ostream& outfile)
 {
 	string a;
 	cout << "\nINSTRUCTION TABLE\n";
+	outfile << "\nINSTRUCTION TABLE\n";
 	for (int i = 1; i < instr_idx; i++)
 	{
 		if (instr_table[i].oprnd == BLANK) {
@@ -92,11 +97,17 @@ void Par::printInstr() const
 			cout << instr_table[i].address << " " << instr_table[i].op << " "
 				<< a;
 			cout << endl;
+			outfile << instr_table[i].address << " " << instr_table[i].op << " "
+				<< a;
+			outfile << endl;
 		}
 		else {
 			cout << instr_table[i].address << " " << instr_table[i].op << " "
 				<< instr_table[i].oprnd;
 			cout << endl;
+			outfile << instr_table[i].address << " " << instr_table[i].op << " "
+				<< instr_table[i].oprnd;
+			outfile << endl;
 		}
 
 	}
@@ -337,11 +348,13 @@ void Par::IDs(ifstream& infile, ofstream& outfile)
 		}
 		else if (!check_sym(lexeme) && isFromRead == true)
 		{
+			outfile << "Identifier " << lexeme << " has not been declared yet.\n";
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
 			exit(1);
 		}
 		if (count_sym == 2) {
+			outfile << "Identifier " << lexeme << " is already declared.\n";
 			cerr << "Identifier " << lexeme << " is already declared.\n";
 			system("pause");
 			exit(1);
@@ -584,6 +597,7 @@ void Par::Assign(ifstream& infile, ofstream& outfile)
 	{
 		if (!check_sym(lexeme))
 		{
+			outfile << "Identifier " << lexeme << " has not been declared yet.\n";
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
 			exit(1);
@@ -1367,11 +1381,13 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	{
 		if (!check_sym(lexeme))
 		{
+			outfile << "Identifier " << lexeme << " has not been declared yet.\n";
 			cerr << "Identifier " << lexeme << " has not been declared yet.\n";
 			system("pause");
 			exit(1);
 		}
 		if (!(getType(temp) == getType(lexeme)) && !(temp == "")) {
+			outfile << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			system("pause");
 			exit(1);
@@ -1391,6 +1407,7 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	else if (token == "integer")
 	{
 		if (!(getType(temp) == "integer") && !(temp == "")) {
+			outfile << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			cerr << "The type of " << temp << " and " << lexeme << " must match" << endl;
 			system("pause");
 			exit(1);
@@ -1440,10 +1457,17 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	{
 		if (!(getType(temp) == "boolean") && !(temp == "") || prevLexeme == "-") {
 			if (prevLexeme == "-")
+			{
+				outfile << "Cannot assign " << temp << " to " << prevLexeme + lexeme << endl;
 				cerr << "Cannot assign " << temp << " to " << prevLexeme + lexeme << endl;
+			}
 			else
+			{
+				outfile << "The type of " << temp << " and " << lexeme << " must match"
+					<< endl;
 				cerr << "The type of " << temp << " and " << lexeme << " must match"
-				<< endl;
+					<< endl;
+			}
 			system("pause");
 			exit(1);
 		}
@@ -1460,10 +1484,17 @@ void Par::Primary(ifstream& infile, ofstream& outfile)
 	{
 		if (!(getType(temp) == "boolean") && !(temp == "") || prevLexeme == "-") {
 			if (prevLexeme == "-")
+			{
+				outfile << "Cannot assign " << temp << " to " << prevLexeme + lexeme << endl;
 				cerr << "Cannot assign " << temp << " to " << prevLexeme + lexeme << endl;
+			}
 			else
+			{
+				outfile << "The type of " << temp << " and " << lexeme << " must match"
+					<< endl;
 				cerr << "The type of " << temp << " and " << lexeme << " must match"
-				<< endl;
+					<< endl;
+			}
 			system("pause");
 			exit(1);
 		}
