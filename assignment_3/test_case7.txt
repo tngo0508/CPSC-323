@@ -2,7 +2,7 @@
     integer   i, max, sum;
 	boolean a;
     sum := 0;
-    a := 4;
+    a := a + a;
     read ( max);
     while (i <  max) {
           sum := sum + i;

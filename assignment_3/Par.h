@@ -141,7 +141,8 @@ public:
 	void gen_instr(string op, int oprnd);
 	void printInstr(ifstream& infile, ostream& outfile);
 	string getType(string input) const;
-	void checkTypeMatch(string preLexeme, string lexeme);
+	void checkTypeMatch(string preLexeme, string lexeme, 
+		ifstream& infile, ostream& outfile);
 
 	//Destructor
 	~Par();

@@ -133,10 +133,12 @@ string Par::getType(string input) const
 Check Type of current lexeme vs previous lexeme
 if does not match, print error
 */
-void Par::checkTypeMatch(string prevLexeme, string lexeme)
+void Par::checkTypeMatch(string prevLexeme, string lexeme,
+	ifstream& infile, ostream& outfile)
 {
 	if (getType(prevLexeme) == "boolean" || getType(lexeme) == "boolean") {
-		cerr << "No Arithmetic operations are allowed for booleans." << endl;
+		outfile << "No Arithmetic operations are allowed for boolean." << endl;
+		cerr << "No Arithmetic operations are allowed for boolean." << endl;
 		system("pause");
 		exit(1);
 	}
@@ -1265,7 +1267,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 				<< "+ <Term> <Expression Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(prevLexeme, lexeme);
+		checkTypeMatch(prevLexeme, lexeme, infile, outfile);
 		print(outfile);
 		Term(infile, outfile);
 		gen_instr("ADD", BLANK);
@@ -1281,7 +1283,7 @@ void Par::ExpressionPrime(ifstream& infile, ofstream& outfile)
 				<< "- <Term> <Expression Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(prevLexeme, lexeme);
+		checkTypeMatch(prevLexeme, lexeme, infile, outfile);
 		print(outfile);
 		Term(infile, outfile);
 		gen_instr("SUB", BLANK);
@@ -1319,7 +1321,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 			outfile << "\t<Term Prime> -> * <Factor> <Term Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(prevLexeme, lexeme);
+		checkTypeMatch(prevLexeme, lexeme, infile, outfile);
 		print(outfile);
 		Factor(infile, outfile);
 		gen_instr("MUL", BLANK);
@@ -1333,7 +1335,7 @@ void Par::TermPrime(ifstream& infile, ofstream& outfile)
 			outfile << "\t<Term Prime> -> / <Factor> <Term Prime>\n";
 		}
 		lexer(infile);
-		checkTypeMatch(prevLexeme, lexeme);
+		checkTypeMatch(prevLexeme, lexeme, infile, outfile);
 		print(outfile);
 		Factor(infile, outfile);
 		gen_instr("DIV", BLANK);

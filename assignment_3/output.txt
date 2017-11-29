@@ -1,30 +1,18 @@
 SOURCE CODE:
 
 %% 
-	integer a,b,c;
-	
-    if(a<b) 
-		a:= a+c;
-	else
-		a:= a-b;
-	fi
+    integer   i, max, sum;
+	boolean a;
+    sum := 0;
+    a := a + a;
+    read ( max);
+    while (i <  max) {
+          sum := sum + i;
+          i  := i + 1; 
+     }
+     write (sum+max);
 
 
 OUTPUT:
 
-a 10000 integer
-b 10001 integer
-c 10002 integer
-1 PUSHM 10000
-2 PUSHM 10001
-3 LES 
-4 JUMPZ 9
-5 PUSHM 10000
-6 PUSHM 10002
-7 ADD 
-8 POPM 10000
-9 PUSHM 10000
-10 PUSHM 10001
-11 SUB 
-12 POPM 10000
-
+No Arithmetic operations are allowed for booleans.
