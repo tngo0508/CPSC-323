@@ -1,11 +1,21 @@
-%%
-integer i,max,sum;
-
-sum := 0;
-i := 1;
-read(max);
-while(i<max) {
-sum := sum + i;
-i := I + 1;
-}
-write(sum+max);
+%% 
+    integer   i, j, max, sum, a, b , c;
+	boolean d, e, f, g;
+    sum := 0;
+	d := true;
+    i := 1;
+	a := -5;
+	b := -20;
+	c := 30;
+	e := false;
+	f := true;	
+	g := false;
+	j := a - b + c;
+	sum := j + i;
+	max := sum + b;
+	read (max);
+    while (i =>  max) {
+          sum := sum + i;
+          i  := i + 1; 
+     }
+     write (sum+max+i);
