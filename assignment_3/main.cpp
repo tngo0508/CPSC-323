@@ -63,11 +63,7 @@ int main() {
 			check.printSym();
 			check.printInstr();
 			inFile.close();
-<<<<<<< HEAD
-			
-=======
 
->>>>>>> thomas_edit
 			check.~Par();
 			cout << endl;
 			outFile << endl;
