@@ -9,6 +9,7 @@ int memory_address = 10000;
 bool isFromRead = false;
 int count_sym = 0;
 bool isFromDeclaration = false;
+bool dummyLabel = false;
 string prevLexeme;
 string temp;
 
@@ -182,6 +183,8 @@ void Par::RAT17F(ifstream& infile, ofstream& outfile)
 		print(outfile);
 		OptDeclarationList(infile, outfile);
 		StatementList(infile, outfile);
+		if (dummyLabel)
+			gen_instr("LABEL", BLANK);
 		if (!(lexeme == "EOF"))
 		{
 			outfile << "This is not EOF marker.\n"
@@ -678,7 +681,6 @@ void Par::If(ifstream& infile, ofstream& outfile)
 			outfile << "\t<If> -> "
 				<< "if (<Condition>) <Statement> <If Prime>\n";
 		}
-		int addr = instr_idx;
 		lexer(infile);
 		print(outfile);
 		if (lexeme == "(")
@@ -691,8 +693,18 @@ void Par::If(ifstream& infile, ofstream& outfile)
 				lexer(infile);
 				print(outfile);
 				Statement(infile, outfile);
+				int addr = jumpstack.top();
+				jumpstack.pop();
+				jumpstack.push(instr_idx);
+				gen_instr("JUMP", BLANK);
+				
+				jumpstack.push(addr);
 				backPatch(instr_idx);
+				
 				IfPrime(infile, outfile);
+				backPatch(instr_idx);
+				if (lexeme == "EOF")
+					gen_instr("LABEL", BLANK);
 			}
 			else
 			{
@@ -751,7 +763,6 @@ void Par::IfPrime(ifstream& infile, ofstream& outfile)
 	}
 	else if (lexeme == "else")
 	{
-		int addr = instr_idx;
 		if (!_switch)
 		{
 			cout << "\t<If Prime> -> "
@@ -1060,6 +1071,8 @@ void Par::While(ifstream& infile, ofstream& outfile)
 				Statement(infile, outfile);
 				gen_instr("JUMP", addr);
 				backPatch(instr_idx);
+				if (lexeme == "EOF")
+					gen_instr("LABEL", BLANK);
 			}
 			else
 			{
@@ -1589,6 +1602,7 @@ Par::~Par()
 	count_sym = 0;
 	isFromRead = false;
 	isFromDeclaration = false;
+	dummyLabel = false;
 	prevLexeme = "";
 	temp = "";
 }

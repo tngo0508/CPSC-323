@@ -1,7 +1,7 @@
 %% 
 	integer a,b,c;
 	
-    if(a<b) 
+    if(a /= b) 
 		a:= a+c;
 	else
 		a:= a-b;

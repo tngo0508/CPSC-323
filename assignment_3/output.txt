@@ -1,18 +1,36 @@
 SOURCE CODE:
 
 %% 
-    integer   i, max, sum;
-	boolean a;
-    sum := 0;
-    a := a + a;
-    read ( max);
-    while (i <  max) {
-          sum := sum + i;
-          i  := i + 1; 
-     }
-     write (sum+max);
+	integer a,b,c;
+	
+    if(a /= b) 
+		a:= a+c;
+	else
+		a:= a-b;
+	fi
 
 
 OUTPUT:
 
-No Arithmetic operations are allowed for booleans.
+
+SYMBOL TABLE
+a 10000 integer
+b 10001 integer
+c 10002 integer
+
+INSTRUCTION TABLE
+1 PUSHM 10000
+2 PUSHM 10001
+3 NEQ 
+4 JUMPZ 10
+5 PUSHM 10000
+6 PUSHM 10002
+7 ADD 
+8 POPM 10000
+9 JUMP 14
+10 PUSHM 10000
+11 PUSHM 10001
+12 SUB 
+13 POPM 10000
+14 LABEL 
+
