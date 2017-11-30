@@ -183,8 +183,6 @@ void Par::RAT17F(ifstream& infile, ofstream& outfile)
 		print(outfile);
 		OptDeclarationList(infile, outfile);
 		StatementList(infile, outfile);
-		if (dummyLabel)
-			gen_instr("LABEL", BLANK);
 		if (!(lexeme == "EOF"))
 		{
 			outfile << "This is not EOF marker.\n"
@@ -693,16 +691,21 @@ void Par::If(ifstream& infile, ofstream& outfile)
 				lexer(infile);
 				print(outfile);
 				Statement(infile, outfile);
-				int addr = jumpstack.top();
-				jumpstack.pop();
-				jumpstack.push(instr_idx);
-				gen_instr("JUMP", BLANK);
-				
-				jumpstack.push(addr);
+				if (lexeme == "else")
+				{
+					int addr = jumpstack.top();
+					jumpstack.pop();
+					jumpstack.push(instr_idx);
+					gen_instr("JUMP", BLANK);
+
+					jumpstack.push(addr);
+					dummyLabel = true;
+				}
 				backPatch(instr_idx);
-				
+
 				IfPrime(infile, outfile);
-				backPatch(instr_idx);
+				if (dummyLabel == true)
+					backPatch(instr_idx);
 				if (lexeme == "EOF")
 					gen_instr("LABEL", BLANK);
 			}

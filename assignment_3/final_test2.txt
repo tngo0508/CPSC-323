@@ -2,8 +2,8 @@
     integer   i, max, sum;
 
     sum := 0;
-    i := true;
-    read ( max);
+    i := 1;
+    read ( i, a, max);
     while (i <  max)  {
           sum := sum + i;
           i  := i + 1; 

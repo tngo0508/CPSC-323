@@ -1,36 +1,72 @@
 SOURCE CODE:
 
 %% 
+    integer   i, max, sum;
 	integer a,b,c;
 	
-    if(a /= b) 
+    if(a > b) 
 		a:= a+c;
 	else
 		a:= a-b;
 	fi
+
+    sum := 0;
+    i := 1;
+    read ( max);
+    while (i <  max) {
+          sum := sum + i;
+          i  := i + 1; 
+     }
+     write (sum+max);
 
 
 OUTPUT:
 
 
 SYMBOL TABLE
-a 10000 integer
-b 10001 integer
-c 10002 integer
+i 10000 integer
+max 10001 integer
+sum 10002 integer
+a 10003 integer
+b 10004 integer
+c 10005 integer
 
 INSTRUCTION TABLE
-1 PUSHM 10000
-2 PUSHM 10001
-3 NEQ 
+1 PUSHM 10003
+2 PUSHM 10004
+3 GRT 
 4 JUMPZ 10
-5 PUSHM 10000
-6 PUSHM 10002
+5 PUSHM 10003
+6 PUSHM 10005
 7 ADD 
-8 POPM 10000
+8 POPM 10003
 9 JUMP 14
-10 PUSHM 10000
-11 PUSHM 10001
+10 PUSHM 10003
+11 PUSHM 10004
 12 SUB 
-13 POPM 10000
-14 LABEL 
+13 POPM 10003
+14 PUSHI 0
+15 POPM 10002
+16 PUSHI 1
+17 POPM 10000
+18 STDIN 
+19 POPM 10001
+20 LABEL 
+21 PUSHM 10000
+22 PUSHM 10001
+23 LES 
+24 JUMPZ 34
+25 PUSHM 10002
+26 PUSHM 10000
+27 ADD 
+28 POPM 10002
+29 PUSHM 10000
+30 PUSHI 1
+31 ADD 
+32 POPM 10000
+33 JUMP 20
+34 PUSHM 10002
+35 PUSHM 10001
+36 ADD 
+37 STDOUT 
 
