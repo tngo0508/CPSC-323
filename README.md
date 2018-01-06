@@ -17,7 +17,7 @@ Some identifiers are reserved for use as keywords, and may not be used otherwise
        e.g.,  int, if, else, fi,  while, return, read, write  etc <br>
 
 2) Syntax rules <br>
-
+```
 The following BNF  describes the  Rat17F. <br>  
 <Rat17F>  ::=  <Opt Function Definitions> 
                          %%  <Opt Declaration List> <Statement List>    <br>
@@ -51,7 +51,7 @@ The following BNF  describes the  Rat17F. <br>
 <Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>]  | 
                        ( <Expression> ) |  <Real>  | true | false    <br>                    
 <Empty>   ::= epsilon <br>
-
+```
 
 3) Some Semantics <br>
 +	Rat17F is a conventional imperative programming language. A Rat17F program consists of a sequence of functions followed  by the "main body"  where the program executes.  
