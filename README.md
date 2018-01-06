@@ -8,7 +8,8 @@ The programming assignments are based on a language called "Rat17F" which is des
 1) Lexical Conventions: <br>
 ```
 The lexical units of a program are identifiers, keywords, integers, reals, operators and other separators. 
-Blanks, tabs and newlines  (collectively, "white space") as described below are ignored except as they serve to separate tokens. 
+Blanks, tabs and newlines  (collectively, "white space") as described below are ignored except 
+as they serve to separate tokens. 
 Some white space is required to separate otherwise adjacent identifiers, keywords, reals and integers.
 <Identifier> is a sequence of letters and   “#”. 
 The first character must be a letter and two consecutive #s are not allowed. 
